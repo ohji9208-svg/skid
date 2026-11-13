@@ -368,7 +368,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114m·GitHub";
+const VERLBL="v1114n·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -384,7 +384,21 @@ if(READY&&"serviceWorker" in navigator){navigator.serviceWorker.register("sw.js"
 /*/CONN*/
 const HOL={"2025-01-01":"신정","2025-03-01":"삼일절","2025-05-05":"어린이날·부처님오신날","2025-06-06":"현충일","2025-08-15":"광복절","2025-10-03":"개천절","2025-10-09":"한글날","2025-12-25":"성탄절","2025-01-28":"설날 연휴","2025-01-29":"설날","2025-01-30":"설날 연휴","2025-10-05":"추석 연휴","2025-10-06":"추석","2025-10-07":"추석 연휴","2025-06-03":"대통령선거","2025-01-27":"임시공휴일","2025-03-03":"대체공휴일","2025-05-06":"대체공휴일","2025-10-08":"대체공휴일","2026-01-01":"신정","2026-03-01":"삼일절","2026-05-05":"어린이날","2026-06-06":"현충일","2026-08-15":"광복절","2026-10-03":"개천절","2026-10-09":"한글날","2026-12-25":"성탄절","2026-05-01":"노동절","2026-07-17":"제헌절","2026-02-16":"설날 연휴","2026-02-17":"설날","2026-02-18":"설날 연휴","2026-09-24":"추석 연휴","2026-09-25":"추석","2026-09-26":"추석 연휴","2026-05-24":"부처님오신날","2026-06-03":"지방선거","2026-03-02":"대체공휴일","2026-05-25":"대체공휴일","2026-08-17":"대체공휴일","2026-10-05":"대체공휴일","2027-01-01":"신정","2027-03-01":"삼일절","2027-05-05":"어린이날","2027-06-06":"현충일","2027-08-15":"광복절","2027-10-03":"개천절","2027-10-09":"한글날","2027-12-25":"성탄절","2027-05-01":"노동절","2027-07-17":"제헌절","2027-02-06":"설날 연휴","2027-02-07":"설날","2027-02-08":"설날 연휴","2027-09-14":"추석 연휴","2027-09-15":"추석","2027-09-16":"추석 연휴","2027-05-13":"부처님오신날","2027-02-09":"대체공휴일","2027-05-03":"대체공휴일","2027-07-19":"대체공휴일","2027-08-16":"대체공휴일","2027-10-04":"대체공휴일","2027-10-11":"대체공휴일","2027-12-27":"대체공휴일","2028-01-01":"신정","2028-03-01":"삼일절","2028-05-05":"어린이날","2028-06-06":"현충일","2028-08-15":"광복절","2028-10-03":"개천절·추석","2028-10-09":"한글날","2028-12-25":"성탄절","2028-05-01":"노동절","2028-07-17":"제헌절","2028-01-25":"설날 연휴","2028-01-26":"설날","2028-01-27":"설날 연휴","2028-10-02":"추석 연휴","2028-10-04":"추석 연휴","2028-05-02":"부처님오신날","2028-04-12":"국회의원선거","2028-10-05":"대체공휴일","2029-01-01":"신정","2029-03-01":"삼일절","2029-05-05":"어린이날","2029-06-06":"현충일","2029-08-15":"광복절","2029-10-03":"개천절","2029-10-09":"한글날","2029-12-25":"성탄절","2029-05-01":"노동절","2029-07-17":"제헌절","2029-02-12":"설날 연휴","2029-02-13":"설날","2029-02-14":"설날 연휴","2029-09-21":"추석 연휴","2029-09-22":"추석","2029-09-23":"추석 연휴","2029-05-20":"부처님오신날","2029-05-07":"대체공휴일","2029-05-21":"대체공휴일","2029-09-24":"대체공휴일","2030-01-01":"신정","2030-03-01":"삼일절","2030-05-05":"어린이날","2030-06-06":"현충일","2030-08-15":"광복절","2030-10-03":"개천절","2030-10-09":"한글날","2030-12-25":"성탄절","2030-05-01":"노동절","2030-07-17":"제헌절","2030-02-02":"설날 연휴","2030-02-03":"설날","2030-02-04":"설날 연휴","2030-09-11":"추석 연휴","2030-09-12":"추석","2030-09-13":"추석 연휴","2030-05-09":"부처님오신날","2030-02-05":"대체공휴일","2030-05-06":"대체공휴일"};
 const SH_DEF={base:"2026-11-07",teams:[{k:"A",g12:"오지훈",g3:"고우성",ph:0},{k:"B",g12:"우성제",g3:"유승규",ph:6},{k:"C",g12:"김영준",g3:"유재혁",ph:9},{k:"D",g12:"변영화",g3:"김완승",ph:3}]};
-const SH_EXTRA=[{n:"박윤혁",g:"g12",s:"D",p:[{to:"2026-11-30",w:"CD"},{from:"2026-12-01",w:"AB"}]}];
+// ==== 인원·근무 순환 변동 (기간별) · 대시보드와 휴대폰이 같은 규칙을 씀 ====
+// 근무 순환이 하루 밀리는 날: 이날은 모든 조가 전날 근무를 한 번 더 (근무표 엑셀 26년 12월 기준: 12/25)
+const SH_HOLD=["2026-12-25"];
+// 조 구성원 교체: 2027-01-01 부터 1st·2nd A조 = 박윤혁 (오지훈은 평일 주간으로)
+const SH_SWAP=[{k:"A",g:"g12",from:"2027-01-01",n:"박윤혁"}];
+// 추가 인원: w=짝 조(그 조가 s 근무하는 날 같이 근무) · w="WD" 는 평일 주간(토·일·공휴일 휴무)
+const SH_EXTRA=[{n:"박윤혁",g:"g12",s:"D",p:[{to:"2026-11-30",w:"CD"},{from:"2026-12-02",to:"2026-12-31",w:"AB"}]},
+  {n:"오지훈",g:"g12",s:"D",p:[{from:"2027-01-01",w:"WD"}]}];
+const holdN=(k,base)=>SH_HOLD.filter(h=>h>base&&h<=k).length;
+const memberAt=(t,g,k)=>{let n=t[g];SH_SWAP.forEach(w=>{if(w.k===t.k&&w.g===g&&(!w.from||k>=w.from)&&(!w.to||k<=w.to))n=w.n;});return n;};
+const atDay=(t,k)=>{if(!t)return t;let o=null;GRP.forEach(G=>{const n=memberAt(t,G.g,k);if(n!==t[G.g]){o=o||{...t};o[G.g]=n;}});return o||t;};
+function extrasOn(k,ds){const out=[];SH_EXTRA.forEach(x=>{const P=x.p.find(p=>(!p.from||k>=p.from)&&(!p.to||k<=p.to));if(!P)return;const s=P.s||x.s;
+  if(P.w==="WD"){const d=new Date(k+"T00:00").getDay();if(d>0&&d<6&&!HOL[k])out.push({...x,s,wd:1});return;}
+  const t=s==="D"?ds.D:ds.N;if(t&&P.w.includes(t.k))out.push({...x,s});});return out;}
+const allMembers=(g,c)=>[...new Set([...c.teams.map(t=>t[g]),...SH_SWAP.filter(w=>w.g===g).map(w=>w.n),...SH_EXTRA.filter(x=>x.g===g).map(x=>x.n)].filter(Boolean))];
 const SH_PAT="DDDOOONNNOOO";
 const GRP=[{g:"g12",n:"1st·2nd",c:"b"},{g:"g3",n:"3rd",c:"r"}];
 const TYPES=["연차","반차","교육","기타"];
@@ -402,14 +416,13 @@ const t0=new Date();Y=t0.getFullYear();M=t0.getMonth();
 
 function live(){return recs.filter(r=>!r.del);}
 function cfg(){const r=live().find(e=>e.kind==="cfg"&&e.id==="shiftcfg");return r&&r.cfg&&r.cfg.teams?r.cfg:SH_DEF;}
-const shiftOf=(t,k,c)=>SH_PAT[(((dNum(k)-dNum(c.base)+(+t.ph||0))%12)+12)%12];
-function dayShift(k,c=cfg()){const r={D:null,N:null,off:[]};for(const t of c.teams){const s=shiftOf(t,k,c);if(s==="D"&&!r.D)r.D=t;else if(s==="N"&&!r.N)r.N=t;else r.off.push(t);}return r;}
-function extrasOn(k,ds){return SH_EXTRA.filter(x=>{const P=x.p.find(p=>(!p.from||k>=p.from)&&(!p.to||k<=p.to));if(!P)return false;const t=x.s==="D"?ds.D:ds.N;return !!t&&P.w.includes(t.k);});}
+const shiftOf=(t,k,c)=>SH_PAT[(((dNum(k)-dNum(c.base)-holdN(k,c.base)+(+t.ph||0))%12)+12)%12];
+function dayShift(k,c=cfg()){const r={D:null,N:null,off:[]};for(const t0 of c.teams){const t=atDay(t0,k),s=shiftOf(t0,k,c);if(s==="D"&&!r.D)r.D=t;else if(s==="N"&&!r.N)r.N=t;else r.off.push(t);}return r;}
 const subsOf=k=>live().filter(e=>e.kind==="sub"&&e.date===k).sort((a,b)=>(a.at||0)-(b.at||0));
-function mine(c=cfg()){for(const t of c.teams)for(const G of GRP)if(t[G.g]===me)return {t,g:G.g};const x=SH_EXTRA.find(x=>x.n===me);return x?{x,g:x.g}:null;}
-function myShift(k,ds,m){if(!m)return null;if(m.t)return ds.D===m.t?"D":ds.N===m.t?"N":null;return extrasOn(k,ds).includes(m.x)?m.x.s:null;}
+function mine(c=cfg()){for(const G of GRP)if(allMembers(G.g,c).includes(me))return {g:G.g};return null;}
+function myShift(k,ds,m){if(!m)return null;const g=m.g;if(ds.D&&ds.D[g]===me)return "D";if(ds.N&&ds.N[g]===me)return "N";const e=extrasOn(k,ds).find(x=>x.n===me&&x.g===g);return e?e.s:null;}
 function workers(k,ds,g){const L=[];if(ds.D)L.push({n:ds.D[g],s:"D",k:ds.D.k});if(ds.N)L.push({n:ds.N[g],s:"N",k:ds.N.k});extrasOn(k,ds).filter(x=>x.g===g).forEach(x=>L.push({n:x.n,s:x.s,x:1}));return L.filter(w=>w.n);}
-function offPeople(k,ds,g,c=cfg()){const on=new Set(workers(k,ds,g).map(w=>w.n));return [...c.teams.map(t=>t[g]),...SH_EXTRA.filter(x=>x.g===g).map(x=>x.n)].filter(n=>n&&!on.has(n));}
+function offPeople(k,ds,g,c=cfg()){const on=new Set(workers(k,ds,g).map(w=>w.n));return allMembers(g,c).filter(n=>!on.has(n));}
 function myDay(k,ds,subs,m){if(!m)return null;const g=m.g,out=subs.find(z=>z.grp===g&&z.who===me),inn=subs.find(z=>z.grp===g&&z.sub===me),s=myShift(k,ds,m);
   if(s&&out)return {lab:out.type,cls:"lv"};
   if(inn){const w=workers(k,ds,g).find(w=>w.n===inn.who);return {s:w?w.s:"D",lab:"대근",by:inn.who};}
