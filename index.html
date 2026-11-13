@@ -314,6 +314,21 @@ header{margin:0 6px 8px!important}
 .add{height:44px!important;margin-top:2px!important}
 .rl{font-size:14px!important}
 .tbl th,.tbl td{padding:7px 6px!important}
+/* v1114h: 연차·반차·교육·기타·대근 색 구분 (주간=검정 · 야간=파랑 · 휴무=빨강) */
+.big.b-subD,.big.b-subN,.big.b-lv{text-decoration:none!important;display:block;margin-left:auto!important;margin-right:auto!important;width:fit-content;max-width:100%;padding:2px 5px;border-radius:6px;overflow:hidden;text-overflow:clip}
+.big.b-subD,.big.b-subN{color:#C2560B!important;background:#FFE9D6}
+.big.lv-yc{color:#16884F!important;background:#DDF4E7}
+.big.lv-bc{color:#0B7F8C!important;background:#D9F3F5}
+.big.lv-ed{color:#A1307A!important;background:#F8E0EF}
+.big.lv-et{color:#5B6475!important;background:#E9ECF2}
+@media (prefers-color-scheme:dark){
+ .big.b-subD,.big.b-subN{color:#FFB067!important;background:rgba(255,150,70,.18)}
+ .big.lv-yc{color:#6FDCA3!important;background:rgba(80,210,140,.16)}
+ .big.lv-bc{color:#6FDCE6!important;background:rgba(80,200,215,.16)}
+ .big.lv-ed{color:#FF9BD2!important;background:rgba(255,120,190,.16)}
+ .big.lv-et{color:#B6BECD!important;background:rgba(180,190,210,.14)}}
+.bsub{color:#C2560B!important}@media (prefers-color-scheme:dark){.bsub{color:#FFB067!important}}
+.rv .big.b-subD,.rv .big.b-subN,.rv .big.b-lv{padding:3px 10px}
 </style>
 </head>
 <body>
@@ -331,7 +346,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114g·GitHub";
+const VERLBL="v1114h·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -463,7 +478,7 @@ function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()
   const n=(new Date(Y,M+1,0).getDate()+f.getDay())>35?42:35;
   for(let i=0;i<n;i++){const d=new Date(s);d.setDate(s.getDate()+i);const k=key(d),ds=dayShift(k,c),subs=subsOf(k),hol=HOL[k],o=stOf(myDay(k,ds,subs,m)),evs=evOf(k);
     h+=`<button type="button" class="day st-${o.st}${d.getMonth()!==M?" out":""}${d.getDay()===0?" sun":""}${d.getDay()===6?" sat":""}${hol?" hol":""}${k===tk?" isToday":""}${k===sel?" sel":""}" data-k="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일${hol?" "+esc(hol):""} ${esc(o.lab)}${evs.length?" 일정 "+evs.length+"개":""}">
-      <span class="dn">${d.getDate()}</span>${m?`<span class="big b-${o.st}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:"대근")}</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${hol?`<span class="hn">${esc(hol)}</span>`:""}
+      <span class="dn">${d.getDate()}</span>${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:"대근")}</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${hol?`<span class="hn">${esc(hol)}</span>`:""}
       <span class="evs">${evs.slice(0,2).map(e=>`<span class="ev">${esc(e.t)}</span>`).join("")}${evs.length>2?`<span class="more">+${evs.length-2}</span>`:""}</span></button>`;}
   $("grid").innerHTML=h;$("grid").style.setProperty("--rows",n/7);
   // 안내 띠: 잠금 · 내일 대근
@@ -487,6 +502,7 @@ function twoTap(b,fn,lab){b.onclick=()=>{if(!b.classList.contains("ask")){const 
 // 시간은 30분 단위로만 (하루 종일 + 00:00 ~ 23:30)
 const tLbl=v=>{const [h,m]=v.split(":").map(Number);return (h<12?"오전 ":"오후 ")+((h%12)||12)+":"+String(m).padStart(2,"0");};
 const TSLOT='<option value="">하루 종일</option>'+Array.from({length:48},(_,i)=>{const v=pad(Math.floor(i/2))+":"+(i%2?"30":"00");return `<option value="${v}">${tLbl(v)}</option>`;}).join("");
+const LVC={"연차":"yc","반차":"bc","교육":"ed","기타":"et"};const lvc=o=>o.st==="lv"?" lv-"+(LVC[o.lab]||"et"):"";
 let CHG={k:null,type:null,sub:""};
 function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("on")&&$("sheet").dataset.k===k;const st0={};
   if(wasOpen){const sh=$("sheet");st0.top=sh.scrollTop;sh.querySelectorAll("details[data-f]").forEach(d=>st0[d.dataset.f]=d.open);const ti=$("eT"),tt=$("eTm");if(ti){st0.t=ti.value;st0.tm=tt.value;}}
@@ -502,7 +518,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   const bigTxt=o.st==="off"?"휴무":o.st==="day"?"주간":o.st==="night"?"야간":o.st==="lv"?o.lab:o.lab;
   let h=`<div class="dsHead"><button class="dsX" type="button" id="xBtn" aria-label="닫기">✕</button><b>${d.getMonth()+1}월 ${d.getDate()}일 (${W[d.getDay()]})</b>${hol?`<span class="hb">${esc(hol)}</span>`:"<span></span>"}</div>`;
   // 1) 내 근무 + 근무 변경 (한눈에)
-  if(m){h+=`<div class="dsRow"><span class="rl">내 근무</span><span class="rv"><span class="big b-${o.st}">${esc(bigTxt)}</span>${md&&md.by?`<small>${esc(md.by)}님 대신</small>`:""}</span></div>`;
+  if(m){h+=`<div class="dsRow"><span class="rl">내 근무</span><span class="rv"><span class="big b-${o.st}${lvc(o)}">${esc(bigTxt)}</span>${md&&md.by?`<small>${esc(md.by)}님 대신</small>`:""}</span></div>`;
     h+=`<div class="dsRow col"><span class="rl">근무 변경</span>`;
     if(myOut)h+=`<div class="chgNow"><span><b>${esc(myOut.type)}</b> · ${myOut.sub?esc(myOut.sub)+" 대근":"대근 없음"}</span><button class="chip danger" type="button" data-sdel="${esc(myOut.id)}">변경 취소</button></div>`;
     else if(s0){h+=`<div class="chips">${TYPES.map(t=>`<button class="chip${CHG.type===t?" on":""}" type="button" data-ty="${esc(t)}">${esc(t)}</button>`).join("")}</div>`;
