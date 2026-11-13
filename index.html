@@ -297,6 +297,23 @@ header{margin:0 6px 8px!important}
 .addEv #eTm{height:46px!important;flex:none!important;width:100%;font-size:15px!important;padding:0 12px!important}
 .addEv .addBtn{height:46px;min-width:96px;font-size:15px}
 .evl li{padding:12px 6px 12px 14px!important}.evl .et{font-size:16px!important}
+.addEv select#eTm{background-position:calc(100% - 18px) 20px,calc(100% - 13px) 20px!important;font-weight:800}
+/* v1114g: 아래 창이 주소창에 가리지 않게 · 닫기 버튼 항상 보이게 · 촘촘하게 */
+.sheet{max-height:calc(var(--avh,100dvh) - 44px)!important;padding-top:0!important}
+.sheet.tall{min-height:0!important}
+.sheet .grab{position:sticky;top:0;z-index:3;margin:0 -12px!important;padding:8px 0 6px;background:var(--surf);width:auto;height:auto;border-radius:0}
+.sheet .grab::before{content:"";display:block;width:40px;height:5px;border-radius:9px;background:var(--line);margin:0 auto}
+.dsHead,.sheet h2{position:sticky;top:18px;z-index:3;background:var(--surf);margin:0 -12px 4px!important;padding:2px 12px 8px;box-shadow:0 1px 0 var(--line)}
+.dsHead b{font-size:17px!important}
+.dsX,.x{width:38px!important;height:38px!important;font-size:16px!important}
+.dsRow{padding:9px 2px!important}
+.dsRow.col{gap:7px!important}
+.chip{height:38px!important;min-width:52px!important;padding:0 12px!important;font-size:15px!important;border-radius:10px!important}
+.chip.danger{height:34px!important;font-size:13.5px!important}
+.dsSec{padding:10px 2px 2px!important;gap:7px!important}
+.add{height:44px!important;margin-top:2px!important}
+.rl{font-size:14px!important}
+.tbl th,.tbl td{padding:7px 6px!important}
 </style>
 </head>
 <body>
@@ -314,7 +331,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114e·GitHub";
+const VERLBL="v1114g·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -459,8 +476,17 @@ function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()
 function openSheet(html,k){const sh=$("sheet");sh.classList.remove("tall");sh.dataset.k=k||"";sh.innerHTML='<div class="grab"></div>'+html;$("dim").classList.add("on");sh.classList.add("on");}
 function closeSheet(){$("dim").classList.remove("on");$("sheet").classList.remove("on");$("sheet").dataset.k="";if(sel){sel=null;render();}}
 $("dim").onclick=closeSheet;
+// 실제로 보이는 화면 높이(주소창·툴바 제외)를 따라가서 창이 위로 넘치지 않게
+function fitVh(){const h=(window.visualViewport&&visualViewport.height)||innerHeight;document.documentElement.style.setProperty("--avh",Math.round(h)+"px");}
+fitVh();addEventListener("resize",fitVh);if(window.visualViewport)visualViewport.addEventListener("resize",fitVh);
+// 아래로 끌어내리면 닫기 (맨 위에서만)
+(()=>{const sh=$("sheet");let y0=null;sh.addEventListener("touchstart",e=>{y0=sh.scrollTop<=0?e.touches[0].clientY:null;},{passive:true});
+  sh.addEventListener("touchend",e=>{if(y0==null)return;const dy=e.changedTouches[0].clientY-y0;y0=null;if(dy>90&&sh.scrollTop<=0&&!(document.activeElement&&/INPUT|SELECT/.test(document.activeElement.tagName)))closeSheet();},{passive:true});})();
 function twoTap(b,fn,lab){b.onclick=()=>{if(!b.classList.contains("ask")){const o=b.textContent;b.classList.add("ask");b.textContent=lab||"한 번 더 누르면 실행";setTimeout(()=>{if(b.isConnected&&b.classList.contains("ask")){b.classList.remove("ask");b.textContent=o;}},3500);return;}b.classList.remove("ask");fn();};}
 
+// 시간은 30분 단위로만 (하루 종일 + 00:00 ~ 23:30)
+const tLbl=v=>{const [h,m]=v.split(":").map(Number);return (h<12?"오전 ":"오후 ")+((h%12)||12)+":"+String(m).padStart(2,"0");};
+const TSLOT='<option value="">하루 종일</option>'+Array.from({length:48},(_,i)=>{const v=pad(Math.floor(i/2))+":"+(i%2?"30":"00");return `<option value="${v}">${tLbl(v)}</option>`;}).join("");
 let CHG={k:null,type:null,sub:""};
 function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("on")&&$("sheet").dataset.k===k;const st0={};
   if(wasOpen){const sh=$("sheet");st0.top=sh.scrollTop;sh.querySelectorAll("details[data-f]").forEach(d=>st0[d.dataset.f]=d.open);const ti=$("eT"),tt=$("eTm");if(ti){st0.t=ti.value;st0.tm=tt.value;}}
@@ -489,8 +515,8 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   // 2) 내 일정
   h+=`<div class="dsSec"><span class="rl">내 일정</span>`;
   if(locked())h+=`<div class="lockBox"><span>🔒 내 일정이 잠겨 있어요</span><button class="add" type="button" id="goLock">잠금 풀기</button></div>`;
-  else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del" type="button" data-pdel="${esc(e.id)}" aria-label="일정 삭제">✕</button></li>`).join("")}</ul>`:"")+
-    `<div class="addEv"><input id="eT" maxlength="100" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><input id="eTm" type="time" aria-label="시간 (선택 · 비우면 하루 종일)"><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
+  else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(/^\d{2}:\d{2}$/.test(e.tm)?tLbl(e.tm):e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del" type="button" data-pdel="${esc(e.id)}" aria-label="일정 삭제">✕</button></li>`).join("")}</ul>`:"")+
+    `<div class="addEv"><input id="eT" maxlength="100" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><select id="eTm" aria-label="시간 (30분 단위)">${TSLOT}</select><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
   h+=`</div>`;
   // 3) 그날 전체 근무표
   h+=`<div class="dsSec"><span class="rl">그날 전체 근무표</span><div class="allIn">
