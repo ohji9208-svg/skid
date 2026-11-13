@@ -336,6 +336,10 @@ header{margin:0 6px 8px!important}
 .chip.claim{height:36px!important;border-color:#EA7A3A!important;color:#C2560B!important;background:var(--surf)}
 .chip.claim.ask{background:#EA7A3A!important;color:#fff!important}
 @media (prefers-color-scheme:dark){.chip.claim{color:#FFB067!important}}
+/* v1114j: 위아래로 넘기는 달력 */
+.gridWrap{touch-action:none;overscroll-behavior:contain}
+.grid{transition:none!important}
+.grid.ghost{position:absolute;inset:0;pointer-events:none;will-change:transform,opacity}
 </style>
 </head>
 <body>
@@ -353,7 +357,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114i·GitHub";
+const VERLBL="v1114j·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -462,23 +466,35 @@ function shell(){$("app").innerHTML=`<header><h1>내 캘린더<small>SKID 근무
   <div id="banner"></div>
   <section class="card" id="cal"><div class="nav"><button class="ib" id="prv" type="button" aria-label="이전 달">‹</button><b id="ym"></b><button class="ib" id="nxt" type="button" aria-label="다음 달">›</button><span class="sync" id="syncLbl"></span><button class="today" id="tdy" type="button">오늘</button><button class="ib plus" id="fab" type="button" aria-label="일정 추가">+</button></div>
   <div class="wk">${[...W].map(w=>`<span>${w}</span>`).join("")}</div><div class="gridWrap"><div class="grid" id="grid"></div></div></section>`;
-  const go=dir=>{M+=dir;if(M<0){M=11;Y--;}if(M>11){M=0;Y++;}render();slide(dir);};
+  const go=(dir,from)=>{const snap=snapGrid();M+=dir;if(M<0){M=11;Y--;}if(M>11){M=0;Y++;}render();slide(dir,snap,from||0);};
   $("prv").onclick=()=>go(-1);$("nxt").onclick=()=>go(1);
-  $("tdy").onclick=()=>{const t=new Date(),d=(t.getFullYear()-Y)*12+(t.getMonth()-M);Y=t.getFullYear();M=t.getMonth();render();if(d)slide(d>0?1:-1);openDay(key(t));};
+  $("tdy").onclick=()=>{const t=new Date(),d=(t.getFullYear()-Y)*12+(t.getMonth()-M);const snap=d?snapGrid():null;Y=t.getFullYear();M=t.getMonth();render();if(d)slide(d>0?1:-1,snap,0);openDay(key(t));};
   $("grid").onclick=e=>{const b=e.target.closest(".day");if(b&&b.dataset.k)openDay(b.dataset.k);};
   $("meBtn").onclick=openSettings;
   $("fab").onclick=()=>openDay(sel||key(new Date()),false,true);
   $("banner").onclick=e=>{const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;if(a==="unlock")openLock();else if(a==="seen"){let sn={};try{sn=JSON.parse(LS("seenClaim")||"{}")||{};}catch(x){}sn[b.dataset.sk]=1;LS("seenClaim",JSON.stringify(sn));const k=b.dataset.k;const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);}
     else if(a==="go"){const k=b.dataset.k;const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);}};
-  // 손가락으로 밀어서 달 넘기기 (따라 움직이다가 넘어감)
-  const g=$("grid");let sx=null,sy=null,dx=0,drag=false;
-  g.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;drag=false;},{passive:true});
-  g.addEventListener("touchmove",e=>{if(sx==null)return;dx=e.touches[0].clientX-sx;const dy=e.touches[0].clientY-sy;if(!drag&&Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy))drag=true;
-    if(drag){g.style.transition="none";g.style.transform=`translateX(${dx*.6}px)`;g.style.opacity=String(1-Math.min(Math.abs(dx)/600,.35));}},{passive:true});
-  g.addEventListener("touchend",()=>{if(sx==null)return;sx=null;g.style.transition="";g.style.transform="";g.style.opacity="";if(drag&&Math.abs(dx)>60)go(dx<0?1:-1);},{passive:true});}
-function slide(dir){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const g=$("grid"),ym=$("ym");
-  try{g.getAnimations().forEach(a=>a.cancel());g.animate([{transform:`translateX(${dir*46}px)`,opacity:0},{transform:"none",opacity:1}],{duration:320,easing:"cubic-bezier(.22,.8,.24,1)"});
-    ym.animate([{transform:`translateY(${dir*8}px)`,opacity:0},{transform:"none",opacity:1}],{duration:260,easing:"ease-out"});}catch(e){}}
+  // 위·아래로 밀어서 달 넘기기 (아이폰 사파리의 좌우 '뒤로 가기' 제스처와 겹치지 않게) · 손가락을 따라 움직이다 넘어감
+  const g=$("grid"),gw=g.parentNode;let sx=null,sy=null,dy=0,drag=false,t0=0;
+  gw.addEventListener("touchstart",e=>{if(e.touches.length>1){sx=null;return;}sx=e.touches[0].clientX;sy=e.touches[0].clientY;dy=0;drag=false;t0=Date.now();},{passive:true});
+  gw.addEventListener("touchmove",e=>{if(sx==null)return;const dx=e.touches[0].clientX-sx;dy=e.touches[0].clientY-sy;
+    if(!drag&&Math.abs(dy)>8&&Math.abs(dy)>Math.abs(dx))drag=true;
+    if(drag){e.preventDefault();const gg=$("grid");gg.getAnimations().forEach(a=>a.cancel());const h=gw.clientHeight||400,r=dy/(1+Math.abs(dy)/h);   // 끝으로 갈수록 살짝 무겁게
+      gg.style.transform=`translateY(${r}px)`;gg.style.opacity=String(1-Math.min(Math.abs(r)/h,.5));}},{passive:false});
+  const end=()=>{if(sx==null)return;sx=null;const gg=$("grid");if(!drag)return;const h=gw.clientHeight||400,r=dy/(1+Math.abs(dy)/h),fast=Math.abs(dy)/Math.max(1,Date.now()-t0)>.5;
+    if(Math.abs(r)>h*.18||(fast&&Math.abs(dy)>30)){gg.style.transform="";gg.style.opacity="";go(dy<0?1:-1,r);}
+    else{gg.animate([{transform:`translateY(${r}px)`,opacity:gg.style.opacity||1},{transform:"none",opacity:1}],{duration:260,easing:"cubic-bezier(.2,.9,.3,1)"});gg.style.transform="";gg.style.opacity="";}};
+  gw.addEventListener("touchend",end,{passive:true});gw.addEventListener("touchcancel",end,{passive:true});}
+// 지금 달력을 사진처럼 복사해 두었다가, 새 달과 함께 위/아래로 이어지게 움직임
+function snapGrid(){const g=$("grid");if(!g)return null;const c=g.cloneNode(true);c.removeAttribute("id");c.classList.add("ghost");c.setAttribute("aria-hidden","true");c.style.transform=g.style.transform;c.style.opacity=g.style.opacity;return c;}
+function slide(dir,snap,from){const g=$("grid"),ym=$("ym"),gw=g&&g.parentNode;if(!g)return;
+  if(matchMedia("(prefers-reduced-motion: reduce)").matches||!snap){return;}
+  try{gw.querySelectorAll(".grid.ghost").forEach(x=>x.remove());g.getAnimations().forEach(a=>a.cancel());
+    const h=gw.clientHeight||400,ease="cubic-bezier(.22,.9,.28,1)",dur=Math.round(460-Math.min(Math.abs(from)/h,1)*160);
+    gw.appendChild(snap);
+    snap.animate([{transform:`translateY(${from}px)`,opacity:snap.style.opacity||1},{transform:`translateY(${-dir*h}px)`,opacity:.15}],{duration:dur,easing:ease,fill:"forwards"}).onfinish=()=>snap.remove();
+    g.animate([{transform:`translateY(${dir*h+from}px)`,opacity:.3},{transform:"none",opacity:1}],{duration:dur,easing:ease});
+    ym.animate([{transform:`translateY(${dir*10}px)`,opacity:0},{transform:"none",opacity:1}],{duration:300,easing:"ease-out"});}catch(e){}}
 function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date());
   $("ym").textContent=Y+"."+pad(M+1);
   $("meBtn").innerHTML=`<i></i>${esc(me)}<span class="gear">⚙</span>`;
