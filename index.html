@@ -340,6 +340,16 @@ header{margin:0 6px 8px!important}
 .gridWrap{touch-action:none;overscroll-behavior:contain}
 .grid{transition:none!important}
 .grid.ghost{position:absolute;inset:0;pointer-events:none;will-change:transform,opacity}
+/* v1114k: 키보드 위로 창 붙이기 · 알림 바 */
+.sheet.kb{border-radius:16px 16px 0 0!important;transition:none!important}
+.addEv #eTm,.addEv #eT,.pwf input{font-size:16px!important}
+.nbar{position:fixed;left:8px;right:8px;top:calc(8px + env(safe-area-inset-top));z-index:60;display:flex;align-items:center;gap:8px;padding:11px 8px 11px 14px;border-radius:16px;background:var(--surf);color:var(--ink);box-shadow:0 14px 34px -12px rgba(0,0,0,.45),0 0 0 1px var(--line);transform:translateY(calc(-100% - 30px));transition:transform .38s cubic-bezier(.2,.9,.3,1);max-width:560px;margin:0 auto}
+.nbar.on{transform:none}
+.nbar.ok{box-shadow:0 14px 34px -12px rgba(0,0,0,.45),inset 4px 0 0 #1F9D6B,0 0 0 1px var(--line)}
+.nbar.warn{box-shadow:0 14px 34px -12px rgba(0,0,0,.45),inset 4px 0 0 #EA7A3A,0 0 0 1px var(--line)}
+.nbar .ni{font-size:18px;flex:0 0 auto}.nbar .nt{flex:1;min-width:0;font-size:14px;font-weight:800;line-height:1.35;word-break:keep-all}.nbar .nt small{color:var(--muted);font-weight:700}
+.nbar .nb{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--p);color:#fff;font-weight:800;font-size:13px}
+.nbar .nx{flex:0 0 auto;width:32px;height:34px;border:0;background:transparent;color:var(--muted);font-size:15px}
 </style>
 </head>
 <body>
@@ -347,6 +357,7 @@ header{margin:0 6px 8px!important}
 <div class="dim" id="dim"></div>
 <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<div class="nbar" id="nbar" role="alert" aria-live="assertive"></div>
 <script>
 /*CONN*/
 /* GitHub Pages 용: 주소의 ?u=개인토큰&a=구글배포ID 로 동작 (한 번 열면 이 휴대폰에 기억) */
@@ -357,7 +368,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114j·GitHub";
+const VERLBL="v1114k·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -446,7 +457,7 @@ function lockNow(){if(!vault())return;KEY=null;LS("k_"+me,null);for(const id in 
 async function load(quiet){if(busy)return;busy=true;syncLbl();
   try{const r=await call("list");if(!r||!r.ok){if(r&&r.err==="pin")return badLink();throw new Error("응답 없음");}
     recs=r.recs||[];lastSync=Date.now();if(r.me&&r.me!=="admin"&&r.me!==me){me=r.me;LS("me",me);}if(!me)return badLink();
-    if(!KEY)await restoreKey();await decryptAll();if(!$("cal"))shell();render();if(sel&&$("sheet").classList.contains("on")&&$("sheet").dataset.k===sel)openDay(sel,true);}
+    if(!KEY)await restoreKey();await decryptAll();if(!$("cal"))shell();render();checkNotes();if(sel&&$("sheet").classList.contains("on")&&$("sheet").dataset.k===sel)openDay(sel,true);}
   catch(e){if(!quiet)toast("불러오기 실패 · 인터넷 연결을 확인하세요");const s=$("syncLbl");if(s){s.textContent="연결 안 됨";s.className="sync err";}if(!$("cal")&&me){shell();render();}}
   finally{busy=false;syncLbl();}}
 async function saveMany(list,okMsg){
@@ -455,7 +466,26 @@ async function saveMany(list,okMsg){
   try{const r=await call("save",list);if(!r||!r.ok)throw new Error(r&&r.err||"");recs=r.recs||recs;lastSync=Date.now();ok=!r.denied;toast(r.denied?"본인 일정·근무만 바꿀 수 있어요":okMsg);}
   catch(e){recs=prev;toast("저장 실패 · 인터넷 연결을 확인하세요");}
   finally{busy=false;syncLbl();}
-  await decryptAll();render();refreshSheet();return ok;}
+  await decryptAll();render();refreshSheet();if(ok)checkNotes(true);return ok;}
+/* ── 내 근무 변화 알림 바 (휴대폰 알림이 꺼져 있어도 앱을 열면 위에서 내려옴) ──
+   · 내 연차에 누가 대근을 신청/취소했을 때 · 누가 나를 대근으로 지정/해제했을 때 */
+let NQ=[];
+function checkNotes(silent){const m=mine();if(!m)return;const tk=key(new Date()),L=live().filter(x=>x.kind==="sub"&&x.date>=tk);
+  let st=null;try{st=JSON.parse(LS("subSt_"+me)||"null");}catch(e){}
+  const cur={};L.forEach(x=>{if(x.who===me)cur["o:"+x.id]=x.sub||"";else if(x.sub===me)cur["i:"+x.id]=x.who;});
+  if(st&&!silent){const add=[];
+    L.forEach(x=>{const d=md_(x.date);
+      if(x.who===me){const p=st["o:"+x.id];if(p===undefined&&x.sub&&x.claim&&x.claim.by===x.sub&&x.claim.at>(st._t||0))add.push({k:x.date,t:`${x.sub}님이 ${d} ${x.type} 대근을 신청했어요`,c:"ok"});else if(p!==undefined&&p!==(x.sub||""))add.push(x.sub?{k:x.date,t:`${x.sub}님이 ${d} ${x.type} 대근을 신청했어요`,c:"ok"}:{k:x.date,t:`${p}님이 ${d} 대근 신청을 취소했어요 · 지금 대근자 미정`,c:"warn"});}
+      else if(x.sub===me&&st["i:"+x.id]===undefined&&!(x.claim&&x.claim.by===me))add.push({k:x.date,t:`${x.who}님이 ${d} ${x.type} 대근으로 나를 지정했어요`,c:"ok"});});
+    Object.keys(st).forEach(k=>{if(k.startsWith("i:")&&cur[k]===undefined){const x=recs.find(r=>r.id===k.slice(2));if(x&&!x.del&&x.date>=tk&&x.sub!==me)add.push({k:x.date,t:`${st[k]}님 ${md_(x.date)} 대근에서 빠졌어요`,c:"warn"});}});
+    if(add.length){NQ=NQ.concat(add);showNote();}}
+  cur._t=Date.now();LS("subSt_"+me,JSON.stringify(cur));}
+function showNote(){const b=$("nbar");if(!NQ.length){b.classList.remove("on");return;}const n=NQ[0];
+  b.className="nbar on "+(n.c||"");b.innerHTML=`<span class="ni">🔔</span><span class="nt">${esc(n.t)}${NQ.length>1?` <small>외 ${NQ.length-1}건</small>`:""}</span><button type="button" class="nb" data-go="${esc(n.k)}">보기</button><button type="button" class="nx" aria-label="닫기">✕</button>`;
+  try{navigator.vibrate&&navigator.vibrate(60);}catch(e){}
+  b.querySelector(".nx").onclick=()=>{NQ.shift();showNote();};
+  b.querySelector(".nb").onclick=()=>{const k=n.k;NQ.shift();showNote();const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);};}
+function noteNow(t,c,k){NQ.push({t,c:c||"ok",k:k||key(new Date())});showNote();}
 function refreshSheet(){const sh=$("sheet");if(sh.classList.contains("on")&&sh.dataset.k&&/^\d{4}-/.test(sh.dataset.k))openDay(sh.dataset.k,true);}
 const save=(rec,msg)=>saveMany([rec],msg);
 
@@ -520,8 +550,15 @@ function openSheet(html,k){const sh=$("sheet");sh.classList.remove("tall");sh.da
 function closeSheet(){$("dim").classList.remove("on");$("sheet").classList.remove("on");$("sheet").dataset.k="";if(sel){sel=null;render();}}
 $("dim").onclick=closeSheet;
 // 실제로 보이는 화면 높이(주소창·툴바 제외)를 따라가서 창이 위로 넘치지 않게
-function fitVh(){const h=(window.visualViewport&&visualViewport.height)||innerHeight;document.documentElement.style.setProperty("--avh",Math.round(h)+"px");}
-fitVh();addEventListener("resize",fitVh);if(window.visualViewport)visualViewport.addEventListener("resize",fitVh);
+// 아이폰은 키보드가 올라와도 화면 크기가 그대로라 아래 창이 키보드 뒤로 숨음 → 키보드 바로 위에 창을 붙임
+function fitVh(){const vv=window.visualViewport,h=vv?vv.height:innerHeight,kb=vv?Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)):0,sh=$("sheet");
+  if(kb>80){sh.classList.add("kb");sh.style.bottom=kb+"px";sh.style.setProperty("max-height",Math.round(h-8)+"px","important");}
+  else{sh.classList.remove("kb");sh.style.bottom="";sh.style.removeProperty("max-height");document.documentElement.style.setProperty("--avh",Math.round(h)+"px");}}
+fitVh();addEventListener("resize",fitVh);if(window.visualViewport){visualViewport.addEventListener("resize",fitVh);visualViewport.addEventListener("scroll",fitVh);}
+// 입력칸을 누르면 키보드가 다 올라온 뒤 그 칸이 창 가운데 오도록
+$("sheet").addEventListener("focusin",e=>{const el=e.target;if(!/INPUT|SELECT|TEXTAREA/.test(el.tagName))return;[120,350,650].forEach(t=>setTimeout(()=>{fitVh();if(document.activeElement===el)try{el.scrollIntoView({block:"center",behavior:"smooth"});}catch(x){}},t));});
+$("sheet").addEventListener("focusout",()=>setTimeout(fitVh,250));
+window.scrollTo(0,0);
 // 아래로 끌어내리면 닫기 (맨 위에서만)
 (()=>{const sh=$("sheet");let y0=null;sh.addEventListener("touchstart",e=>{y0=sh.scrollTop<=0?e.touches[0].clientY:null;},{passive:true});
   sh.addEventListener("touchend",e=>{if(y0==null)return;const dy=e.changedTouches[0].clientY-y0;y0=null;if(dy>90&&sh.scrollTop<=0&&!(document.activeElement&&/INPUT|SELECT/.test(document.activeElement.tagName)))closeSheet();},{passive:true});})();
@@ -578,9 +615,9 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   $("sheet").querySelectorAll("[data-ty]").forEach(b=>b.onclick=()=>{const t=b.dataset.ty;if(CHG.type===t){CHG.type=null;}else{CHG.type=t;}openDay(k,true);});
   $("sheet").querySelectorAll("[data-su]").forEach(b=>b.onclick=()=>{CHG.sub=b.dataset.su;openDay(k,true);});
   $("sheet").querySelectorAll("[data-claim]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.claim);if(!x||x.sub)return;
-    save({...x,sub:me,text:`${x.who} ${x.type} · ${me} 대근`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:{by:me,at:Date.now()}},`대근 신청했어요 · ${x.who}님에게 알림이 가요`);},"한 번 더 누르면 신청"));
+    save({...x,sub:me,text:`${x.who} ${x.type} · ${me} 대근`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:{by:me,at:Date.now()}},`대근 신청했어요 · ${x.who}님에게 알림이 가요`).then(ok=>{if(ok)noteNow(`대근 신청 완료 · ${md_(x.date)} ${x.who}님 ${x.type} 대신 근무해요 (${x.who}님에게 알렸어요)`,"ok",x.date);});},"한 번 더 누르면 신청"));
   $("sheet").querySelectorAll("[data-unclaim]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.unclaim);if(!x||x.sub!==me)return;
-    save({...x,sub:"",text:`${x.who} ${x.type} · 대근자 미정`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:undefined},"대근을 취소했어요");},"한 번 더 누르면 취소"));
+    save({...x,sub:"",text:`${x.who} ${x.type} · 대근자 미정`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:undefined},"대근을 취소했어요").then(ok=>{if(ok)noteNow(`대근 취소 완료 · ${md_(x.date)} ${x.who}님에게 알렸어요`,"warn",x.date);});},"한 번 더 누르면 취소"));
   if($("fAdd"))$("fAdd").onclick=()=>{const type=CHG.type,sub=CHG.sub,g=m.g;if(!type)return;
     if(sub&&!offPeople(k,dayShift(k),g).includes(sub)){toast("대근은 그날 휴무자만 가능해요");return;}
     const G=GRP.find(x=>x.g===g),text=`${me} ${type}`+(sub?` · ${sub} 대근`:" · 대근자 미정"),t=Date.now();CHG={k,type:null,sub:""};
@@ -652,7 +689,7 @@ async function openSettings(){const c=cfg(),m=mine(c);
 
 /* 자동 새로고침: 화면으로 돌아올 때 · 1분마다 */
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&READY&&Date.now()-lastSync>15000)load(true);});
-setInterval(()=>{if(!document.hidden&&READY&&!$("sheet").classList.contains("on"))load(true);},60000);
+setInterval(()=>{if(!document.hidden&&READY&&!$("sheet").classList.contains("on"))load(true);},30000);
 if(READY)load();else badLink();
 </script>
 </body>
