@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SKID 근무표">
 <meta name="theme-color" content="#5B4BD8">
@@ -368,7 +368,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114l·GitHub";
+const VERLBL="v1114m·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -551,12 +551,17 @@ function closeSheet(){$("dim").classList.remove("on");$("sheet").classList.remov
 $("dim").onclick=closeSheet;
 // 실제로 보이는 화면 높이(주소창·툴바 제외)를 따라가서 창이 위로 넘치지 않게
 // 아이폰은 키보드가 올라와도 화면 크기가 그대로라 아래 창이 키보드 뒤로 숨음 → 키보드 바로 위에 창을 붙임
-function fitVh(){const vv=window.visualViewport,h=vv?vv.height:innerHeight,kb=vv?Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop)):0,sh=$("sheet");
-  if(kb>80){sh.classList.add("kb");sh.style.bottom=kb+"px";sh.style.setProperty("max-height",Math.round(h-8)+"px","important");}
+// 주의: 아이폰 사파리는 키보드가 올라오면 innerHeight 도 같이 줄어듦 → 화면 전체 높이는 clientHeight(키보드와 무관)로 계산
+function fitVh(){const vv=window.visualViewport,h=vv?vv.height:innerHeight,LH=Math.max(document.documentElement.clientHeight||0,0)||innerHeight,
+  kb=vv?Math.max(0,Math.round(LH-vv.height-vv.offsetTop)):0,sh=$("sheet");
+  if(kb>80){sh.classList.add("kb");sh.style.bottom=kb+"px";sh.style.setProperty("max-height",Math.round(h-8)+"px","important");const ae=document.activeElement;if(ae&&sh.contains(ae)&&/INPUT|SELECT|TEXTAREA/.test(ae.tagName)){clearTimeout(fitVh.t);fitVh.t=setTimeout(()=>keepVisible(ae),60);}}
   else{sh.classList.remove("kb");sh.style.bottom="";sh.style.removeProperty("max-height");document.documentElement.style.setProperty("--avh",Math.round(h)+"px");}}
 fitVh();addEventListener("resize",fitVh);if(window.visualViewport){visualViewport.addEventListener("resize",fitVh);visualViewport.addEventListener("scroll",fitVh);}
 // 입력칸을 누르면 키보드가 다 올라온 뒤 그 칸이 창 가운데 오도록
-$("sheet").addEventListener("focusin",e=>{const el=e.target;if(!/INPUT|SELECT|TEXTAREA/.test(el.tagName))return;[120,350,650].forEach(t=>setTimeout(()=>{fitVh();if(document.activeElement===el)try{el.scrollIntoView({block:"center",behavior:"smooth"});}catch(x){}},t));});
+$("sheet").addEventListener("focusin",e=>{const el=e.target;if(!/INPUT|SELECT|TEXTAREA/.test(el.tagName))return;[120,350,650].forEach(t=>setTimeout(()=>{fitVh();if(document.activeElement===el)keepVisible(el);},t));});
+// 창 안에서 직접 스크롤: 입력 묶음(입력칸+추가 버튼)이 창 아래쪽에 보이게, 위 제목줄에 가리지 않게
+function keepVisible(el){const sh=$("sheet"),box=el.closest(".addEv,.pwf")||el,sr=sh.getBoundingClientRect(),br=box.getBoundingClientRect(),hd=sh.querySelector(".dsHead,h2"),top=sr.top+(hd?hd.getBoundingClientRect().height+22:24);
+  let d=0;if(br.bottom>sr.bottom-10)d=br.bottom-(sr.bottom-10);if(br.top-d<top)d=br.top-top;if(Math.abs(d)>1)sh.scrollTop+=d;}
 $("sheet").addEventListener("focusout",()=>setTimeout(fitVh,250));
 window.scrollTo(0,0);
 // 아래로 끌어내리면 닫기 (맨 위에서만)
