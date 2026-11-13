@@ -329,7 +329,7 @@ header{margin:0 6px 8px!important}
  .big.lv-et{color:#B6BECD!important;background:rgba(180,190,210,.14)}}
 .bsub{color:#C2560B!important}@media (prefers-color-scheme:dark){.bsub{color:#FFB067!important}}
 .rv .big.b-subD,.rv .big.b-subN,.rv .big.b-lv{padding:3px 10px}
-/* v1114i: 대근자 미정 · 대근 신청 */
+/* v1114i: 미정 · 대근 신청 */
 .req{display:block;margin:1px auto 0;width:fit-content;max-width:100%;padding:1px 4px;border-radius:5px;font-size:9.5px;font-weight:900;color:#C2560B;background:#FFE9D6;white-space:nowrap;overflow:hidden}
 @media (prefers-color-scheme:dark){.req{color:#FFB067;background:rgba(255,150,70,.18)}}
 .reqLi{background:color-mix(in srgb,#EA7A3A 10%,var(--surf))!important}
@@ -368,7 +368,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114k·GitHub";
+const VERLBL="v1114l·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -475,7 +475,7 @@ function checkNotes(silent){const m=mine();if(!m)return;const tk=key(new Date())
   const cur={};L.forEach(x=>{if(x.who===me)cur["o:"+x.id]=x.sub||"";else if(x.sub===me)cur["i:"+x.id]=x.who;});
   if(st&&!silent){const add=[];
     L.forEach(x=>{const d=md_(x.date);
-      if(x.who===me){const p=st["o:"+x.id];if(p===undefined&&x.sub&&x.claim&&x.claim.by===x.sub&&x.claim.at>(st._t||0))add.push({k:x.date,t:`${x.sub}님이 ${d} ${x.type} 대근을 신청했어요`,c:"ok"});else if(p!==undefined&&p!==(x.sub||""))add.push(x.sub?{k:x.date,t:`${x.sub}님이 ${d} ${x.type} 대근을 신청했어요`,c:"ok"}:{k:x.date,t:`${p}님이 ${d} 대근 신청을 취소했어요 · 지금 대근자 미정`,c:"warn"});}
+      if(x.who===me){const p=st["o:"+x.id];if(p===undefined&&x.sub&&x.claim&&x.claim.by===x.sub&&x.claim.at>(st._t||0))add.push({k:x.date,t:`${x.sub}님이 ${d} ${x.type} 대근을 신청했어요`,c:"ok"});else if(p!==undefined&&p!==(x.sub||""))add.push(x.sub?{k:x.date,t:`${x.sub}님이 ${d} ${x.type} 대근을 신청했어요`,c:"ok"}:{k:x.date,t:`${p}님이 ${d} 대근 신청을 취소했어요 · 지금 미정`,c:"warn"});}
       else if(x.sub===me&&st["i:"+x.id]===undefined&&!(x.claim&&x.claim.by===me))add.push({k:x.date,t:`${x.who}님이 ${d} ${x.type} 대근으로 나를 지정했어요`,c:"ok"});});
     Object.keys(st).forEach(k=>{if(k.startsWith("i:")&&cur[k]===undefined){const x=recs.find(r=>r.id===k.slice(2));if(x&&!x.del&&x.date>=tk&&x.sub!==me)add.push({k:x.date,t:`${st[k]}님 ${md_(x.date)} 대근에서 빠졌어요`,c:"warn"});}});
     if(add.length){NQ=NQ.concat(add);showNote();}}
@@ -578,7 +578,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   const c=cfg(),ds=dayShift(k,c),subs=subsOf(k),d=new Date(k+"T00:00"),hol=HOL[k],m=mine(c),md=myDay(k,ds,subs,m),o=stOf(md),evs=evOf(k);
   const nm=(n,g)=>{const x=subs.find(s=>s.grp===g&&s.who===n);const meC=n===me||(x&&x.sub===me)?" me":"";
     if(!x)return `<span class="nm${meC}">${esc(n)}</span>`;
-    return `<span class="nm${meC}">${x.sub?esc(x.sub):`<s>${esc(n)}</s>`}</span><span class="chg">${esc(n)} ${esc(x.type)} → ${x.sub?`<em>${esc(x.sub)} 대근</em>`:"대근자 미정"}</span>`;};
+    return `<span class="nm${meC}">${x.sub?esc(x.sub):`<s>${esc(n)}</s>`}</span><span class="chg">${esc(n)} ${esc(x.type)} → ${x.sub?`<em>${esc(x.sub)} 대근</em>`:"미정"}</span>`;};
   const xs=extrasOn(k,ds);
   const row=(lab,t,sh)=>`<tr><th>${lab}${t?` <span class="c t${esc(t.k)}">${esc(t.k)}</span>`:""}</th>${GRP.map(G=>`<td>${t?nm(t[G.g]||"-",G.g):"-"}${xs.filter(x=>x.s===sh&&x.g===G.g).map(x=>`<div class="plus">+ ${nm(x.n,G.g)}</div>`).join("")}</td>`).join("")}</tr>`;
   const myOut=m&&subs.find(z=>z.grp===m.g&&z.who===me),s0=myShift(k,ds,m);
@@ -587,15 +587,15 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   // 1) 내 근무 + 근무 변경 (한눈에)
   if(m){h+=`<div class="dsRow"><span class="rl">내 근무</span><span class="rv"><span class="big b-${o.st}${lvc(o)}">${esc(bigTxt)}</span>${md&&md.by?`<small>${esc(md.by)}님 대신</small>`:""}</span></div>`;
     h+=`<div class="dsRow col"><span class="rl">근무 변경</span>`;
-    if(myOut)h+=`<div class="chgNow"><span><b>${esc(myOut.type)}</b> · ${myOut.sub?esc(myOut.sub)+" 대근"+(myOut.claim&&myOut.claim.by===myOut.sub?" (신청)":""):"대근자 미정 · 휴무자가 신청하면 알려 드려요"}</span><button class="chip danger" type="button" data-sdel="${esc(myOut.id)}">변경 취소</button></div>`;
+    if(myOut)h+=`<div class="chgNow"><span><b>${esc(myOut.type)}</b> · ${myOut.sub?esc(myOut.sub)+" 대근"+(myOut.claim&&myOut.claim.by===myOut.sub?" (신청)":""):"미정 · 휴무자가 신청하면 알려 드려요"}</span><button class="chip danger" type="button" data-sdel="${esc(myOut.id)}">변경 취소</button></div>`;
     else if(s0){h+=`<div class="chips">${TYPES.map(t=>`<button class="chip${CHG.type===t?" on":""}" type="button" data-ty="${esc(t)}">${esc(t)}</button>`).join("")}</div>`;
       if(CHG.type){const used=new Set(subs.filter(x=>x.grp===m.g&&x.sub).map(x=>x.sub)),cand=offPeople(k,ds,m.g,c).filter(n=>n!==me&&!used.has(n));
-        h+=`<span class="rl sub">대근자 <small>그날 휴무자</small></span><div class="chips">${cand.map(n=>`<button class="chip${CHG.sub===n?" on":""}" type="button" data-su="${esc(n)}">${esc(n)}</button>`).join("")}<button class="chip${CHG.sub===""?" on":""}" type="button" data-su="">대근자 미정</button></div><div class="pvHint">미정으로 올리면 그날 휴무자가 대근을 신청할 수 있고, 신청이 오면 알림이 가요</div>
-          <button class="add" id="fAdd" type="button">${esc(CHG.type)}${CHG.sub?" · "+esc(CHG.sub)+" 대근":" · 대근자 미정"} 등록</button>`;}}
+        h+=`<span class="rl sub">대근자 <small>그날 휴무자</small></span><div class="chips">${cand.map(n=>`<button class="chip${CHG.sub===n?" on":""}" type="button" data-su="${esc(n)}">${esc(n)}</button>`).join("")}<button class="chip${CHG.sub===""?" on":""}" type="button" data-su="">미정</button></div><div class="pvHint">미정으로 올리면 그날 휴무자가 대근을 신청할 수 있고, 신청이 오면 알림이 가요</div>
+          <button class="add" id="fAdd" type="button">${esc(CHG.type)}${CHG.sub?" · "+esc(CHG.sub)+" 대근":" · 미정"} 등록</button>`;}}
     else if(md&&md.lab==="대근"){const mi=subs.find(z=>z.grp===m.g&&z.sub===me);h+=`<div class="chgNow"><span><b>${esc(md.by)}님 ${esc(mi?mi.type:"")}</b> 대신 대근</span>${mi?`<button class="chip danger" type="button" data-unclaim="${esc(mi.id)}">대근 취소</button>`:""}</div>`;}
     else h+=`<div class="muted">없음 · 이 날은 근무가 없어요</div>`;
     h+=`</div>`;}
-  // 1-2) 대근 구해요: 대근자 미정인 같은 팀 연차 → 그날 휴무인 내가 신청
+  // 1-2) 대근 구해요: 미정인 같은 팀 연차 → 그날 휴무인 내가 신청
   const opn=openReqs(k,ds,subs,m,c);
   if(opn.length)h+=`<div class="dsSec"><span class="rl">대근 구해요 <small>신청하면 연차 쓴 분에게 알림이 가요</small></span><ul class="evl">${opn.map(x=>`<li class="reqLi"><span class="et">${esc(x.who)} ${esc(x.type)}</span><button class="chip claim" type="button" data-claim="${esc(x.id)}">대근 신청</button></li>`).join("")}</ul></div>`;
   // 2) 내 일정
@@ -608,7 +608,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   h+=`<div class="dsSec"><span class="rl">그날 전체 근무표</span><div class="allIn">
      <table class="tbl"><thead><tr><th></th>${GRP.map(G=>`<th>${G.n}</th>`).join("")}</tr></thead><tbody>${row("주간",ds.D,"D")}${row("야간",ds.N,"N")}</tbody></table>
      <div class="off">휴무 · ${ds.off.map(t=>`${esc(t.k)}조 (${esc(t.g12||"")}·${esc(t.g3||"")})`).join(", ")||"-"}</div>
-     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":"대근자 미정"}</span></li>`).join("")}</ul>`:""}</div></div>`;
+     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":"미정"}</span></li>`).join("")}</ul>`:""}</div></div>`;
   openSheet(h,k);$("sheet").classList.add("tall");$("xBtn").onclick=closeSheet;
   if(wasOpen){$("sheet").querySelectorAll("details[data-f]").forEach(dd=>{if(st0[dd.dataset.f]!=null)dd.open=st0[dd.dataset.f];});$("sheet").scrollTop=st0.top||0;if($("eT")&&st0.t!=null){$("eT").value=st0.t;$("eTm").value=st0.tm;}}
   const gl=$("goLock");if(gl)gl.onclick=openLock;
@@ -617,10 +617,10 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   $("sheet").querySelectorAll("[data-claim]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.claim);if(!x||x.sub)return;
     save({...x,sub:me,text:`${x.who} ${x.type} · ${me} 대근`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:{by:me,at:Date.now()}},`대근 신청했어요 · ${x.who}님에게 알림이 가요`).then(ok=>{if(ok)noteNow(`대근 신청 완료 · ${md_(x.date)} ${x.who}님 ${x.type} 대신 근무해요 (${x.who}님에게 알렸어요)`,"ok",x.date);});},"한 번 더 누르면 신청"));
   $("sheet").querySelectorAll("[data-unclaim]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.unclaim);if(!x||x.sub!==me)return;
-    save({...x,sub:"",text:`${x.who} ${x.type} · 대근자 미정`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:undefined},"대근을 취소했어요").then(ok=>{if(ok)noteNow(`대근 취소 완료 · ${md_(x.date)} ${x.who}님에게 알렸어요`,"warn",x.date);});},"한 번 더 누르면 취소"));
+    save({...x,sub:"",text:`${x.who} ${x.type} · 미정`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:undefined},"대근을 취소했어요").then(ok=>{if(ok)noteNow(`대근 취소 완료 · ${md_(x.date)} ${x.who}님에게 알렸어요`,"warn",x.date);});},"한 번 더 누르면 취소"));
   if($("fAdd"))$("fAdd").onclick=()=>{const type=CHG.type,sub=CHG.sub,g=m.g;if(!type)return;
     if(sub&&!offPeople(k,dayShift(k),g).includes(sub)){toast("대근은 그날 휴무자만 가능해요");return;}
-    const G=GRP.find(x=>x.g===g),text=`${me} ${type}`+(sub?` · ${sub} 대근`:" · 대근자 미정"),t=Date.now();CHG={k,type:null,sub:""};
+    const G=GRP.find(x=>x.g===g),text=`${me} ${type}`+(sub?` · ${sub} 대근`:" · 미정"),t=Date.now();CHG={k,type:null,sub:""};
     save({id:uid(),date:k,text,c:G.c,kind:"sub",grp:g,who:me,type,sub,at:t,u:t,by:me},"근무 변경을 등록했어요 · 대시보드에도 반영돼요");};
   if($("eAdd")){const add=async()=>{const t=$("eT").value.trim();if(!t){$("eT").focus();return;}const tm=$("eTm").value||"";$("eAdd").disabled=true;
       if(!(await ensureKey())){$("eAdd").disabled=false;openLock();return;}const s=await seal({d:k,t,tm}),now=Date.now();$("eT").value="";$("eTm").value="";
