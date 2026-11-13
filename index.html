@@ -171,7 +171,14 @@ const recU=r=>r.u||r.at||0;
 let me=ME;let recs=[],Y,M,sel=null,lastSync=0,busy=false;
 const t0=new Date();Y=t0.getFullYear();M=t0.getMonth();
 
-async function call(op,list){if(!API)throw new Error("no api");const r=await fetch(API,{method:"POST",body:JSON.stringify({op,pin:TOK,recs:list||[]}),redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);return await r.json();}
+async function gasGet(url,q){const u=url+(url.includes('?')?'&':'?')+'api=1&'+Object.entries(q).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&')+'&_='+Date.now();
+  const r=await fetch(u,{redirect:'follow',cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error('notjson');}}
+ async function gasCall(url,pin,op,recs,names){const q={pin,op:op==='tokens'?'tokens':'list'};if(names)q.names=JSON.stringify(names);
+  if(op==='save'&&recs&&recs.length){const body=JSON.stringify({op:'save',pin,recs,names});
+   try{const r=await fetch(url,{method:'POST',body,redirect:'follow',cache:'no-store'});const t=await r.text();return JSON.parse(t);}
+   catch(e){await fetch(url,{method:'POST',body,mode:'no-cors',redirect:'follow',cache:'no-store'});return await gasGet(url,q);}}
+  return await gasGet(url,q);}
+async function call(op,list){if(!API)throw new Error("no api");return await gasCall(API,TOK,op,list||[]);}
 function live(){return recs.filter(r=>!r.del);}
 function cfg(){const r=live().find(e=>e.kind==="cfg"&&e.id==="shiftcfg");return r&&r.cfg&&r.cfg.teams?r.cfg:SH_DEF;}
 const shiftOf=(t,k,c)=>SH_PAT[(((dNum(k)-dNum(c.base)+(+t.ph||0))%12)+12)%12];
