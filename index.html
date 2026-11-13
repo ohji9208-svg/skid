@@ -7,6 +7,7 @@
 <meta name="apple-mobile-web-app-title" content="SKID 근무표">
 <meta name="theme-color" content="#5B4BD8">
 <title>SKID 근무표</title>
+<link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" href="icon-192.png">
 <style>
 :root{--bg:#F4F5FA;--surf:#FFFFFF;--soft:#EEF0F6;--line:#E3E6EE;--ink:#141A2B;--muted:#6B7385;--p:#5B4BD8;--pS:rgba(91,75,216,.10);--red:#D6404C;--redS:rgba(229,72,77,.08);--sat:#3D6BD8;
  --gA:#4F6FD0;--gAb:#E8EDFB;--gB:#2E8C6B;--gBb:#DFF2EA;--gC:#D0581C;--gCb:#FCE7DC;--gD:#C2416B;--gDb:#FBE4EC;--g12:#A86F00;--g3:#B02AA8;
@@ -257,6 +258,29 @@ html,body{overflow-x:hidden}
 .muted{font-size:13.5px;font-weight:700;color:var(--muted)}
 .dsSec{display:flex;flex-direction:column;gap:9px;padding:13px 4px 4px}
 .dsSec .evl{margin:0}
+/* v1114c: 화면 고정 · 글씨 크기 · 넘김 효과 */
+html,body{height:100%;overflow:hidden!important;overscroll-behavior:none;position:fixed;inset:0;width:100%;touch-action:manipulation}
+.app{height:100%;display:flex;flex-direction:column;padding-bottom:calc(10px + env(safe-area-inset-bottom))!important}
+header,#banner{flex:0 0 auto}
+#cal{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.gridWrap{flex:1;min-height:0;overflow:hidden;position:relative}
+.grid{height:100%;grid-template-rows:repeat(var(--rows,5),minmax(0,1fr));transition:transform .25s ease,opacity .25s ease;will-change:transform}
+.day{min-height:0!important}
+.big{font-size:17px!important;margin:3px 0 1px!important;letter-spacing:-.3px!important}
+.big.b-subD,.big.b-subN,.big.b-lv{font-size:14px!important}
+.rv .big{font-size:18px!important}
+.key,.fab{display:none!important}
+.ib.plus{background:var(--p);border-color:var(--p);color:#fff;font-size:22px;font-weight:400;margin-left:2px}
+.sheet{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.allIn{display:flex;flex-direction:column;gap:6px}
+.pvHint{font-size:11.5px;font-weight:700;color:var(--muted);margin:-2px 2px 0}
+.howto{padding:12px 14px;border-radius:12px;background:var(--soft);font-size:13px;font-weight:600;color:var(--muted)}.howto b{color:var(--ink)}.howto ol{margin:6px 0 0;padding-left:18px;line-height:1.7}
+.ghostBtn:disabled{opacity:.45}
+.nav{gap:4px!important;padding:10px 8px 6px!important;min-width:0}
+.nav b{font-size:17px!important;margin:0 2px!important;white-space:nowrap}
+.nav .sync{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11px!important}
+.nav .today{margin-left:0!important;padding:0 10px!important;height:32px}
+.nav .ib{flex:0 0 auto;width:32px!important;height:32px!important}
 .loading{text-align:center;color:var(--muted);font-weight:700;padding:40px 0}
 </style>
 </head>
@@ -275,17 +299,19 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114b·GitHub";
+const VERLBL="v1114c·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
-async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref"};
-  const isW=(op==="save"&&recs&&recs.length)||op==="setpref"||op==="testmail",q={pin,op:RD[op]||op};
+async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
+  const isW=(op==="save"&&recs&&recs.length)||!!RD[op]&&op!=="save",q={pin,op:RD[op]||op};
   if(isW){const body=JSON.stringify({op,pin,recs,pref:extra});
     try{const r=await fetch(url,{method:"POST",body,redirect:"follow",cache:"no-store"});const t=await r.text();return JSON.parse(t);}
-    catch(e){await fetch(url,{method:"POST",body,mode:"no-cors",redirect:"follow",cache:"no-store"});const g=await gasGet(url,q);if(op==="testmail")g.sent="unknown";return g;}}
+    catch(e){await fetch(url,{method:"POST",body,mode:"no-cors",redirect:"follow",cache:"no-store"});const g=await gasGet(url,q);if(op==="testmail"||op==="testpush")g.sent="unknown";return g;}}
   return await gasGet(url,q);}
 async function call(op,list,extra){if(!API)throw new Error("no api");return await gasCall(API,TOK,op,list||[],extra);}
 const READY=!!(TOK&&API);
+/* 알림용 서비스워커: 알림 신호를 받으면 내 알림 내용을 가져와 보여 줌 */
+if(READY&&"serviceWorker" in navigator){navigator.serviceWorker.register("sw.js").catch(()=>{});try{caches.open("skid-cfg").then(c=>c.put("cfg",new Response(JSON.stringify({api:API,tok:TOK})))).catch(()=>{});}catch(e){}}
 /*/CONN*/
 const HOL={"2025-01-01":"신정","2025-03-01":"삼일절","2025-05-05":"어린이날·부처님오신날","2025-06-06":"현충일","2025-08-15":"광복절","2025-10-03":"개천절","2025-10-09":"한글날","2025-12-25":"성탄절","2025-01-28":"설날 연휴","2025-01-29":"설날","2025-01-30":"설날 연휴","2025-10-05":"추석 연휴","2025-10-06":"추석","2025-10-07":"추석 연휴","2025-06-03":"대통령선거","2025-01-27":"임시공휴일","2025-03-03":"대체공휴일","2025-05-06":"대체공휴일","2025-10-08":"대체공휴일","2026-01-01":"신정","2026-03-01":"삼일절","2026-05-05":"어린이날","2026-06-06":"현충일","2026-08-15":"광복절","2026-10-03":"개천절","2026-10-09":"한글날","2026-12-25":"성탄절","2026-05-01":"노동절","2026-07-17":"제헌절","2026-02-16":"설날 연휴","2026-02-17":"설날","2026-02-18":"설날 연휴","2026-09-24":"추석 연휴","2026-09-25":"추석","2026-09-26":"추석 연휴","2026-05-24":"부처님오신날","2026-06-03":"지방선거","2026-03-02":"대체공휴일","2026-05-25":"대체공휴일","2026-08-17":"대체공휴일","2026-10-05":"대체공휴일","2027-01-01":"신정","2027-03-01":"삼일절","2027-05-05":"어린이날","2027-06-06":"현충일","2027-08-15":"광복절","2027-10-03":"개천절","2027-10-09":"한글날","2027-12-25":"성탄절","2027-05-01":"노동절","2027-07-17":"제헌절","2027-02-06":"설날 연휴","2027-02-07":"설날","2027-02-08":"설날 연휴","2027-09-14":"추석 연휴","2027-09-15":"추석","2027-09-16":"추석 연휴","2027-05-13":"부처님오신날","2027-02-09":"대체공휴일","2027-05-03":"대체공휴일","2027-07-19":"대체공휴일","2027-08-16":"대체공휴일","2027-10-04":"대체공휴일","2027-10-11":"대체공휴일","2027-12-27":"대체공휴일","2028-01-01":"신정","2028-03-01":"삼일절","2028-05-05":"어린이날","2028-06-06":"현충일","2028-08-15":"광복절","2028-10-03":"개천절·추석","2028-10-09":"한글날","2028-12-25":"성탄절","2028-05-01":"노동절","2028-07-17":"제헌절","2028-01-25":"설날 연휴","2028-01-26":"설날","2028-01-27":"설날 연휴","2028-10-02":"추석 연휴","2028-10-04":"추석 연휴","2028-05-02":"부처님오신날","2028-04-12":"국회의원선거","2028-10-05":"대체공휴일","2029-01-01":"신정","2029-03-01":"삼일절","2029-05-05":"어린이날","2029-06-06":"현충일","2029-08-15":"광복절","2029-10-03":"개천절","2029-10-09":"한글날","2029-12-25":"성탄절","2029-05-01":"노동절","2029-07-17":"제헌절","2029-02-12":"설날 연휴","2029-02-13":"설날","2029-02-14":"설날 연휴","2029-09-21":"추석 연휴","2029-09-22":"추석","2029-09-23":"추석 연휴","2029-05-20":"부처님오신날","2029-05-07":"대체공휴일","2029-05-21":"대체공휴일","2029-09-24":"대체공휴일","2030-01-01":"신정","2030-03-01":"삼일절","2030-05-05":"어린이날","2030-06-06":"현충일","2030-08-15":"광복절","2030-10-03":"개천절","2030-10-09":"한글날","2030-12-25":"성탄절","2030-05-01":"노동절","2030-07-17":"제헌절","2030-02-02":"설날 연휴","2030-02-03":"설날","2030-02-04":"설날 연휴","2030-09-11":"추석 연휴","2030-09-12":"추석","2030-09-13":"추석 연휴","2030-05-09":"부처님오신날","2030-02-05":"대체공휴일","2030-05-06":"대체공휴일"};
 const SH_DEF={base:"2026-11-07",teams:[{k:"A",g12:"오지훈",g3:"고우성",ph:0},{k:"B",g12:"우성제",g3:"유승규",ph:6},{k:"C",g12:"김영준",g3:"유재혁",ph:9},{k:"D",g12:"변영화",g3:"김완승",ph:3}]};
@@ -323,7 +349,7 @@ function stOf(md){if(!md)return {st:"off",b:"",lab:"휴무"};if(md.cls)return {s
   if(md.lab==="대근")return {st:md.s==="N"?"subN":"subD",b:"대근",lab:(md.s==="N"?"야간":"주간")+" 대근"};return {st:md.s==="N"?"night":"day",b:md.s==="N"?"야":"주",lab:md.lab};}
 function toast(t){const e=$("toast");e.textContent=t;e.classList.add("on");clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove("on"),2400);}
 function syncLbl(){const e=$("syncLbl");if(!e)return;if(busy){e.textContent="동기화 중…";e.className="sync";return;}
-  if(!lastSync){e.textContent="";return;}const d=new Date(lastSync);e.textContent=pad(d.getHours())+":"+pad(d.getMinutes())+" 기준";e.className="sync";}
+  if(!lastSync){e.textContent="";return;}const d=new Date(lastSync);e.textContent=pad(d.getHours())+":"+pad(d.getMinutes());e.className="sync";}
 
 /* ── 개인 일정 암호화 (이 휴대폰 안에서만 풀림) ── */
 const enc=new TextEncoder(),dec=new TextDecoder();
@@ -336,22 +362,27 @@ async function deriveKey(pass,salt){const base=await crypto.subtle.importKey("ra
   return crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:310000,hash:"SHA-256"},base,{name:"AES-GCM",length:256},true,["encrypt","decrypt"]);}
 async function seal(obj,k=KEY){const iv=crypto.getRandomValues(new Uint8Array(12));const c=await crypto.subtle.encrypt({name:"AES-GCM",iv},k,enc.encode(JSON.stringify(obj)));return {iv:b64(iv),c:b64(c)};}
 async function unseal(r,k=KEY){const p=await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(r.iv)},k,ub64(r.c));return JSON.parse(dec.decode(p));}
-async function rememberKey(){if(LS("lockEach")==="1"){LS("k_"+me,null);return;}LS("k_"+me,JSON.stringify(await crypto.subtle.exportKey("jwk",KEY)));}
-async function restoreKey(){const s=LS("k_"+me),v=vault();if(!s||!v)return false;
-  try{const k=await crypto.subtle.importKey("jwk",JSON.parse(s),{name:"AES-GCM"},true,["encrypt","decrypt"]);await unseal(v,k);KEY=k;return true;}catch(e){LS("k_"+me,null);return false;}}
+const newDK=()=>crypto.subtle.generateKey({name:"AES-GCM",length:256},true,["encrypt","decrypt"]);
+const impDK=raw=>crypto.subtle.importKey("raw",raw,{name:"AES-GCM"},true,["encrypt","decrypt"]);
+async function rememberKey(){if(LS("lockEach")==="1"&&vault()){LS("k_"+me,null);return;}LS("k_"+me,JSON.stringify(await crypto.subtle.exportKey("jwk",KEY)));}
+async function restoreKey(){const s=LS("k_"+me);if(!s)return false;try{KEY=await crypto.subtle.importKey("jwk",JSON.parse(s),{name:"AES-GCM"},true,["encrypt","decrypt"]);return true;}catch(e){LS("k_"+me,null);return false;}}
+async function ensureKey(){if(KEY)return true;if(vault())return false;KEY=await newDK();await rememberKey();return true;}
 async function decryptAll(){if(!KEY)return;for(const r of recs){if(r.kind!=="priv"||r.del||r.id===vaultId()||r.owner!==me)continue;const c=PV[r.id];if(c&&c.u===recU(r))continue;
     try{PV[r.id]={u:recU(r),v:await unseal(r)};}catch(e){}}
   for(const id in PV){const r=recs.find(x=>x.id===id);if(!r||r.del)delete PV[id];}}
 const evOf=k=>Object.entries(PV).filter(([,e])=>e.v.d===k).map(([id,e])=>({id,...e.v})).sort((a,b)=>((a.tm||"~")<(b.tm||"~")?-1:(a.tm||"~")>(b.tm||"~")?1:0));
 const locked=()=>!!vault()&&!KEY;
-async function createVault(pass){const salt=crypto.getRandomValues(new Uint8Array(16)),k=await deriveKey(pass,salt),s=await seal({ok:"skid"},k),old=recs.find(r=>r.id===vaultId());
-  const ok=await saveMany([{id:vaultId(),kind:"priv",owner:me,salt:b64(salt),...s,u:Math.max(Date.now(),old?recU(old)+1:0)}],"잠금 비밀번호를 만들었어요");
-  if(!ok)return false;KEY=k;await rememberKey();await decryptAll();render();return true;}
-async function unlock(pass){const v=vault();if(!v)return false;const k=await deriveKey(pass,ub64(v.salt));try{await unseal(v,k);}catch(e){return false;}
+async function setPassword(pass){if(!KEY&&vault())return false;if(!KEY)KEY=await newDK();
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12)),pk=await deriveKey(pass,salt);
+  const w=await crypto.subtle.encrypt({name:"AES-GCM",iv},pk,new Uint8Array(await crypto.subtle.exportKey("raw",KEY))),old=recs.find(r=>r.id===vaultId());
+  const ok=await saveMany([{id:vaultId(),kind:"priv",owner:me,v:2,salt:b64(salt),iv:b64(iv),c:b64(w),u:Math.max(Date.now(),old?recU(old)+1:0)}],"잠금 비밀번호를 저장했어요");
+  if(ok)await rememberKey();return ok;}
+async function unlock(pass){const v=vault();if(!v)return false;const pk=await deriveKey(pass,ub64(v.salt));let k;
+  try{if(v.v===2)k=await impDK(await crypto.subtle.decrypt({name:"AES-GCM",iv:ub64(v.iv)},pk,ub64(v.c)));else{await unseal(v,pk);k=pk;}}catch(e){return false;}
   KEY=k;await rememberKey();await decryptAll();render();return true;}
 async function resetVault(){const t=Date.now(),L=recs.filter(r=>r.kind==="priv"&&!r.del&&r.owner===me).map(r=>({id:r.id,kind:"priv",owner:me,del:1,u:Math.max(t,recU(r)+1)}));
   if(L.length&&!(await saveMany(L,"내 일정을 모두 지웠어요")))return false;KEY=null;LS("k_"+me,null);for(const id in PV)delete PV[id];render();return true;}
-function lockNow(){KEY=null;LS("k_"+me,null);for(const id in PV)delete PV[id];render();}
+function lockNow(){if(!vault())return;KEY=null;LS("k_"+me,null);for(const id in PV)delete PV[id];render();}
 
 /* ── 불러오기 · 저장 ── */
 async function load(quiet){if(busy)return;busy=true;syncLbl();
@@ -375,18 +406,24 @@ function badLink(){$("app").innerHTML=`<div class="card pin"><h2>SKID 근무표<
   <div class="empty" style="text-align:left;line-height:1.6">사무실 대시보드의 <b>근무조</b> 창에서 내 이름의 QR을 휴대폰 카메라로 찍으면 열려요.<br>예전에 받은 링크라면 팀 비밀번호가 바뀌었을 수 있어요. 새 QR을 받아 주세요.</div></div>`;}
 function shell(){$("app").innerHTML=`<header><h1>내 캘린더<small>SKID 근무 · <span style="opacity:.55">${VERLBL}</span></small></h1><button class="meBtn" id="meBtn" type="button" aria-label="설정"></button></header>
   <div id="banner"></div>
-  <section class="card" id="cal"><div class="nav"><button class="ib" id="prv" type="button" aria-label="이전 달">‹</button><b id="ym"></b><button class="ib" id="nxt" type="button" aria-label="다음 달">›</button><span class="sync" id="syncLbl"></span><button class="today" id="tdy" type="button">오늘</button></div>
-  <div class="wk">${[...W].map(w=>`<span>${w}</span>`).join("")}</div><div class="grid" id="grid"></div></section>
-  <div class="key"><b class="kb b-day">주</b>주간 <b class="kb b-night">야</b>야간 <b class="kb b-off">휴</b>휴무 <b class="kb b-subD">대근</b>내가 대신 근무 <b class="kb b-lv">연차</b>쉼</div>
-  <button class="fab" id="fab" type="button" aria-label="일정 추가">+</button>`;
-  $("prv").onclick=()=>{M--;if(M<0){M=11;Y--;}render();};$("nxt").onclick=()=>{M++;if(M>11){M=0;Y++;}render();};
-  $("tdy").onclick=()=>{const t=new Date();Y=t.getFullYear();M=t.getMonth();render();openDay(key(t));};
+  <section class="card" id="cal"><div class="nav"><button class="ib" id="prv" type="button" aria-label="이전 달">‹</button><b id="ym"></b><button class="ib" id="nxt" type="button" aria-label="다음 달">›</button><span class="sync" id="syncLbl"></span><button class="today" id="tdy" type="button">오늘</button><button class="ib plus" id="fab" type="button" aria-label="일정 추가">+</button></div>
+  <div class="wk">${[...W].map(w=>`<span>${w}</span>`).join("")}</div><div class="gridWrap"><div class="grid" id="grid"></div></div></section>`;
+  const go=dir=>{M+=dir;if(M<0){M=11;Y--;}if(M>11){M=0;Y++;}render();slide(dir);};
+  $("prv").onclick=()=>go(-1);$("nxt").onclick=()=>go(1);
+  $("tdy").onclick=()=>{const t=new Date(),d=(t.getFullYear()-Y)*12+(t.getMonth()-M);Y=t.getFullYear();M=t.getMonth();render();if(d)slide(d>0?1:-1);openDay(key(t));};
   $("grid").onclick=e=>{const b=e.target.closest(".day");if(b&&b.dataset.k)openDay(b.dataset.k);};
   $("meBtn").onclick=openSettings;
   $("fab").onclick=()=>openDay(sel||key(new Date()),false,true);
-  $("banner").onclick=e=>{const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;if(a==="unlock"||a==="create")openLock();else if(a==="go"){const k=b.dataset.k;const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);}};
-  let sx=null;$("grid").addEventListener("touchstart",e=>{sx=e.touches[0].clientX;},{passive:true});
-  $("grid").addEventListener("touchend",e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx;sx=null;if(Math.abs(dx)>60){(dx<0?$("nxt"):$("prv")).click();}},{passive:true});}
+  $("banner").onclick=e=>{const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;if(a==="unlock")openLock();else if(a==="go"){const k=b.dataset.k;const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);}};
+  // 손가락으로 밀어서 달 넘기기 (따라 움직이다가 넘어감)
+  const g=$("grid");let sx=null,sy=null,dx=0,drag=false;
+  g.addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY;dx=0;drag=false;},{passive:true});
+  g.addEventListener("touchmove",e=>{if(sx==null)return;dx=e.touches[0].clientX-sx;const dy=e.touches[0].clientY-sy;if(!drag&&Math.abs(dx)>10&&Math.abs(dx)>Math.abs(dy))drag=true;
+    if(drag){g.style.transition="none";g.style.transform=`translateX(${dx*.6}px)`;g.style.opacity=String(1-Math.min(Math.abs(dx)/600,.35));}},{passive:true});
+  g.addEventListener("touchend",()=>{if(sx==null)return;sx=null;g.style.transition="";g.style.transform="";g.style.opacity="";if(drag&&Math.abs(dx)>60)go(dx<0?1:-1);},{passive:true});}
+function slide(dir){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const g=$("grid"),ym=$("ym");
+  try{g.getAnimations().forEach(a=>a.cancel());g.animate([{transform:`translateX(${dir*46}px)`,opacity:0},{transform:"none",opacity:1}],{duration:320,easing:"cubic-bezier(.22,.8,.24,1)"});
+    ym.animate([{transform:`translateY(${dir*8}px)`,opacity:0},{transform:"none",opacity:1}],{duration:260,easing:"ease-out"});}catch(e){}}
 function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date());
   $("ym").textContent=Y+"."+pad(M+1);
   $("meBtn").innerHTML=`<i></i>${esc(me)}<span class="gear">⚙</span>`;
@@ -396,12 +433,11 @@ function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()
     h+=`<button type="button" class="day st-${o.st}${d.getMonth()!==M?" out":""}${d.getDay()===0?" sun":""}${d.getDay()===6?" sat":""}${hol?" hol":""}${k===tk?" isToday":""}${k===sel?" sel":""}" data-k="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일${hol?" "+esc(hol):""} ${esc(o.lab)}${evs.length?" 일정 "+evs.length+"개":""}">
       <span class="dn">${d.getDate()}</span>${m?`<span class="big b-${o.st}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:"대근")}</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${hol?`<span class="hn">${esc(hol)}</span>`:""}
       <span class="evs">${evs.slice(0,2).map(e=>`<span class="ev">${esc(e.t)}</span>`).join("")}${evs.length>2?`<span class="more">+${evs.length-2}</span>`:""}</span></button>`;}
-  $("grid").innerHTML=h;
+  $("grid").innerHTML=h;$("grid").style.setProperty("--rows",n/7);
   // 안내 띠: 잠금 · 내일 대근
   let bn="";const tm=new Date();tm.setDate(tm.getDate()+1);const tmk=key(tm),tsub=m&&subsOf(tmk).find(z=>z.grp===m.g&&z.sub===me);
   if(tsub)bn+=`<button class="bn alert" type="button" data-act="go" data-k="${tmk}"><b>내일 ${md_(tmk)} 대근 근무가 있어요</b><span>${esc(tsub.who)}님 ${esc(tsub.type)} 대신 ›</span></button>`;
-  if(!vault())bn+=`<button class="bn" type="button" data-act="create"><b>🔒 내 일정 쓰기 시작</b><span>나만 볼 수 있게 잠금 비밀번호를 만들어 주세요 ›</span></button>`;
-  else if(!KEY)bn+=`<button class="bn" type="button" data-act="unlock"><b>🔒 내 일정이 잠겨 있어요</b><span>비밀번호를 넣으면 이 휴대폰에서 보여요 ›</span></button>`;
+  if(vault()&&!KEY)bn+=`<button class="bn" type="button" data-act="unlock"><b>🔒 내 일정이 잠겨 있어요</b><span>비밀번호를 넣으면 이 휴대폰에서 보여요 ›</span></button>`;
   $("banner").innerHTML=bn;syncLbl();}
 
 /* ── 시트(아래에서 올라오는 창) ── */
@@ -437,16 +473,15 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
     h+=`</div>`;}
   // 2) 내 일정
   h+=`<div class="dsSec"><span class="rl">내 일정</span>`;
-  if(!vault())h+=`<div class="lockBox"><span>잠금 비밀번호를 만들면 나만 보는 일정을 적을 수 있어요. 다른 사람과 관리자는 볼 수 없어요.</span><button class="add" type="button" id="goLock">잠금 비밀번호 만들기</button></div>`;
-  else if(!KEY)h+=`<div class="lockBox"><span>🔒 내 일정이 잠겨 있어요</span><button class="add" type="button" id="goLock">잠금 풀기</button></div>`;
+  if(locked())h+=`<div class="lockBox"><span>🔒 내 일정이 잠겨 있어요</span><button class="add" type="button" id="goLock">잠금 풀기</button></div>`;
   else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del" type="button" data-pdel="${esc(e.id)}" aria-label="일정 삭제">✕</button></li>`).join("")}</ul>`:"")+
-    `<div class="addEv"><input id="eT" maxlength="60" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><input id="eTm" type="time" aria-label="시간 (선택)"><button class="addBtn" id="eAdd" type="button">추가</button></div>`;
+    `<div class="addEv"><input id="eT" maxlength="60" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><input id="eTm" type="time" aria-label="시간 (선택)"><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
   h+=`</div>`;
   // 3) 그날 전체 근무표
-  h+=`<details class="fold" data-f="all"><summary>그날 전체 근무표</summary><div class="foldIn">
+  h+=`<div class="dsSec"><span class="rl">그날 전체 근무표</span><div class="allIn">
      <table class="tbl"><thead><tr><th></th>${GRP.map(G=>`<th>${G.n}</th>`).join("")}</tr></thead><tbody>${row("주간",ds.D,"D")}${row("야간",ds.N,"N")}</tbody></table>
      <div class="off">휴무 · ${ds.off.map(t=>`${esc(t.k)}조 (${esc(t.g12||"")}·${esc(t.g3||"")})`).join(", ")||"-"}</div>
-     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":"대근 없음"}</span></li>`).join("")}</ul>`:""}</div></details>`;
+     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":"대근 없음"}</span></li>`).join("")}</ul>`:""}</div></div>`;
   openSheet(h,k);$("sheet").classList.add("tall");$("xBtn").onclick=closeSheet;
   if(wasOpen){$("sheet").querySelectorAll("details[data-f]").forEach(dd=>{if(st0[dd.dataset.f]!=null)dd.open=st0[dd.dataset.f];});$("sheet").scrollTop=st0.top||0;if($("eT")&&st0.t!=null){$("eT").value=st0.t;$("eTm").value=st0.tm;}}
   const gl=$("goLock");if(gl)gl.onclick=openLock;
@@ -457,22 +492,22 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
     const G=GRP.find(x=>x.g===g),text=`${me} ${type}`+(sub?` · ${sub} 대근`:""),t=Date.now();CHG={k,type:null,sub:""};
     save({id:uid(),date:k,text,c:G.c,kind:"sub",grp:g,who:me,type,sub,at:t,u:t,by:me},"근무 변경을 등록했어요 · 대시보드에도 반영돼요");};
   if($("eAdd")){const add=async()=>{const t=$("eT").value.trim();if(!t){$("eT").focus();return;}const tm=$("eTm").value||"";$("eAdd").disabled=true;
-      const s=await seal({d:k,t,tm}),now=Date.now();$("eT").value="";$("eTm").value="";
+      if(!(await ensureKey())){$("eAdd").disabled=false;openLock();return;}const s=await seal({d:k,t,tm}),now=Date.now();$("eT").value="";$("eTm").value="";
       await save({id:"p"+uid(),kind:"priv",owner:me,...s,u:now},"일정을 저장했어요");};
     $("eAdd").onclick=add;$("eT").onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();add();}};if(focusAdd)setTimeout(()=>$("eT")&&$("eT").focus(),300);}
   $("sheet").querySelectorAll("[data-pdel]").forEach(b=>twoTap(b,()=>{const r=recs.find(x=>x.id===b.dataset.pdel);if(!r)return;save({id:r.id,kind:"priv",owner:me,del:1,u:Math.max(Date.now(),recU(r)+1)},"일정을 지웠어요");},"삭제"));
   $("sheet").querySelectorAll("[data-sdel]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.sdel);if(!x||x.who!==me)return;save({id:x.id,del:1,kind:"sub",date:x.date,u:Math.max(Date.now(),recU(x)+1),ed:me},"근무 변경을 취소했어요");},"한 번 더 누르면 취소"));}
 
-/* ── 잠금 비밀번호 ── */
-function openLock(){const v=vault();
-  if(!v){openSheet(`<h2>잠금 비밀번호 만들기<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
-    <p class="lead">내 일정은 이 비밀번호로 <b>휴대폰 안에서 암호화</b>된 뒤 저장돼요. 다른 작업자는 물론 <b>관리자도 내용을 볼 수 없어요.</b></p>
+/* ── 잠금 비밀번호 (선택) ── */
+function openLock(mode){const v=vault();
+  if(!v||mode==="change"){openSheet(`<h2>${v?"비밀번호 바꾸기":"잠금 비밀번호 만들기"}<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
+    <p class="lead">내 일정은 이미 <b>이 휴대폰 안에서 암호화</b>되어 저장돼요. 비밀번호를 만들면 <b>휴대폰을 바꾸거나 홈 화면 앱에서도</b> 내 일정을 볼 수 있어요. 다른 작업자와 관리자는 볼 수 없어요.</p>
     <div class="pwf"><input id="pw1" type="password" autocomplete="new-password" placeholder="비밀번호 (6자리 이상)" maxlength="40"><input id="pw2" type="password" autocomplete="new-password" placeholder="한 번 더 입력" maxlength="40"></div>
     <div class="warn">잊어버리면 아무도 되살릴 수 없어요. 생일·전화번호처럼 남이 알 만한 숫자는 피해 주세요.</div><div class="err" id="pwErr"></div>
-    <button class="add" id="pwGo" type="button">만들기</button>`);
+    <button class="add" id="pwGo" type="button">저장</button>`);
     $("xBtn").onclick=closeSheet;
     $("pwGo").onclick=async()=>{const a=$("pw1").value,b=$("pw2").value;if(a.length<6){$("pwErr").textContent="6자리 이상으로 만들어 주세요";return;}if(a!==b){$("pwErr").textContent="두 번 입력한 비밀번호가 달라요";return;}
-      $("pwGo").disabled=true;$("pwGo").textContent="만드는 중…";const ok=await createVault(a);if(ok)closeSheet();else{$("pwGo").disabled=false;$("pwGo").textContent="만들기";}};return;}
+      $("pwGo").disabled=true;$("pwGo").textContent="저장 중…";const ok=await setPassword(a);if(ok){closeSheet();render();}else{$("pwGo").disabled=false;$("pwGo").textContent="저장";}};return;}
   openSheet(`<h2>내 일정 잠금 풀기<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
     <div class="pwf"><input id="pw1" type="password" autocomplete="current-password" placeholder="잠금 비밀번호" maxlength="40"></div><div class="err" id="pwErr"></div>
     <button class="add" id="pwGo" type="button">열기</button><button class="linkBtn" id="pwForgot" type="button">비밀번호를 잊었어요</button>`);
@@ -480,31 +515,46 @@ function openLock(){const v=vault();
   const go=async()=>{const a=$("pw1").value;if(!a)return;$("pwGo").disabled=true;$("pwGo").textContent="여는 중…";const ok=await unlock(a);
     if(ok){closeSheet();toast("내 일정을 열었어요");}else{$("pwErr").textContent="비밀번호가 맞지 않아요";$("pwGo").disabled=false;$("pwGo").textContent="열기";}};
   $("pwGo").onclick=go;$("pw1").onkeydown=e=>{if(e.key==="Enter")go();};
-  twoTap($("pwForgot"),async()=>{if(await resetVault()){closeSheet();toast("내 일정을 지웠어요 · 새 비밀번호를 만들어 주세요");setTimeout(openLock,400);}},"내 일정을 모두 지우고 새로 시작 (한 번 더)");}
+  twoTap($("pwForgot"),async()=>{if(await resetVault()){closeSheet();toast("내 일정을 지웠어요 · 새로 시작해요");}},"내 일정을 모두 지우고 새로 시작 (한 번 더)");}
 
-/* ── 설정: 대근 알림 · 보안 ── */
+/* ── 설정: 휴대폰 알림 · 보안 ── */
+const u8=b=>{const p="=".repeat((4-b.length%4)%4),r=atob((b+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(r,c=>c.charCodeAt(0));};
+const IOS=/iPhone|iPad|iPod/.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const STANDALONE=()=>matchMedia("(display-mode: standalone)").matches||navigator.standalone===true;
+const PUSHOK=()=>!!PAGE&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+async function pushSub(){try{const r=await navigator.serviceWorker.ready;return await r.pushManager.getSubscription();}catch(e){return null;}}
+async function enablePush(){if(Notification.permission==="denied")return "denied";const perm=await Notification.requestPermission();if(perm!=="granted")return perm;
+  const r=await navigator.serviceWorker.ready;let vap=PREF&&PREF.vapid;if(!vap){const x=await call("pref");PREF=x.pref?{...x.pref,vapid:x.vapid,push:x.push}:PREF;vap=x.vapid;}
+  let sub=await r.pushManager.getSubscription();if(!sub)sub=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(vap)});
+  const x=await call("subscribe",null,{endpoint:sub.endpoint,page:PAGE});if(!x||!x.ok)throw new Error("subscribe");
+  const y=await call("setpref",null,{alarm:true,page:PAGE});if(y&&y.pref)PREF={...PREF,...y.pref,push:x.push};return "ok";}
 async function openSettings(){const c=cfg(),m=mine(c);
-  const paint=()=>{const p=PREF||{};openSheet(`<h2>설정<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
-    <div class="who"><b>${esc(me)}</b>${m?` · ${esc(GRP.find(G=>G.g===m.g).n)}`:""}</div>
-    <h3>대근 알림</h3>
-    <label class="sw"><input type="checkbox" id="alOn"${p.alarm!==false?" checked":""}><span class="swT"></span><span>대근 전날 저녁 6시에 알림 받기</span></label>
-    <div class="pwf"><input id="alEm" type="email" inputmode="email" autocomplete="email" placeholder="알림 받을 이메일" value="${esc(p.email||"")}"></div>
-    <div class="hint2">알림은 이메일로 와요. 휴대폰 메일 앱(Gmail·네이버 메일 등)의 알림을 켜 두세요. 이메일은 본인과 알림 보내는 데만 쓰여요.</div>
-    <div class="row2"><button class="ghostBtn" id="alTest" type="button">테스트 메일</button><button class="add sm" id="alSave" type="button">저장</button></div><div class="err" id="alMsg"></div>
-    <h3>내 일정 보안</h3>
-    <p class="lead">내 일정은 이 휴대폰에서 암호화된 뒤 저장돼요. 관리자도 내용을 볼 수 없어요.</p>
-    <label class="sw"><input type="checkbox" id="lkEach"${LS("lockEach")==="1"?" checked":""}><span class="swT"></span><span>앱을 열 때마다 비밀번호 묻기</span></label>
-    ${KEY?`<button class="ghostBtn wide" id="lkNow" type="button">지금 잠그기</button>`:""}`);
+  const paint=async()=>{const p=PREF||{},v=vault();let pushHtml;
+    if(!PAGE)pushHtml=`<div class="hint2">휴대폰 알림은 새 QR(GitHub 주소)로 연 화면에서 켤 수 있어요.</div>`;
+    else if(IOS&&!STANDALONE())pushHtml=`<div class="howto"><b>아이폰은 먼저 홈 화면에 추가해 주세요</b><ol><li>사파리 아래 <b>공유 버튼(□↑)</b> → <b>홈 화면에 추가</b></li><li>홈 화면의 <b>SKID 근무표</b> 아이콘으로 열기</li><li>여기서 <b>알림 켜기</b> (iOS 16.4 이상)</li></ol></div>`;
+    else if(!PUSHOK())pushHtml=`<div class="hint2">이 브라우저는 알림을 지원하지 않아요. 크롬이나 삼성 인터넷으로 열어 주세요.</div>`;
+    else{const sub=await pushSub(),perm=Notification.permission,on=perm==="granted"&&!!sub&&p.alarm!==false;
+      pushHtml=`<label class="sw"><input type="checkbox" id="alOn"${on?" checked":""}><span class="swT"></span><span>대근 전날 저녁 6시에 휴대폰 알림</span></label>
+        ${perm==="denied"?`<div class="err">알림이 차단돼 있어요 · 휴대폰 설정 → 알림에서 이 앱(또는 브라우저)을 허용해 주세요</div>`:""}
+        <div class="row2"><button class="ghostBtn" id="alTest" type="button"${on?"":" disabled"}>테스트 알림 보내기</button></div><div class="err" id="alMsg"></div>`;}
+    const sec=!v?`<p class="lead">내 일정은 이 휴대폰 안에서 암호화되어 저장돼요. 지금은 <b>이 휴대폰에서만</b> 볼 수 있어요.</p><button class="ghostBtn wide" id="pwMake" type="button">잠금 비밀번호 만들기 (선택)</button><div class="hint2">만들어 두면 휴대폰을 바꾸거나 홈 화면 앱에서도 내 일정을 볼 수 있어요.</div>`
+      :KEY?`<p class="lead">비밀번호가 설정되어 있어요. 관리자도 내 일정을 볼 수 없어요.</p><label class="sw"><input type="checkbox" id="lkEach"${LS("lockEach")==="1"?" checked":""}><span class="swT"></span><span>앱을 열 때마다 비밀번호 묻기</span></label><div class="row2"><button class="ghostBtn" id="pwChange" type="button">비밀번호 바꾸기</button><button class="ghostBtn" id="lkNow" type="button">지금 잠그기</button></div>`
+      :`<p class="lead">내 일정이 잠겨 있어요.</p><button class="add" id="pwOpen" type="button">잠금 풀기</button>`;
+    openSheet(`<h2>설정<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
+      <div class="who"><b>${esc(me)}</b>${m?` · ${esc(GRP.find(G=>G.g===m.g).n)}`:""}</div>
+      <h3>대근 알림</h3>${pushHtml}<h3>내 일정 보안</h3>${sec}`);
     $("xBtn").onclick=closeSheet;
-    $("lkEach").onchange=async()=>{LS("lockEach",$("lkEach").checked?"1":null);if($("lkEach").checked)LS("k_"+me,null);else if(KEY)await rememberKey();toast($("lkEach").checked?"앱을 열 때마다 비밀번호를 물어요":"이 휴대폰에서 잠금 풀린 상태를 기억해요");};
-    const lk=$("lkNow");if(lk)lk.onclick=()=>{lockNow();closeSheet();toast("잠갔어요");};
-    const msg=(t,ok)=>{$("alMsg").textContent=t;$("alMsg").className="err"+(ok?" ok":"");};
-    const savePref=async()=>{const email=$("alEm").value.trim(),alarm=$("alOn").checked;if(alarm&&!email){msg("알림 받을 이메일을 넣어 주세요");return null;}
-      try{const r=await call("setpref",null,{email,alarm,page:PAGE});if(!r||!r.ok){msg(r&&r.err==="email"?"이메일 주소를 확인해 주세요":"저장 실패 · 다시 시도해 주세요");return null;}PREF=r.pref||PREF;return r;}catch(e){msg("저장 실패 · 인터넷 연결을 확인하세요");return null;}};
-    $("alSave").onclick=async()=>{$("alSave").disabled=true;const r=await savePref();$("alSave").disabled=false;if(r)msg($("alOn").checked?"저장했어요 · 대근 전날 저녁 6시에 메일이 와요":"저장했어요 · 알림을 껐어요",true);};
-    $("alOn").onchange=()=>$("alSave").click();
-    $("alTest").onclick=async()=>{$("alTest").disabled=true;const r=await savePref();if(r){try{const t=await call("testmail");const s=t&&t.sent;msg(s==="sent"?"테스트 메일을 보냈어요 · 메일함을 확인해 보세요":s==="limit"?"테스트 메일은 하루 3번까지예요":s==="noemail"?"이메일을 먼저 저장해 주세요":"요청했어요 · 메일함을 확인해 보세요",s!=="limit"&&s!=="noemail");}catch(e){msg("보내기 실패 · 다시 시도해 주세요");}}$("alTest").disabled=false;};};
-  paint();if(!PREF){try{const r=await call("pref");if(r&&r.ok){PREF=r.pref||{};if($("sheet").classList.contains("on")&&$("alOn"))paint();}}catch(e){}}}
+    const b=id=>$(id);
+    if(b("pwMake"))b("pwMake").onclick=()=>openLock();if(b("pwChange"))b("pwChange").onclick=()=>openLock("change");if(b("pwOpen"))b("pwOpen").onclick=()=>openLock();
+    if(b("lkNow"))b("lkNow").onclick=()=>{lockNow();closeSheet();toast("잠갔어요");};
+    if(b("lkEach"))b("lkEach").onchange=async()=>{LS("lockEach",b("lkEach").checked?"1":null);if(b("lkEach").checked)LS("k_"+me,null);else if(KEY)await rememberKey();toast(b("lkEach").checked?"앱을 열 때마다 비밀번호를 물어요":"이 휴대폰에서 기억해요");};
+    const msg=(t,ok)=>{const e=b("alMsg");if(e){e.textContent=t;e.className="err"+(ok?" ok":"");}};
+    if(b("alOn"))b("alOn").onchange=async()=>{const el=b("alOn");el.disabled=true;
+      try{if(el.checked){const r=await enablePush();if(r==="ok"){msg("알림을 켰어요 · 대근 전날 저녁 6시에 알려 드려요",true);b("alTest").disabled=false;}else{el.checked=false;msg(r==="denied"?"알림이 차단돼 있어요 · 휴대폰 설정에서 허용해 주세요":"알림 허용을 눌러야 켜져요");}}
+        else{const y=await call("setpref",null,{alarm:false});if(y&&y.pref)PREF={...PREF,...y.pref};msg("알림을 껐어요",true);b("alTest").disabled=true;}}
+      catch(e){el.checked=!el.checked;msg("설정 실패 · 인터넷 연결을 확인하세요");}finally{el.disabled=false;}};
+    if(b("alTest"))b("alTest").onclick=async()=>{b("alTest").disabled=true;try{const t=await call("testpush");const s=t&&t.sent;msg(s==="sent"?"테스트 알림을 보냈어요 · 몇 초 안에 와요":s==="limit"?"테스트 알림은 하루 5번까지예요":s==="fail"?"보내기 실패 · 알림을 껐다가 다시 켜 보세요":"요청했어요 · 몇 초 안에 와요",s==="sent"||s==="unknown");}catch(e){msg("보내기 실패 · 다시 시도해 주세요");}b("alTest").disabled=false;};};
+  await paint();if(!PREF||PREF.vapid==null){try{const r=await call("pref");if(r&&r.ok){PREF={...(r.pref||{}),vapid:r.vapid,push:r.push};if($("sheet").classList.contains("on")&&document.querySelector("#sheet .who"))await paint();}}catch(e){}}}
 
 /* 자동 새로고침: 화면으로 돌아올 때 · 1분마다 */
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&READY&&Date.now()-lastSync>15000)load(true);});
