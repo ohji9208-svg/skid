@@ -282,6 +282,21 @@ header,#banner{flex:0 0 auto}
 .nav .today{margin-left:0!important;padding:0 10px!important;height:32px}
 .nav .ib{flex:0 0 auto;width:32px!important;height:32px!important}
 .loading{text-align:center;color:var(--muted);font-weight:700;padding:40px 0}
+/* v1114e: 화면 넓게 · 일정 입력 칸 여유 */
+.app{max-width:none!important;padding-left:max(4px,env(safe-area-inset-left))!important;padding-right:max(4px,env(safe-area-inset-right))!important;padding-top:max(8px,env(safe-area-inset-top))!important}
+header{margin:0 6px 8px!important}
+#cal.card{border-radius:14px}
+.wk{padding:0 2px!important}.grid{padding:2px 2px 4px!important}
+.nav{padding:8px 6px 4px!important}
+.day{padding:3px 1px 2px!important}
+.ev{font-size:10.5px!important}
+.sheet{max-width:none!important;padding-left:max(12px,env(safe-area-inset-left))!important;padding-right:max(12px,env(safe-area-inset-right))!important}
+@media (min-width:700px){.app,.sheet{max-width:760px!important}}
+.addEv{display:grid!important;grid-template-columns:1fr auto;gap:8px!important;margin-top:6px!important;padding:12px;border-radius:14px;background:var(--soft)}
+.addEv #eT{grid-column:1/-1;height:52px!important;font-size:16px!important;padding:0 14px!important;border-radius:12px}
+.addEv #eTm{height:46px!important;flex:none!important;width:100%;font-size:15px!important;padding:0 12px!important}
+.addEv .addBtn{height:46px;min-width:96px;font-size:15px}
+.evl li{padding:12px 6px 12px 14px!important}.evl .et{font-size:16px!important}
 </style>
 </head>
 <body>
@@ -299,7 +314,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114c·GitHub";
+const VERLBL="v1114e·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -475,7 +490,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   h+=`<div class="dsSec"><span class="rl">내 일정</span>`;
   if(locked())h+=`<div class="lockBox"><span>🔒 내 일정이 잠겨 있어요</span><button class="add" type="button" id="goLock">잠금 풀기</button></div>`;
   else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del" type="button" data-pdel="${esc(e.id)}" aria-label="일정 삭제">✕</button></li>`).join("")}</ul>`:"")+
-    `<div class="addEv"><input id="eT" maxlength="60" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><input id="eTm" type="time" aria-label="시간 (선택)"><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
+    `<div class="addEv"><input id="eT" maxlength="100" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><input id="eTm" type="time" aria-label="시간 (선택 · 비우면 하루 종일)"><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
   h+=`</div>`;
   // 3) 그날 전체 근무표
   h+=`<div class="dsSec"><span class="rl">그날 전체 근무표</span><div class="allIn">
