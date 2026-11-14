@@ -350,6 +350,70 @@ header{margin:0 6px 8px!important}
 .nbar .ni{font-size:18px;flex:0 0 auto}.nbar .nt{flex:1;min-width:0;font-size:14px;font-weight:800;line-height:1.35;word-break:keep-all}.nbar .nt small{color:var(--muted);font-weight:700}
 .nbar .nb{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--p);color:#fff;font-weight:800;font-size:13px}
 .nbar .nx{flex:0 0 auto;width:32px;height:34px;border:0;background:transparent;color:var(--muted);font-size:15px}
+/* v1114r: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
+header h1{flex:1 1 auto}
+.vsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;height:34px;padding:3px;border-radius:12px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
+.vsw button{position:relative;z-index:1;border:0;background:transparent;padding:0 11px;font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;transition:color .25s}
+.vsw button[aria-selected="true"]{color:#fff}
+.vsw .th{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:9px;background:var(--p);box-shadow:0 4px 10px -4px rgba(0,0,0,.4);transition:transform .32s cubic-bezier(.3,1.3,.5,1)}
+.vsw[data-v="all"] .th{transform:translateX(100%)}
+.alWrap{display:grid;gap:2px;margin-top:2px;justify-items:center}
+.al{position:relative;white-space:nowrap;max-width:100%;display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 5px;border-radius:5px;font-size:11px;font-weight:900;line-height:1}
+.alD{background:#FFF1C9;color:#8A5B00}.alN{background:#E3E5FF;color:#3A3FB8}
+.al.mine{box-shadow:inset 0 0 0 1.5px currentColor}
+.al .alc{position:absolute;top:-6px;right:-7px;box-shadow:0 0 0 1.5px var(--surf);font-style:normal;min-width:13px;height:13px;border-radius:7px;background:#EA7A3A;color:#fff;font-size:9px;display:grid;place-items:center;padding:0 2px}
+.al.alq{background:transparent;color:#5B4BD6;border:1.2px dashed #7C6CF0;font-size:9.5px;padding:0 3px;letter-spacing:-.3px}@media (max-width:380px){.al.alq b{display:none}.al{padding:0 4px}}
+@media (prefers-color-scheme:dark){.alD{background:rgba(242,193,78,.2);color:#F7D27A}.alN{background:rgba(120,126,255,.22);color:#B8BCFF}.al.alq{color:#B9B0FF;border-color:#9A8FFF}}
+/* 주간 대근 = 주황 해 · 야간 대근 = 남색 달 */
+.big.b-subD{color:#B34A06!important;background:#FFE3C8!important}
+.big.b-subN{color:#fff!important;background:#3B3FA8!important}
+@media (prefers-color-scheme:dark){.big.b-subD{color:#FFC08A!important;background:rgba(255,150,70,.22)!important}.big.b-subN{color:#E4E5FF!important;background:#4B50C8!important}}
+.sb-subN{color:#3B3FA8!important;box-shadow:inset 0 0 0 1.5px #5B60D0!important}
+@media (prefers-color-scheme:dark){.sb-subN{color:#B8BCFF!important;box-shadow:inset 0 0 0 1.5px #8A8FFF!important}}
+/* 미정(대근자 아직 없음) = 보라 점선 + ? (대근과 다른 모양) */
+.req{color:#5B4BD6!important;background:rgba(124,108,240,.10)!important;box-shadow:inset 0 0 0 1.2px #7C6CF0;border-radius:5px}
+.req::before{content:"? ";font-weight:900}
+.mj{display:inline-block;padding:0 6px;border-radius:5px;border:1.5px dashed #7C6CF0;color:#5B4BD6;font-weight:800;font-size:12px}
+.mj::before{content:"? "}
+@media (prefers-color-scheme:dark){.req{color:#B9B0FF!important;box-shadow:inset 0 0 0 1.2px #9A8FFF;background:rgba(154,143,255,.14)!important}.mj{color:#B9B0FF;border-color:#9A8FFF}}
+/* 내 일정 메모: 형광펜처럼 배경 */
+.ev{background:#FFE98A!important;color:#4A3B00!important;border-radius:4px!important;padding:1px 3px!important;margin-top:1px}
+.evl .et{background:linear-gradient(transparent 45%,#FFE98A 45%);padding:0 2px;border-radius:2px;color:var(--ink)}
+@media (prefers-color-scheme:dark){.ev{background:rgba(255,214,0,.26)!important;color:#FFF1A8!important}.evl .et{background:linear-gradient(transparent 45%,rgba(255,214,0,.32) 45%)}}
+/* 지우기 = '취소' 글자 버튼 (닫기 ✕ 와 헷갈리지 않게) */
+.evl .del.txt{width:auto!important;min-width:0;height:30px;padding:0 10px!important;border-radius:9px;border:1.5px solid rgba(209,47,58,.5);background:transparent;color:#D12F3A;font-size:13px;font-weight:800}
+@media (prefers-color-scheme:dark){.evl .del.txt{color:#FF8A8A;border-color:rgba(255,138,138,.5)}}
+@media (max-width:360px){.vsw button{padding:0 8px;font-size:12px}header h1{font-size:17px}}
+/* 예상 월급 */
+.payGo{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;width:100%;margin:6px 0 4px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--soft);text-align:left;color:var(--ink)}
+.payGo>span{grid-row:1/3;font-size:22px}.payGo b{font-size:15px}.payGo small{grid-column:2;color:var(--muted);font-size:12px;font-weight:600}.payGo i{grid-row:1/3;grid-column:3;font-style:normal;font-size:20px;color:var(--muted)}
+.payM{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 10px}.payM b{font-size:16px}
+.payIn{display:grid;grid-template-columns:max-content minmax(0,1fr) max-content;align-items:center;gap:8px;padding:10px 12px;border-radius:12px;background:var(--soft);font-weight:800}
+.payIn span,.payIn em{white-space:nowrap}.payIn input{min-width:0;width:100%;height:44px;font-size:17px!important;font-weight:800;text-align:right;padding:0 10px}.payIn em{font-style:normal;color:var(--muted)}
+.payTot{display:grid;justify-items:center;gap:2px;margin:12px 0 8px;padding:14px;border-radius:14px;background:color-mix(in srgb,var(--p) 12%,var(--surf));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--p) 35%,transparent)}
+.payTot small{color:var(--muted);font-weight:700}.payTot b{font-size:26px;font-weight:900;letter-spacing:-.5px}.payTot span{color:var(--muted);font-size:12px;font-weight:600}
+.payL{list-style:none;margin:0 0 8px;padding:0}.payL li{display:flex;justify-content:space-between;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:14px}
+.payL li span{min-width:0}.payL li small{display:block;color:var(--muted);font-size:11.5px;font-weight:600}.payL li b{white-space:nowrap}
+.payL li.sub{padding:6px 2px 6px 14px;font-size:12.5px;color:var(--muted)}.payL li.sub b{font-weight:700}
+.payL li.sub small,.payL li small{display:block}.payL li b{display:flex;align-items:center;gap:6px;white-space:nowrap}.pxm{font-style:normal;background:#FFE98A;color:#5A4500;border-radius:4px;padding:0 4px}
+.pxDel{height:26px!important;padding:0 8px!important;font-size:12px!important}
+.pxGo{display:grid;width:100%;margin:4px 0 8px;padding:12px 14px;border:1.5px dashed color-mix(in srgb,var(--p) 55%,transparent);border-radius:14px;background:color-mix(in srgb,var(--p) 6%,var(--surf));color:var(--p);font-weight:900;font-size:15px;text-align:left}.pxGo small{color:var(--muted);font-weight:700;font-size:12px;margin-top:2px}
+.pxF{display:grid;gap:10px;margin:4px 0 10px;padding:12px;border-radius:14px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}.pxT{font-size:15px}
+.pxR{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:8px}.pxF label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted);min-width:0}
+.pxF input,.pxF select{height:40px;font-size:16px!important;min-width:0;width:100%}
+.pxH{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.pxH input{text-align:center}.pxH span{grid-column:1/-1;font-weight:900;color:var(--p);font-size:14px}
+.pxB{display:grid;grid-template-columns:1fr 2fr;gap:8px}.pxB button{height:44px}
+.pBtn{border:0;border-radius:12px;background:var(--p);color:#fff;font-weight:900;font-size:15px}
+.payG select,.payG input{min-width:0;width:100%}.payG select{height:38px;font-size:14px!important}.payG label{min-width:0}
+.payG3{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:6px 8px;align-items:end;margin:4px 0 8px}.payG3 b{font-size:13px;padding-bottom:10px}.payG3 label{display:grid;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}.payG3 input{height:36px;font-size:15px!important;text-align:center;min-width:0;width:100%}
+@media (prefers-color-scheme:dark){.pxm{background:#6B5A12;color:#FFF3B0}}
+.otb{display:block;margin:2px auto 0;width:max-content;max-width:100%;padding:0 4px;border-radius:5px;background:#D9F5E8;color:#0B6B47;font-size:10px;font-weight:900;line-height:15px;white-space:nowrap}
+.otAdd{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:center;margin-top:6px}.otAdd>span{font-weight:900;color:var(--muted)}
+.otAdd select,.otAdd input{height:42px;font-size:16px!important;min-width:0;width:100%}.otAdd input{grid-column:1/3}.otAdd .addBtn{grid-column:3;height:42px;background:#1F9D6B}
+.otSec .tm{color:#0B6B47;font-weight:900}.otT{font-size:13px}#oPv b{color:#0B6B47}
+@media (prefers-color-scheme:dark){.otb{background:rgba(52,199,130,.2);color:#7FE0B1}.otSec .tm,#oPv b{color:#7FE0B1}}
+.payR{margin:6px 0;border:1px solid var(--line);border-radius:12px;padding:8px 12px}.payR summary{font-weight:800;cursor:pointer}
+.payG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.payG label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}.payG input{height:38px;font-size:16px!important}
 </style>
 </head>
 <body>
@@ -368,7 +432,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114n·GitHub";
+const VERLBL="v1114r·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -476,7 +540,8 @@ async function load(quiet){if(busy)return;busy=true;syncLbl();
 async function saveMany(list,okMsg){
   const prev=recs.slice();for(const rec of list){const i=recs.findIndex(r=>r.id===rec.id);if(i>=0)recs[i]=rec;else recs.push(rec);}
   await decryptAll();render();refreshSheet();busy=true;syncLbl();let ok=false;
-  try{const r=await call("save",list);if(!r||!r.ok)throw new Error(r&&r.err||"");recs=r.recs||recs;lastSync=Date.now();ok=!r.denied;toast(r.denied?"본인 일정·근무만 바꿀 수 있어요":okMsg);}
+  try{let r=await call("save",list);for(let i=0;i<3&&r&&r.err==="busy";i++){await new Promise(z=>setTimeout(z,2500+i*2500));r=await call("save",list);}   // 다른 사람이 저장 중이면 잠깐 기다렸다 다시
+    if(!r||!r.ok)throw new Error(r&&r.err||"");recs=r.recs||recs;lastSync=Date.now();ok=!r.denied;toast(r.denied?"본인 일정·근무만 바꿀 수 있어요":okMsg);}
   catch(e){recs=prev;toast("저장 실패 · 인터넷 연결을 확인하세요");}
   finally{busy=false;syncLbl();}
   await decryptAll();render();refreshSheet();if(ok)checkNotes(true);return ok;}
@@ -505,7 +570,7 @@ const save=(rec,msg)=>saveMany([rec],msg);
 /* ── 화면 ── */
 function badLink(){$("app").innerHTML=`<div class="card pin"><h2>SKID 근무표</h2><p>본인 전용 링크로 들어와 주세요</p>
   <div class="empty" style="text-align:left;line-height:1.6">사무실 대시보드의 <b>근무조</b> 창에서 내 이름의 QR을 휴대폰 카메라로 찍으면 열려요.<br>예전에 받은 링크라면 팀 비밀번호가 바뀌었을 수 있어요. 새 QR을 받아 주세요.</div></div>`;}
-function shell(){$("app").innerHTML=`<header><h1>내 캘린더<small>SKID 근무 · <span style="opacity:.55">${VERLBL}</span></small></h1><button class="meBtn" id="meBtn" type="button" aria-label="설정"></button></header>
+function shell(){$("app").innerHTML=`<header><h1>내 캘린더<small>SKID 근무 · <span style="opacity:.55">${VERLBL}</span></small></h1><div class="vsw" id="vsw" role="tablist" aria-label="보기"><i class="th" aria-hidden="true"></i><button type="button" role="tab" data-v="me">내 근무</button><button type="button" role="tab" data-v="all">전체</button></div><button class="meBtn" id="meBtn" type="button" aria-label="설정"></button></header>
   <div id="banner"></div>
   <section class="card" id="cal"><div class="nav"><button class="ib" id="prv" type="button" aria-label="이전 달">‹</button><b id="ym"></b><button class="ib" id="nxt" type="button" aria-label="다음 달">›</button><span class="sync" id="syncLbl"></span><button class="today" id="tdy" type="button">오늘</button><button class="ib plus" id="fab" type="button" aria-label="일정 추가">+</button></div>
   <div class="wk">${[...W].map(w=>`<span>${w}</span>`).join("")}</div><div class="gridWrap"><div class="grid" id="grid"></div></div></section>`;
@@ -514,6 +579,8 @@ function shell(){$("app").innerHTML=`<header><h1>내 캘린더<small>SKID 근무
   $("tdy").onclick=()=>{const t=new Date(),d=(t.getFullYear()-Y)*12+(t.getMonth()-M);const snap=d?snapGrid():null;Y=t.getFullYear();M=t.getMonth();render();if(d)slide(d>0?1:-1,snap,0);openDay(key(t));};
   $("grid").onclick=e=>{const b=e.target.closest(".day");if(b&&b.dataset.k)openDay(b.dataset.k);};
   $("meBtn").onclick=openSettings;
+  $("vsw").onclick=e=>{const b=e.target.closest("[data-v]");if(!b||b.dataset.v===VIEW)return;VIEW=b.dataset.v;LS("view",VIEW);const snap=snapGrid();render();
+    try{$("grid").animate([{opacity:.25,transform:"scale(.985)"},{opacity:1,transform:"none"}],{duration:260,easing:"cubic-bezier(.2,.9,.3,1)"});}catch(x){}};
   $("fab").onclick=()=>openDay(sel||key(new Date()),false,true);
   $("banner").onclick=e=>{const b=e.target.closest("[data-act]");if(!b)return;const a=b.dataset.act;if(a==="unlock")openLock();else if(a==="seen"){let sn={};try{sn=JSON.parse(LS("seenClaim")||"{}")||{};}catch(x){}sn[b.dataset.sk]=1;LS("seenClaim",JSON.stringify(sn));const k=b.dataset.k;const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);}
     else if(a==="go"){const k=b.dataset.k;const d=new Date(k+"T00:00");Y=d.getFullYear();M=d.getMonth();render();openDay(k);}};
@@ -538,14 +605,22 @@ function slide(dir,snap,from){const g=$("grid"),ym=$("ym"),gw=g&&g.parentNode;if
     snap.animate([{transform:`translateY(${from}px)`,opacity:snap.style.opacity||1},{transform:`translateY(${-dir*h}px)`,opacity:.15}],{duration:dur,easing:ease,fill:"forwards"}).onfinish=()=>snap.remove();
     g.animate([{transform:`translateY(${dir*h+from}px)`,opacity:.3},{transform:"none",opacity:1}],{duration:dur,easing:ease});
     ym.animate([{transform:`translateY(${dir*10}px)`,opacity:0},{transform:"none",opacity:1}],{duration:300,easing:"ease-out"});}catch(e){}}
-function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date());
+// 전체 보기: 그날 내 그룹의 주간·야간 조 + 근무 변경 표시 (이름은 날짜를 누르면 표로)
+function allCell(k,ds,subs,m,c,o){const g=m?m.g:GRP[0].g,ws=workers(k,ds,g),sg=subs.filter(z=>z.grp===g);
+  const line=(s,lab)=>{const L=ws.filter(w=>w.s===s);if(!L.length)return "";const t=s==="D"?ds.D:ds.N;const me1=L.some(w=>w.n===me);
+    const ch=L.filter(w=>sg.some(z=>z.who===w.n)).length;
+    return `<span class="al al${s}${me1?" mine":""}"><b>${lab}${t?esc(t.k):""}</b>${L.length>1&&!t?L.length:""}${ch?`<i class="alc" title="근무 변경 ${ch}">${ch}</i>`:""}</span>`;};
+  const open=sg.filter(z=>!z.sub).length;
+  return `<span class="alWrap">${line("D","주")}${line("N","야")}${open?`<span class="al alq" title="미정 ${open}건">?<b>미정</b>${open}</span>`:""}</span>`;}
+function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()),OTM=m?otMap():{};
+  document.querySelectorAll("#vsw [data-v]").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===VIEW));const vs=$("vsw");if(vs)vs.dataset.v=VIEW;
   $("ym").textContent=Y+"."+pad(M+1);
   $("meBtn").innerHTML=`<i></i>${esc(me)}<span class="gear">⚙</span>`;
   const f=new Date(Y,M,1),s=new Date(f);s.setDate(1-f.getDay());let h="";
   const n=(new Date(Y,M+1,0).getDate()+f.getDay())>35?42:35;
   for(let i=0;i<n;i++){const d=new Date(s);d.setDate(s.getDate()+i);const k=key(d),ds=dayShift(k,c),subs=subsOf(k),hol=HOL[k],o=stOf(myDay(k,ds,subs,m)),evs=evOf(k);
     h+=`<button type="button" class="day st-${o.st}${d.getMonth()!==M?" out":""}${d.getDay()===0?" sun":""}${d.getDay()===6?" sat":""}${hol?" hol":""}${k===tk?" isToday":""}${k===sel?" sel":""}" data-k="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일${hol?" "+esc(hol):""} ${esc(o.lab)}${evs.length?" 일정 "+evs.length+"개":""}">
-      <span class="dn">${d.getDate()}</span>${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:"대근")}</span>`:""}${m&&o.st==="off"&&openReqs(k,ds,subs,m,c).length?`<span class="req">대근 구함</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${hol?`<span class="hn">${esc(hol)}</span>`:""}
+      <span class="dn">${d.getDate()}</span>${VIEW==="all"?allCell(k,ds,subs,m,c,o):`${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:o.st==="subN"?"야대근":"주대근")}</span>`:""}${m&&o.st==="off"&&openReqs(k,ds,subs,m,c).length?`<span class="req">대근 구함</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${OTM[k]?`<span class="otb">OT ${OTM[k].reduce((t,x)=>t+otH(x).reduce((a,b)=>a+b,0),0)}h</span>`:""}`}${hol?`<span class="hn">${esc(hol)}</span>`:""}
       <span class="evs">${evs.slice(0,2).map(e=>`<span class="ev">${esc(e.t)}</span>`).join("")}${evs.length>2?`<span class="more">+${evs.length-2}</span>`:""}</span></button>`;}
   $("grid").innerHTML=h;$("grid").style.setProperty("--rows",n/7);
   // 안내 띠: 잠금 · 내일 대근
@@ -584,13 +659,15 @@ function twoTap(b,fn,lab){b.onclick=()=>{if(!b.classList.contains("ask")){const 
 
 // 시간은 30분 단위로만 (하루 종일 + 00:00 ~ 23:30)
 const tLbl=v=>{const [h,m]=v.split(":").map(Number);return (h<12?"오전 ":"오후 ")+((h%12)||12)+":"+String(m).padStart(2,"0");};
+const OSLOT=Array.from({length:48},(_,i)=>{const v=pad(Math.floor(i/2))+":"+(i%2?"30":"00");return `<option value="${v}">${tLbl(v)}</option>`;}).join("");
 const TSLOT='<option value="">하루 종일</option>'+Array.from({length:48},(_,i)=>{const v=pad(Math.floor(i/2))+":"+(i%2?"30":"00");return `<option value="${v}">${tLbl(v)}</option>`;}).join("");
 const LVC={"연차":"yc","반차":"bc","교육":"ed","기타":"et"};const lvc=o=>o.st==="lv"?" lv-"+(LVC[o.lab]||"et"):"";
 function openReqs(k,ds,subs,m,c=cfg()){if(!m)return [];const g=m.g;if(!offPeople(k,ds,g,c).includes(me))return [];if(subs.some(x=>x.grp===g&&(x.sub===me||x.who===me)))return [];
   return subs.filter(x=>x.grp===g&&!x.sub&&x.who!==me);}
+let VIEW=(()=>{try{return localStorage.getItem("skidP_view")||"me";}catch(e){return "me";}})();
 let CHG={k:null,type:null,sub:""};
 function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("on")&&$("sheet").dataset.k===k;const st0={};
-  if(wasOpen){const sh=$("sheet");st0.top=sh.scrollTop;sh.querySelectorAll("details[data-f]").forEach(d=>st0[d.dataset.f]=d.open);const ti=$("eT"),tt=$("eTm");if(ti){st0.t=ti.value;st0.tm=tt.value;}}
+  if(wasOpen){const sh=$("sheet");st0.top=sh.scrollTop;sh.querySelectorAll("details[data-f]").forEach(d=>st0[d.dataset.f]=d.open);const ti=$("eT"),tt=$("eTm");if(ti){st0.t=ti.value;st0.tm=tt.value;}if($("oS")){st0.os=$("oS").value;st0.oe=$("oE").value;}}
   if(CHG.k!==k)CHG={k,type:null,sub:""};
   sel=k;if(!keep)render();
   const c=cfg(),ds=dayShift(k,c),subs=subsOf(k),d=new Date(k+"T00:00"),hol=HOL[k],m=mine(c),md=myDay(k,ds,subs,m),o=stOf(md),evs=evOf(k);
@@ -616,20 +693,35 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   // 1-2) 대근 구해요: 미정인 같은 팀 연차 → 그날 휴무인 내가 신청
   const opn=openReqs(k,ds,subs,m,c);
   if(opn.length)h+=`<div class="dsSec"><span class="rl">대근 구해요 <small>신청하면 연차 쓴 분에게 알림이 가요</small></span><ul class="evl">${opn.map(x=>`<li class="reqLi"><span class="et">${esc(x.who)} ${esc(x.type)}</span><button class="chip claim" type="button" data-claim="${esc(x.id)}">대근 신청</button></li>`).join("")}</ul></div>`;
+  // 1-3) OT 일정 (예상 월급에 자동 반영 · 이 휴대폰에만 저장)
+  if(m){const ot=payX().filter(x=>x.d===k),P=payCfg(),hr=(+P.sal||0)/(+P.hb||209),won=x=>Math.round(x).toLocaleString("ko-KR")+"원";
+    const df=o.st==="day"||o.st==="subD"?["19:00","21:00"]:o.st==="night"||o.st==="subN"?["07:00","09:00"]:["07:00","19:00"];
+    h+=`<div class="dsSec otSec"><span class="rl">OT 일정 <small>${o.st==="off"||o.st==="lv"?"휴무 출근 (MDD·SKID 지원 등)":"근무 끝나고 추가 근무"}</small></span>`+
+      (ot.length?`<ul class="evl">${ot.map(x=>{const hh=otH(x);return `<li><span class="tm">${x.s?`${tLbl(x.s)}~${tLbl(x.e)}`:"OT"}</span><span class="et otT">${x.m?`<i class="pxm">${esc(x.m)}</i> `:""}${hTxt(hh)}${hr?` · ${won(hEq(hh)*hr)}`:""}</span><button class="del txt" type="button" data-odel="${esc(x.id)}" aria-label="OT 취소">취소</button></li>`;}).join("")}</ul>`:"")+
+      `<div class="otAdd"><select id="oS" aria-label="시작">${OSLOT}</select><span>~</span><select id="oE" aria-label="끝">${OSLOT}</select><input id="oM" list="xML" maxlength="30" placeholder="사유 (예: MDD)" autocomplete="off"><datalist id="xML"><option value="MDD"><option value="SKID 지원"><option value="교육"><option value="설비 점검"></datalist><button class="addBtn" id="oAdd" type="button">OT 추가</button></div>
+      <div class="pvHint" id="oPv"></div></div>`;
+    st0.otdf=df;}
   // 2) 내 일정
   h+=`<div class="dsSec"><span class="rl">내 일정</span>`;
   if(locked())h+=`<div class="lockBox"><span>🔒 내 일정이 잠겨 있어요</span><button class="add" type="button" id="goLock">잠금 풀기</button></div>`;
-  else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(/^\d{2}:\d{2}$/.test(e.tm)?tLbl(e.tm):e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del" type="button" data-pdel="${esc(e.id)}" aria-label="일정 삭제">✕</button></li>`).join("")}</ul>`:"")+
+  else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(/^\d{2}:\d{2}$/.test(e.tm)?tLbl(e.tm):e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del txt" type="button" data-pdel="${esc(e.id)}" aria-label="일정 취소">취소</button></li>`).join("")}</ul>`:"")+
     `<div class="addEv"><input id="eT" maxlength="100" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><select id="eTm" aria-label="시간 (30분 단위)">${TSLOT}</select><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
   h+=`</div>`;
   // 3) 그날 전체 근무표
   h+=`<div class="dsSec"><span class="rl">그날 전체 근무표</span><div class="allIn">
      <table class="tbl"><thead><tr><th></th>${GRP.map(G=>`<th>${G.n}</th>`).join("")}</tr></thead><tbody>${row("주간",ds.D,"D")}${row("야간",ds.N,"N")}</tbody></table>
      <div class="off">휴무 · ${ds.off.map(t=>`${esc(t.k)}조 (${esc(t.g12||"")}·${esc(t.g3||"")})`).join(", ")||"-"}</div>
-     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":"미정"}</span></li>`).join("")}</ul>`:""}</div></div>`;
+     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":`<span class="mj">미정</span>`}</span></li>`).join("")}</ul>`:""}</div></div>`;
   openSheet(h,k);$("sheet").classList.add("tall");$("xBtn").onclick=closeSheet;
   if(wasOpen){$("sheet").querySelectorAll("details[data-f]").forEach(dd=>{if(st0[dd.dataset.f]!=null)dd.open=st0[dd.dataset.f];});$("sheet").scrollTop=st0.top||0;if($("eT")&&st0.t!=null){$("eT").value=st0.t;$("eTm").value=st0.tm;}}
   const gl=$("goLock");if(gl)gl.onclick=openLock;
+  if($("oAdd")){const oS=$("oS"),oE=$("oE"),pv=()=>{const hh=otSplit(oS.value,oE.value),t=hh.reduce((a,b)=>a+b,0),P=payCfg(),hr=(+P.sal||0)/(+P.hb||209);
+      $("oPv").innerHTML=t?`<b>${t}시간</b> · ${hTxt(hh)}${hr?` · 약 <b>${Math.round(hEq(hh)*hr).toLocaleString("ko-KR")}원</b>`:" · ⚙ 설정 › 예상 월급에서 기본급을 넣으면 금액도 보여요"}`:"시작과 끝 시간을 골라 주세요";};
+    oS.value=st0.os||st0.otdf[0];oE.value=st0.oe||st0.otdf[1];oS.onchange=pv;oE.onchange=pv;pv();
+    $("oAdd").onclick=()=>{if(oS.value===oE.value){toast("시작과 끝 시간이 같아요");return;}
+      payXSave(payX().concat([{id:"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),d:k,s:oS.value,e:oE.value,m:$("oM").value.trim().slice(0,30)}]));
+      toast("OT를 넣었어요 · 예상 월급에 반영돼요");openDay(k);};}
+  $("sheet").querySelectorAll("[data-odel]").forEach(b=>twoTap(b,()=>{payXSave(payX().filter(x=>x.id!==b.dataset.odel));toast("OT를 취소했어요");openDay(k);},"한 번 더 누르면 취소"));
   $("sheet").querySelectorAll("[data-ty]").forEach(b=>b.onclick=()=>{const t=b.dataset.ty;if(CHG.type===t){CHG.type=null;}else{CHG.type=t;}openDay(k,true);});
   $("sheet").querySelectorAll("[data-su]").forEach(b=>b.onclick=()=>{CHG.sub=b.dataset.su;openDay(k,true);});
   $("sheet").querySelectorAll("[data-claim]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.claim);if(!x||x.sub)return;
@@ -677,6 +769,82 @@ async function enablePush(){if(Notification.permission==="denied")return "denied
   let sub=await r.pushManager.getSubscription();if(!sub)sub=await r.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:u8(vap)});
   const x=await call("subscribe",null,{endpoint:sub.endpoint,page:PAGE});if(!x||!x.ok)throw new Error("subscribe");
   const y=await call("setpref",null,{alarm:true,page:PAGE});if(y&&y.pref)PREF={...PREF,...y.pref,push:x.push};return "ok";}
+/* ── 예상 월급 (세전 · 추정) ──
+   주간 07~19 · 야간 19~07 (12시간) · 월급제
+   통상시급 = 기본급 ÷ 기준시간(209)
+   대근 1회 = 12시간 × 시급 × 1.5 · 야간 대근은 22~06시 8시간 × 시급 × 0.5 추가 · 공휴일 대근은 8시간 넘는 4시간 × 시급 × 0.5 추가
+   야간 근무가 있는 달: 식대 80,000원 + 기본 OT 8.7시간(× 시급 × 1.5)
+   기본급·규칙은 이 휴대폰에만 저장 (서버로 보내지 않음) */
+const PAYDEF={hb:209,bo:8.7,boR:1.5,nt:0.5,ntH:8,meal:80000,sD:[8,4,0],sN:[4,4,4],shift:"auto"};
+const PRATE=[1.5,2,2.5];
+function payCfg(){let o={};try{o=JSON.parse(LS("pay_"+me)||"{}")||{};}catch(e){}const P=Object.assign({sal:0},PAYDEF,o);
+  ["sD","sN"].forEach(f=>{if(!Array.isArray(P[f])||P[f].length!==3)P[f]=PAYDEF[f].slice();});return P;}
+function payX(){try{const a=JSON.parse(LS("payx_"+me)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
+function payXSave(a){LS("payx_"+me,JSON.stringify(a.slice(-400)));}
+const hEq=h=>h.reduce((t,x,i)=>t+(+x||0)*PRATE[i],0);
+const tMin=t=>{const m=/^(\d\d):(\d\d)$/.exec(t||"");return m?+m[1]*60+ +m[2]:null;};
+/* OT 시간 → 150·200·250% 나누기: 8시간까지 150%, 넘으면 200% · 22~06시는 +50% (처음부터 200%, 8시간 넘으면 250%) */
+function otSplit(s,e){let a=tMin(s),b=tMin(e);if(a==null||b==null)return [0,0,0];if(b<=a)b+=1440;const h=[0,0,0];
+  for(let t=a;t<b;t+=30){const el=(t-a)/60,hod=(t%1440)/60,night=hod>=22||hod<6;h[(el>=8?1:0)+(night?1:0)]+=.5;}return h;}
+const otH=x=>Array.isArray(x.h)&&!x.s?x.h:otSplit(x.s,x.e);
+const hTxt=h=>["150%","200%","250%"].map((t,i)=>+h[i]?`${t} ${+h[i]}h`:"").filter(Boolean).join(" · ")||"0시간";
+function otMap(){const o={};payX().forEach(x=>{(o[x.d]=o[x.d]||[]).push(x);});return o;}
+function payCalc(y,mo,P){const c=cfg(),m=mine(c),n=new Date(y,mo+1,0).getDate(),hr=(+P.sal||0)/(+P.hb||209),r=x=>Math.round(x);
+  let d=0,nn=0,nights=0,rot=0;const L=[];
+  for(let i=1;i<=n;i++){const k=y+"-"+pad(mo+1)+"-"+pad(i),ds=dayShift(k,c),subs=subsOf(k),md=myDay(k,ds,subs,m),o=stOf(md),dw=new Date(y,mo,i).getDay();
+    if(o.st==="night")nights++;
+    const s0=m&&myShift(k,ds,m);if(s0&&(s0==="N"||dw===0||dw===6||HOL[k]))rot++;
+    if(o.st==="subD"||o.st==="subN"){const N=o.st==="subN",h=N?P.sN:P.sD;if(N)nn++;else d++;L.push({k,N,h,amt:hEq(h)*hr,by:(md||{}).by||""});}}
+  const ym=y+"-"+pad(mo+1),X=payX().filter(x=>String(x.d||"").slice(0,7)===ym).sort((a,b)=>(a.d+(a.s||""))<(b.d+(b.s||""))?-1:1).map(x=>{const h=otH(x);return Object.assign({},x,{hh:h,amt:hEq(h)*hr});});
+  const shift=P.shift==="on"?true:P.shift==="off"?false:rot>0;
+  const bo=shift?r(P.bo*hr*P.boR):0,ntT=r(nights*P.ntH*hr*P.nt),meal=shift&&(nights+nn)>0?+P.meal||0:0,subT=r(L.reduce((a,x)=>a+x.amt,0)),xT=r(X.reduce((a,x)=>a+x.amt,0));
+  return {hr,d,nn,nights,shift,L,X,bo,ntT,meal,subT,xT,total:r((+P.sal||0)+bo+ntT+meal+subT+xT)};}
+function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR")+"원";
+  const paint=()=>{const P=payCfg(),R=payCalc(y,mo,P),ym=y+"-"+pad(mo+1);
+    openSheet(`<div class="dsHead"><button class="dsX" type="button" id="xBtn" aria-label="닫기">✕</button><b>예상 월급</b><span></span></div>
+      <div class="payM"><button class="ib" id="pPrev" type="button" aria-label="이전 달">‹</button><b>${y}년 ${mo+1}월</b><button class="ib" id="pNext" type="button" aria-label="다음 달">›</button></div>
+      <label class="payIn"><span>내 기본급 (월)</span><input id="pSal" inputmode="numeric" placeholder="예: 3,000,000" value="${P.sal?Number(P.sal).toLocaleString("ko-KR"):""}"><em>원</em></label>
+      ${P.sal?`<div class="payTot"><small>세전 예상</small><b>${won(R.total)}</b><span>통상시급 ${won(R.hr)} (기본급 ÷ ${P.hb})</span></div>
+      <ul class="payL">
+        <li><span>기본급</span><b>${won(P.sal)}</b></li>
+        <li><span>보전수당 ${P.bo}시간 <small>${R.shift?"교대근무":"교대근무 아님 · 제외"}</small></span><b>${won(R.bo)}</b></li>
+        <li><span>야간 근무 OT <small>${R.nights}회 × ${P.ntH}시간 × ${P.nt}</small></span><b>${won(R.ntT)}</b></li>
+        <li><span>식대 <small>${R.meal?"교대 · 야간 근무 있음":R.shift?"야간 근무 없는 달 · 제외":"교대근무 아님 · 제외"}</small></span><b>${won(R.meal)}</b></li>
+        <li><span>대근 OT <small>주간 ${R.d}회 · 야간 ${R.nn}회</small></span><b>${won(R.subT)}</b></li>
+        ${R.L.map(x=>`<li class="sub"><span>${+x.k.slice(5,7)}/${+x.k.slice(8)} ${x.N?"야간":"주간"} 대근${x.by?` · ${esc(x.by)}님 대신`:""}<small>${hTxt(x.h)}</small></span><b>${won(x.amt)}</b></li>`).join("")}
+        <li><span>OT 일정 <small>달력에 넣은 OT ${R.X.length}건</small></span><b>${won(R.xT)}</b></li>
+        ${R.X.map(x=>`<li class="sub"><span>${+x.d.slice(5,7)}/${+x.d.slice(8)} ${x.s?`${tLbl(x.s)}~${tLbl(x.e)}`:"OT"}${x.m?` · <i class="pxm">${esc(x.m)}</i>`:""}<small>${hTxt(x.hh)}</small></span><b>${won(x.amt)}</b></li>`).join("")}
+      </ul>`:`<div class="pvHint">기본급을 넣으면 이 달 근무표(대근 포함)로 바로 계산해요</div>`}
+      <div class="pvHint pxHint">📅 OT는 달력에서 날짜를 눌러 <b>OT 일정</b>에 시간을 넣으면 여기에 자동으로 더해져요</div>
+      <details class="payR"><summary>계산 규칙 보기·바꾸기</summary>
+        <div class="payG">
+          <label>시급 기준시간<input id="pHb" inputmode="decimal" value="${P.hb}"></label>
+          <label>교대근무 (보전수당)<select id="pSh"><option value="auto"${P.shift==="auto"?" selected":""}>자동 (근무표로)</option><option value="on"${P.shift==="on"?" selected":""}>항상 받음</option><option value="off"${P.shift==="off"?" selected":""}>안 받음</option></select></label>
+          <label>보전수당 시간<input id="pBo" inputmode="decimal" value="${P.bo}"></label>
+          <label>보전수당 배율<input id="pBr" inputmode="decimal" value="${P.boR}"></label>
+          <label>야간 1회 OT 시간<input id="pNh" inputmode="decimal" value="${P.ntH}"></label>
+          <label>야간 OT 배율<input id="pNt" inputmode="decimal" value="${P.nt}"></label>
+          <label>식대 (교대·야간 있는 달)<input id="pMe" inputmode="numeric" value="${P.meal}"></label><span></span>
+        </div>
+        <div class="payG3"><b>주간 대근</b>${P.sD.map((v,i)=>`<label>${["150%","200%","250%"][i]}<input data-s="sD" data-i="${i}" inputmode="decimal" value="${v}"></label>`).join("")}
+          <b>야간 대근</b>${P.sN.map((v,i)=>`<label>${["150%","200%","250%"][i]}<input data-s="sN" data-i="${i}" inputmode="decimal" value="${v}"></label>`).join("")}</div>
+        <p class="hint2">교대근무자는 보전수당 ${P.bo}시간 × ${P.boR} · 내 야간 근무 1회마다 ${P.ntH}시간 × ${P.nt} · 대근은 위 표대로 · OT 일정은 8시간까지 150%, 넘으면 200%, 22~06시는 +50% (처음부터 200%)</p>
+        <button class="ghostBtn" id="pReset" type="button">처음 규칙으로</button>
+      </details>
+      <p class="hint2">세금·보험료를 빼기 전 금액이고, 실제 급여명세서와 다를 수 있어요. 기본급과 추가 OT는 이 휴대폰에만 저장돼요.</p>`);
+    $("xBtn").onclick=closeSheet;
+    $("pPrev").onclick=()=>{if(--mo<0){mo=11;y--;}form=false;paint();};$("pNext").onclick=()=>{if(++mo>11){mo=0;y++;}form=false;paint();};
+    const save=o=>{LS("pay_"+me,JSON.stringify(Object.assign(payCfg(),o)));};
+    const num=v=>{const n=parseFloat(String(v).replace(/[^\d.]/g,""));return isFinite(n)?n:0;};
+    const keep=fn=>{const op=document.querySelector(".payR").open;fn();paint();document.querySelector(".payR").open=op;};
+    $("pSal").onchange=()=>{save({sal:num($("pSal").value)});paint();};
+    $("pSal").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("pSal").blur();}});
+    [["pHb","hb"],["pBo","bo"],["pBr","boR"],["pNh","ntH"],["pNt","nt"],["pMe","meal"]].forEach(([id,f])=>{$(id).onchange=()=>keep(()=>save({[f]:num($(id).value)}));});
+    $("pSh").onchange=()=>keep(()=>save({shift:$("pSh").value}));
+    document.querySelectorAll(".payG3 input").forEach(el=>{el.onchange=()=>keep(()=>{const P2=payCfg(),a=P2[el.dataset.s].slice();a[+el.dataset.i]=num(el.value);save({[el.dataset.s]:a});});});
+    $("pReset").onclick=()=>{save(Object.assign({},PAYDEF,{sD:PAYDEF.sD.slice(),sN:PAYDEF.sN.slice()}));paint();document.querySelector(".payR").open=true;};
+  };
+  paint();}
 async function openSettings(){const c=cfg(),m=mine(c);
   const paint=async()=>{const p=PREF||{},v=vault();let pushHtml;
     if(!PAGE)pushHtml=`<div class="hint2">휴대폰 알림은 새 QR(GitHub 주소)로 연 화면에서 켤 수 있어요.</div>`;
@@ -691,9 +859,11 @@ async function openSettings(){const c=cfg(),m=mine(c);
       :`<p class="lead">내 일정이 잠겨 있어요.</p><button class="add" id="pwOpen" type="button">잠금 풀기</button>`;
     openSheet(`<h2>설정<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
       <div class="who"><b>${esc(me)}</b>${m?` · ${esc(GRP.find(G=>G.g===m.g).n)}`:""}</div>
+      <button class="payGo" id="payGo" type="button"><span>💰</span><b>예상 월급 계산</b><small>기본급 + 대근 OT · 이 휴대폰에만 저장</small><i>›</i></button>
       <h3>대근 알림</h3>${pushHtml}<h3>내 일정 보안</h3>${sec}`);
     $("xBtn").onclick=closeSheet;
     const b=id=>$(id);
+    if(b("payGo"))b("payGo").onclick=()=>openPay();
     if(b("pwMake"))b("pwMake").onclick=()=>openLock();if(b("pwChange"))b("pwChange").onclick=()=>openLock("change");if(b("pwOpen"))b("pwOpen").onclick=()=>openLock();
     if(b("lkNow"))b("lkNow").onclick=()=>{lockNow();closeSheet();toast("잠갔어요");};
     if(b("lkEach"))b("lkEach").onchange=async()=>{LS("lockEach",b("lkEach").checked?"1":null);if(b("lkEach").checked)LS("k_"+me,null);else if(KEY)await rememberKey();toast(b("lkEach").checked?"앱을 열 때마다 비밀번호를 물어요":"이 휴대폰에서 기억해요");};
