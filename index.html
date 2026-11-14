@@ -352,7 +352,7 @@ header{margin:0 6px 8px!important}
 .nbar .ni{font-size:18px;flex:0 0 auto}.nbar .nt{flex:1;min-width:0;font-size:14px;font-weight:800;line-height:1.35;word-break:keep-all}.nbar .nt small{color:var(--muted);font-weight:700}
 .nbar .nb{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--p);color:#fff;font-weight:800;font-size:13px}
 .nbar .nx{flex:0 0 auto;width:32px;height:34px;border:0;background:transparent;color:var(--muted);font-size:15px}
-/* v1114v: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
+/* v1114w: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
 header h1{flex:1 1 auto}
 .vsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;height:34px;padding:3px;border-radius:12px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
 .vsw button{position:relative;z-index:1;border:0;background:transparent;padding:0 11px;font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;transition:color .25s}
@@ -400,6 +400,19 @@ body.vAll .alLeg{display:flex}
 .thSeg button{height:34px;padding:0 14px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-weight:800;font-size:14px}
 .thSeg button[aria-checked="true"]{background:var(--p);color:#fff;box-shadow:0 3px 8px -4px rgba(0,0,0,.4)}
 .thHint{margin:2px 0 8px}
+.myRow .chgTg{margin-left:4px;height:34px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:var(--surf);color:var(--ink);font-weight:800;font-size:14px}
+.myRow .chgTg.on{background:var(--p);border-color:var(--p);color:#fff}.myRow .rv{flex:0 1 auto;margin-left:auto}
+.chgBox .chips{display:flex!important;flex-direction:row!important;flex-wrap:wrap;gap:7px;justify-content:flex-start}.chgBox .chip{width:auto!important}
+.chgBox{display:grid;gap:8px;padding:10px 0 4px}
+.reqLi .et{background:none!important;padding:0!important}
+.otGo{display:flex;align-items:center;gap:12px;width:100%;margin:12px 0 2px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--surf);color:var(--ink);text-align:left}
+.otGo .otIc{flex:none;display:grid;place-items:center;width:36px;height:36px;border-radius:10px;background:#1F9D6B;color:#fff;font-size:12.5px;font-weight:900;letter-spacing:.3px}
+.otGo .otGt{flex:1;min-width:0;display:grid;gap:1px}.otGo .otGt b{font-size:15px;font-weight:900}.otGo .otGt small{font-size:12.5px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.otGo i{font-style:normal;font-size:20px;color:var(--muted)}
+.allF{margin-top:10px;border-top:1px solid var(--line)}.allF>summary{display:flex;align-items:center;padding:13px 4px;font-weight:900;font-size:15px;cursor:pointer;list-style:none}.allF>summary::-webkit-details-marker{display:none}
+.allF>summary::after{content:"";width:7px;height:7px;margin-left:auto;margin-right:6px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s}.allF[open]>summary::after{transform:rotate(225deg)}
+.otWhy{font-size:14px;font-weight:800;color:var(--ink);opacity:.85}.dsX.back{font-size:26px;line-height:1}
+@media (prefers-color-scheme:dark){.otGo .otIc{background:#34C782;color:#06281A}}
 .payGo{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;width:100%;margin:6px 0 4px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--soft);text-align:left;color:var(--ink)}
 .payGo>span{grid-row:1/3;font-size:22px}.payGo b{font-size:15px}.payGo small{grid-column:2;color:var(--muted);font-size:12px;font-weight:600}.payGo i{grid-row:1/3;grid-column:3;font-style:normal;font-size:20px;color:var(--muted)}
 .payM{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 10px}.payM b{font-size:16px}
@@ -477,7 +490,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114v·GitHub";
+const VERLBL="v1114w·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -712,8 +725,8 @@ function openReqs(k,ds,subs,m,c=cfg()){if(!m)return [];const g=m.g;if(!offPeople
 let VIEW=(()=>{try{return localStorage.getItem("skidP_view")||"me";}catch(e){return "me";}})();
 let CHG={k:null,type:null,sub:""};
 function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("on")&&$("sheet").dataset.k===k;const st0={};
-  if(wasOpen){const sh=$("sheet");st0.top=sh.scrollTop;sh.querySelectorAll("details[data-f]").forEach(d=>st0[d.dataset.f]=d.open);const ti=$("eT"),tt=$("eTm");if(ti){st0.t=ti.value;st0.tm=tt.value;}if($("oS")){st0.os=$("oS").value;st0.oe=$("oE").value;}}
-  if(CHG.k!==k)CHG={k,type:null,sub:""};
+  if(wasOpen){const sh=$("sheet");st0.top=sh.scrollTop;sh.querySelectorAll("details[data-f]").forEach(d=>st0[d.dataset.f]=d.open);const ti=$("eT"),tt=$("eTm");if(ti){st0.t=ti.value;st0.tm=tt.value;}}
+  if(CHG.k!==k)CHG={k,type:null,sub:"",open:false};
   sel=k;if(!keep)render();
   const c=cfg(),ds=dayShift(k,c),subs=subsOf(k),d=new Date(k+"T00:00"),hol=HOL[k],m=mine(c),md=myDay(k,ds,subs,m),o=stOf(md),evs=evOf(k);
   const nm=(n,g)=>{const x=subs.find(s=>s.grp===g&&s.who===n);const meC=n===me||(x&&x.sub===me)?" me":"";
@@ -725,48 +738,38 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   const bigTxt=o.st==="off"?"휴무":o.st==="day"?"주간":o.st==="night"?"야간":o.st==="lv"?o.lab:o.lab;
   let h=`<div class="dsHead"><button class="dsX" type="button" id="xBtn" aria-label="닫기">✕</button><b>${d.getMonth()+1}월 ${d.getDate()}일 (${W[d.getDay()]})</b>${hol?`<span class="hb">${esc(hol)}</span>`:"<span></span>"}</div>`;
   // 1) 내 근무 + 근무 변경 (한눈에)
-  if(m){h+=`<div class="dsRow"><span class="rl">내 근무</span><span class="rv"><span class="big b-${o.st}${lvc(o)}">${esc(bigTxt)}</span>${md&&md.by?`<small>${esc(md.by)}님 대신</small>`:""}</span></div>`;
-    h+=`<div class="dsRow col"><span class="rl">근무 변경</span>`;
-    if(myOut)h+=`<div class="chgNow"><span><b>${esc(myOut.type)}</b> · ${myOut.sub?esc(myOut.sub)+" 대근"+(myOut.claim&&myOut.claim.by===myOut.sub?" (신청)":""):"미정 · 휴무자가 신청하면 알려 드려요"}</span><button class="chip danger" type="button" data-sdel="${esc(myOut.id)}">변경 취소</button></div>`;
-    else if(s0){h+=`<div class="chips">${TYPES.map(t=>`<button class="chip${CHG.type===t?" on":""}" type="button" data-ty="${esc(t)}">${esc(t)}</button>`).join("")}</div>`;
+  if(m){const canChg=!!(s0&&!myOut),opn=canChg&&(CHG.open||CHG.type);
+    h+=`<div class="dsRow myRow"><span class="rl">내 근무</span><span class="rv"><span class="big b-${o.st}${lvc(o)}">${esc(bigTxt)}</span>${md&&md.by?`<small>${esc(md.by)}님 대신</small>`:""}</span>${canChg?`<button class="chgTg${opn?" on":""}" type="button" id="chgTg" aria-expanded="${!!opn}">근무 변경</button>`:""}</div>`;
+    if(myOut)h+=`<div class="chgNow"><span><b>${esc(myOut.type)}</b> · ${myOut.sub?esc(myOut.sub)+" 대근"+(myOut.claim&&myOut.claim.by===myOut.sub?" (신청)":""):"대근 구해요 · 신청이 오면 알려 드려요"}</span><button class="chip danger" type="button" data-sdel="${esc(myOut.id)}">변경 취소</button></div>`;
+    else if(opn){h+=`<div class="chgBox"><div class="chips">${TYPES.map(t=>`<button class="chip${CHG.type===t?" on":""}" type="button" data-ty="${esc(t)}">${esc(t)}</button>`).join("")}</div>`;
       if(CHG.type){const used=new Set(subs.filter(x=>x.grp===m.g&&x.sub).map(x=>x.sub)),cand=offPeople(k,ds,m.g,c).filter(n=>n!==me&&!used.has(n));
-        h+=`<span class="rl sub">대근자 <small>그날 휴무자</small></span><div class="chips">${cand.map(n=>`<button class="chip${CHG.sub===n?" on":""}" type="button" data-su="${esc(n)}">${esc(n)}</button>`).join("")}<button class="chip${CHG.sub===""?" on":""}" type="button" data-su="">미정</button></div><div class="pvHint">미정으로 올리면 그날 휴무자가 대근을 신청할 수 있고, 신청이 오면 알림이 가요</div>
-          <button class="add" id="fAdd" type="button">${esc(CHG.type)}${CHG.sub?" · "+esc(CHG.sub)+" 대근":" · 미정"} 등록</button>`;}}
-    else if(md&&md.lab==="대근"){const mi=subs.find(z=>z.grp===m.g&&z.sub===me);h+=`<div class="chgNow"><span><b>${esc(md.by)}님 ${esc(mi?mi.type:"")}</b> 대신 대근</span>${mi?`<button class="chip danger" type="button" data-unclaim="${esc(mi.id)}">대근 취소</button>`:""}</div>`;}
-    else h+=`<div class="muted">없음 · 이 날은 근무가 없어요</div>`;
-    h+=`</div>`;}
+        h+=`<span class="rl sub">대근자 <small>그날 휴무자</small></span><div class="chips">${cand.map(n=>`<button class="chip${CHG.sub===n?" on":""}" type="button" data-su="${esc(n)}">${esc(n)}</button>`).join("")}<button class="chip${CHG.sub===""?" on":""}" type="button" data-su="">미정</button></div><div class="pvHint">미정으로 올리면 그날 휴무자가 대근을 신청할 수 있어요</div>
+          <button class="add" id="fAdd" type="button">${esc(CHG.type)}${CHG.sub?" · "+esc(CHG.sub)+" 대근":" · 미정"} 등록</button>`;}
+      h+=`</div>`;}
+    else if(md&&md.lab==="대근"){const mi=subs.find(z=>z.grp===m.g&&z.sub===me);h+=`<div class="chgNow"><span><b>${esc(md.by)}님 ${esc(mi?mi.type:"")}</b> 대신 대근</span>${mi?`<button class="chip danger" type="button" data-unclaim="${esc(mi.id)}">대근 취소</button>`:""}</div>`;}}
   // 1-2) 대근 구해요: 미정인 같은 팀 연차 → 그날 휴무인 내가 신청
   const opn=openReqs(k,ds,subs,m,c);
   if(opn.length)h+=`<div class="dsSec"><span class="rl">대근 구해요 <small>신청하면 연차 쓴 분에게 알림이 가요</small></span><ul class="evl">${opn.map(x=>`<li class="reqLi"><span class="et">${esc(x.who)} ${esc(x.type)}</span><button class="chip claim" type="button" data-claim="${esc(x.id)}">대근 신청</button></li>`).join("")}</ul></div>`;
-  // 1-3) OT 일정 (예상 월급에 자동 반영 · 이 휴대폰에만 저장)
-  if(m){const ot=payX().filter(x=>x.d===k),P=payCfg(),hr=(+P.sal||0)/(+P.hb||209),won=x=>Math.round(x).toLocaleString("ko-KR")+"원";
-    const df=o.st==="day"||o.st==="subD"?["19:00","21:00"]:o.st==="night"||o.st==="subN"?["07:00","09:00"]:["07:00","19:00"];
-    h+=`<div class="dsSec otSec"><span class="rl">OT 일정 <small>${o.st==="off"||o.st==="lv"?"휴무 출근 (MDD·SKID 지원 등)":"근무 끝나고 추가 근무"}</small></span>`+
-      (ot.length?`<ul class="otL">${ot.map(x=>{const hh=otH(x),t=hh.reduce((a,b)=>a+b,0);return `<li><div class="otI"><b class="otTm">${x.s?`${tLbl(x.s)} ~ ${tLbl(x.e)}`:"OT"} <em>${t}시간</em></b><span class="otD">${x.m?`<i class="otM">${esc(x.m)}</i>`:""}${hTxt(hh)}${hr?` · <b>${won(hEq(hh)*hr)}</b>`:""}</span></div><button class="del txt" type="button" data-odel="${esc(x.id)}" aria-label="OT 취소">취소</button></li>`;}).join("")}</ul>`:"")+
-      `<div class="otAdd"><label class="otLb">시작<select id="oS">${OSLOT}</select></label><span class="otTil">~</span><label class="otLb">끝<select id="oE">${OSLOT}</select></label><label class="otLb otRs">사유<input id="oM" list="xML" maxlength="30" placeholder="예: MDD" autocomplete="off"></label><datalist id="xML"><option value="MDD"><option value="SKID 지원"><option value="교육"><option value="설비 점검"></datalist><button class="addBtn" id="oAdd" type="button">OT 추가</button></div>
-      <div class="otPv" id="oPv"></div></div>`;
-    st0.otdf=df;}
   // 2) 내 일정
   h+=`<div class="dsSec"><span class="rl">내 일정</span>`;
   if(locked())h+=`<div class="lockBox"><span>🔒 내 일정이 잠겨 있어요</span><button class="add" type="button" id="goLock">잠금 풀기</button></div>`;
   else h+=(evs.length?`<ul class="evl">${evs.map(e=>`<li><span class="tm">${e.tm?esc(/^\d{2}:\d{2}$/.test(e.tm)?tLbl(e.tm):e.tm):"하루 종일"}</span><span class="et">${esc(e.t)}</span><button class="del txt" type="button" data-pdel="${esc(e.id)}" aria-label="일정 취소">취소</button></li>`).join("")}</ul>`:"")+
-    `<div class="addEv"><input id="eT" maxlength="100" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><select id="eTm" aria-label="시간 (30분 단위)">${TSLOT}</select><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정${vault()?"":" · 다른 휴대폰에서도 보려면 ⚙ 설정에서 비밀번호를 만들어요"}</div>`;
+    `<div class="addEv"><input id="eT" maxlength="100" placeholder="메모·일정 입력 (예: 병원, 여행)" autocomplete="off" enterkeyhint="done"><select id="eTm" aria-label="시간 (30분 단위)">${TSLOT}</select><button class="addBtn" id="eAdd" type="button">추가</button></div><div class="pvHint">🔒 나만 보는 일정이에요</div>`;
   h+=`</div>`;
-  // 3) 그날 전체 근무표
-  h+=`<div class="dsSec"><span class="rl">그날 전체 근무표</span><div class="allIn">
+  // 2-2) OT (버튼 → 따로 창)
+  if(m){const ot=payX().filter(x=>x.d===k),tot=ot.reduce((t,x)=>t+otH(x).reduce((a,b)=>a+b,0),0);
+    h+=`<button class="otGo" type="button" id="otGo"><span class="otIc">OT</span><span class="otGt">${ot.length?`<b>OT ${tot}시간</b><small>${ot.map(x=>x.s?`${tLbl(x.s)}~${tLbl(x.e)}`:"OT").join(" · ")}</small>`:`<b>OT 일정 넣기</b><small>${o.st==="off"||o.st==="lv"?"휴무 출근 (MDD·SKID 지원 등)":"근무 끝나고 추가 근무"}</small>`}</span><i>›</i></button>`;}
+  // 3) 그날 전체 근무표 (접기)
+  h+=`<details class="allF" data-f="all"${LS("allOpen")==="1"?" open":""}><summary>그날 전체 근무표</summary><div class="allIn">
      <table class="tbl"><thead><tr><th></th>${GRP.map(G=>`<th>${G.n}</th>`).join("")}</tr></thead><tbody>${row("주간",ds.D,"D")}${row("야간",ds.N,"N")}</tbody></table>
      <div class="off">휴무 · ${ds.off.map(t=>`${esc(t.k)}조 (${esc(t.g12||"")}·${esc(t.g3||"")})`).join(", ")||"-"}</div>
-     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":`<span class="mj">미정</span>`}</span></li>`).join("")}</ul>`:""}</div></div>`;
+     ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":`<span class="mj">미정</span>`}</span></li>`).join("")}</ul>`:""}</div></details>`;
   openSheet(h,k);$("sheet").classList.add("tall");$("xBtn").onclick=closeSheet;
   if(wasOpen){$("sheet").querySelectorAll("details[data-f]").forEach(dd=>{if(st0[dd.dataset.f]!=null)dd.open=st0[dd.dataset.f];});$("sheet").scrollTop=st0.top||0;if($("eT")&&st0.t!=null){$("eT").value=st0.t;$("eTm").value=st0.tm;}}
   const gl=$("goLock");if(gl)gl.onclick=openLock;
-  if($("oAdd")){const oS=$("oS"),oE=$("oE"),pv=()=>{const hh=otSplit(oS.value,oE.value),t=hh.reduce((a,b)=>a+b,0),P=payCfg(),hr=(+P.sal||0)/(+P.hb||209);
-      $("oPv").innerHTML=t?`<span><b>${t}시간</b> · ${hTxt(hh)}</span>${hr?`<span class="otWon">약 <b>${Math.round(hEq(hh)*hr).toLocaleString("ko-KR")}원</b></span>`:`<small>⚙ 설정 › 예상 월급에서 기본급을 넣으면 금액도 보여요</small>`}`:"시작과 끝 시간을 골라 주세요";};
-    oS.value=st0.os||st0.otdf[0];oE.value=st0.oe||st0.otdf[1];oS.onchange=pv;oE.onchange=pv;pv();
-    $("oAdd").onclick=()=>{if(oS.value===oE.value){toast("시작과 끝 시간이 같아요");return;}
-      payXSave(payX().concat([{id:"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),d:k,s:oS.value,e:oE.value,m:$("oM").value.trim().slice(0,30)}]));
-      toast("OT를 넣었어요 · 예상 월급에 반영돼요");openDay(k);};}
-  $("sheet").querySelectorAll("[data-odel]").forEach(b=>twoTap(b,()=>{payXSave(payX().filter(x=>x.id!==b.dataset.odel));toast("OT를 취소했어요");openDay(k);},"한 번 더 누르면 취소"));
+  if($("otGo"))$("otGo").onclick=()=>openOT(k);
+  const af=$("sheet").querySelector(".allF");if(af)af.addEventListener("toggle",()=>LS("allOpen",af.open?"1":null));
+  if($("chgTg"))$("chgTg").onclick=()=>{if(CHG.open||CHG.type){CHG.open=false;CHG.type=null;CHG.sub="";}else CHG.open=true;openDay(k,true);};
   $("sheet").querySelectorAll("[data-ty]").forEach(b=>b.onclick=()=>{const t=b.dataset.ty;if(CHG.type===t){CHG.type=null;}else{CHG.type=t;}openDay(k,true);});
   $("sheet").querySelectorAll("[data-su]").forEach(b=>b.onclick=()=>{CHG.sub=b.dataset.su;openDay(k,true);});
   $("sheet").querySelectorAll("[data-claim]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.claim);if(!x||x.sub)return;
@@ -775,7 +778,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
     save({...x,sub:"",text:`${x.who} ${x.type} · 미정`,u:Math.max(Date.now(),recU(x)+1),ed:me,claim:undefined},"대근을 취소했어요").then(ok=>{if(ok)noteNow(`대근 취소 완료 · ${md_(x.date)} ${x.who}님에게 알렸어요`,"warn",x.date);});},"한 번 더 누르면 취소"));
   if($("fAdd"))$("fAdd").onclick=()=>{const type=CHG.type,sub=CHG.sub,g=m.g;if(!type)return;
     if(sub&&!offPeople(k,dayShift(k),g).includes(sub)){toast("대근은 그날 휴무자만 가능해요");return;}
-    const G=GRP.find(x=>x.g===g),text=`${me} ${type}`+(sub?` · ${sub} 대근`:" · 미정"),t=Date.now();CHG={k,type:null,sub:""};
+    const G=GRP.find(x=>x.g===g),text=`${me} ${type}`+(sub?` · ${sub} 대근`:" · 미정"),t=Date.now();CHG={k,type:null,sub:"",open:false};
     save({id:uid(),date:k,text,c:G.c,kind:"sub",grp:g,who:me,type,sub,at:t,u:t,by:me},"근무 변경을 등록했어요 · 대시보드에도 반영돼요");};
   if($("eAdd")){const add=async()=>{const t=$("eT").value.trim();if(!t){$("eT").focus();return;}const tm=$("eTm").value||"";$("eAdd").disabled=true;
       if(!(await ensureKey())){$("eAdd").disabled=false;openLock();return;}const s=await seal({d:k,t,tm}),now=Date.now();$("eT").value="";$("eTm").value="";
@@ -783,6 +786,24 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
     $("eAdd").onclick=add;$("eT").onkeydown=e=>{if(e.key==="Enter"&&!e.isComposing){e.preventDefault();add();}};if(focusAdd)setTimeout(()=>$("eT")&&$("eT").focus(),300);}
   $("sheet").querySelectorAll("[data-pdel]").forEach(b=>twoTap(b,()=>{const r=recs.find(x=>x.id===b.dataset.pdel);if(!r)return;save({id:r.id,kind:"priv",owner:me,del:1,u:Math.max(Date.now(),recU(r)+1)},"일정을 지웠어요");},"삭제"));
   $("sheet").querySelectorAll("[data-sdel]").forEach(b=>twoTap(b,()=>{const x=recs.find(r=>r.id===b.dataset.sdel);if(!x||x.who!==me)return;save({id:x.id,del:1,kind:"sub",date:x.date,u:Math.max(Date.now(),recU(x)+1),ed:me},"근무 변경을 취소했어요");},"한 번 더 누르면 취소"));}
+
+/* ── OT 일정 (따로 창) ── */
+function openOT(k){const c=cfg(),m=mine(c);if(!m)return;const ds=dayShift(k,c),subs=subsOf(k),o=stOf(myDay(k,ds,subs,m)),d=new Date(k+"T00:00");
+  const P=payCfg(),hr=(+P.sal||0)/(+P.hb||209),won=x=>Math.round(x).toLocaleString("ko-KR")+"원",ot=payX().filter(x=>x.d===k);
+  const df=o.st==="day"||o.st==="subD"?["19:00","21:00"]:o.st==="night"||o.st==="subN"?["07:00","09:00"]:["07:00","19:00"];
+  openSheet(`<div class="dsHead"><button class="dsX back" type="button" id="xBtn" aria-label="뒤로">‹</button><b>${d.getMonth()+1}월 ${d.getDate()}일 OT</b><span></span></div>
+    <div class="otSec"><div class="otWhy">${o.st==="off"||o.st==="lv"?"휴무 출근 (MDD·SKID 지원 등)":"근무 끝나고 추가 근무"} · 내 근무 <b>${esc(o.lab)}</b></div>`+
+    (ot.length?`<ul class="otL">${ot.map(x=>{const hh=otH(x),t=hh.reduce((a,b)=>a+b,0);return `<li><div class="otI"><b class="otTm">${x.s?`${tLbl(x.s)} ~ ${tLbl(x.e)}`:"OT"} <em>${t}시간</em></b><span class="otD">${x.m?`<i class="otM">${esc(x.m)}</i>`:""}${hTxt(hh)}${hr?` · <b>${won(hEq(hh)*hr)}</b>`:""}</span></div><button class="del txt" type="button" data-odel="${esc(x.id)}" aria-label="OT 취소">취소</button></li>`;}).join("")}</ul>`:"")+
+    `<div class="otAdd"><label class="otLb">시작<select id="oS">${OSLOT}</select></label><span class="otTil">~</span><label class="otLb">끝<select id="oE">${OSLOT}</select></label><label class="otLb otRs">사유<input id="oM" list="xML" maxlength="30" placeholder="예: MDD" autocomplete="off"></label><datalist id="xML"><option value="MDD"><option value="SKID 지원"><option value="교육"><option value="설비 점검"></datalist><button class="addBtn" id="oAdd" type="button">OT 추가</button></div>
+    <div class="otPv" id="oPv"></div></div><p class="hint2">8시간까지 150%, 넘으면 200% · 22~06시는 처음부터 200%(8시간 넘으면 250%) · 이 휴대폰에만 저장돼요</p>`,k);
+  $("sheet").classList.add("tall");$("xBtn").onclick=()=>openDay(k);
+  const oS=$("oS"),oE=$("oE"),pv=()=>{const hh=otSplit(oS.value,oE.value),t=hh.reduce((a,b)=>a+b,0);
+    $("oPv").innerHTML=t?`<span><b>${t}시간</b> · ${hTxt(hh)}</span>${hr?`<span class="otWon">약 <b>${won(hEq(hh)*hr)}</b></span>`:`<small>⚙ 설정 › 예상 월급에서 기본급을 넣으면 금액도 보여요</small>`}`:"시작과 끝 시간을 골라 주세요";};
+  oS.value=df[0];oE.value=df[1];oS.onchange=pv;oE.onchange=pv;pv();
+  $("oAdd").onclick=()=>{if(oS.value===oE.value){toast("시작과 끝 시간이 같아요");return;}
+    payXSave(payX().concat([{id:"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),d:k,s:oS.value,e:oE.value,m:$("oM").value.trim().slice(0,30)}]));
+    toast("OT를 넣었어요 · 예상 월급에 반영돼요");render();openDay(k);};
+  $("sheet").querySelectorAll("[data-odel]").forEach(b=>twoTap(b,()=>{payXSave(payX().filter(x=>x.id!==b.dataset.odel));toast("OT를 취소했어요");render();openOT(k);},"한 번 더 누르면 취소"));}
 
 /* ── 잠금 비밀번호 (선택) ── */
 function openLock(mode){const v=vault();
