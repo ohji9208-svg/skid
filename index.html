@@ -352,7 +352,7 @@ header{margin:0 6px 8px!important}
 .nbar .ni{font-size:18px;flex:0 0 auto}.nbar .nt{flex:1;min-width:0;font-size:14px;font-weight:800;line-height:1.35;word-break:keep-all}.nbar .nt small{color:var(--muted);font-weight:700}
 .nbar .nb{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--p);color:#fff;font-weight:800;font-size:13px}
 .nbar .nx{flex:0 0 auto;width:32px;height:34px;border:0;background:transparent;color:var(--muted);font-size:15px}
-/* v1114y: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
+/* v1115b: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
 header h1{flex:1 1 auto}
 .vsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;height:34px;padding:3px;border-radius:12px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
 .vsw button{position:relative;z-index:1;border:0;background:transparent;padding:0 11px;font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;transition:color .25s}
@@ -451,7 +451,7 @@ header .meBtn{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;w
 .payG select,.payG input{min-width:0;width:100%}.payG select{height:38px;font-size:14px!important}.payG label{min-width:0}
 .payG3{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:6px 8px;align-items:end;margin:4px 0 8px}.payG3 b{font-size:13px;padding-bottom:10px}.payG3 label{display:grid;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}.payG3 input{height:36px;font-size:15px!important;text-align:center;min-width:0;width:100%}
 @media (prefers-color-scheme:dark){.pxm{background:#6B5A12;color:#FFF3B0}}
-.otb{display:block;margin:2px auto 0;width:max-content;max-width:100%;padding:0 4px;border-radius:5px;background:#D9F5E8;color:#0B6B47;font-size:10px;font-weight:900;line-height:15px;white-space:nowrap}
+.otb{display:grid;justify-items:center;gap:0;overflow:hidden;margin:2px auto 0;width:max-content;max-width:100%;padding:1px 4px;border-radius:5px;background:#D9F5E8;color:#0B6B47;font-size:10px;font-weight:900;line-height:15px;white-space:nowrap}
 .otSec{padding:12px!important;border-radius:16px;background:color-mix(in srgb,#1F9D6B 9%,var(--surf));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#1F9D6B 35%,transparent)}
 .otSec>.rl{font-size:16px!important;color:var(--ink)}.otSec>.rl small{font-size:13px!important;color:var(--ink)!important;opacity:.75;font-weight:800!important}
 .otL{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
@@ -468,9 +468,26 @@ header .meBtn{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;w
 .otPv b{color:#0B6B47;font-weight:900}.otPv small{flex-basis:100%;font-size:12.5px;color:var(--muted);font-weight:700}.otWon{font-size:16px}
 .otSec .del.txt{flex:none}
 @media (prefers-color-scheme:dark){.otSec{background:color-mix(in srgb,#34C782 12%,var(--surf));box-shadow:inset 0 0 0 1.5px rgba(52,199,130,.4)}.otD b,.otPv b{color:#7FE0B1}.otM{background:#6B5A12;color:#FFF3B0}.otTm em{background:#34C782;color:#06281A}}
+.otb .otW{min-width:0;max-width:100%;white-space:normal;word-break:keep-all;overflow-wrap:anywhere;text-align:center;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.otb .otH{font-size:9.5px;opacity:.85;line-height:1.2}
 @media (prefers-color-scheme:dark){.otb{background:rgba(52,199,130,.2);color:#7FE0B1}.otSec .tm,#oPv b{color:#7FE0B1}}
 .payR{margin:6px 0;border:1px solid var(--line);border-radius:12px;padding:8px 12px}.payR summary{font-weight:800;cursor:pointer}
 .payG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.payG label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}.payG input{height:38px;font-size:16px!important}
+
+/* ── 모션 (v1115b): 창 내용 등장 · 누름 반응 · 첫 화면 · 테마 전환 ── */
+@keyframes shIn{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
+.sheet.sIn>*:not(.grab){animation:shIn .32s cubic-bezier(.2,.8,.2,1) both}
+.sheet.sIn>*:nth-child(3){animation-delay:.03s}.sheet.sIn>*:nth-child(4){animation-delay:.06s}.sheet.sIn>*:nth-child(5){animation-delay:.09s}.sheet.sIn>*:nth-child(6){animation-delay:.12s}.sheet.sIn>*:nth-child(n+7){animation-delay:.15s}
+@keyframes calIn{from{opacity:0;transform:translate3d(0,14px,0)}to{opacity:1;transform:none}}
+#cal{animation:calIn .42s cubic-bezier(.2,.8,.2,1) both}header{animation:calIn .36s cubic-bezier(.2,.8,.2,1) both}
+.chip,.add,.addBtn,.otGo,.payGo,.ib,.today,.meBtn,.chgTg,.thSeg button,.ghostBtn,.pBtn,.dsX,.del.txt,.nb{transition:transform .14s cubic-bezier(.3,.7,.4,1),background-color .18s,border-color .18s,color .18s,box-shadow .18s}
+.chip:active,.add:active,.addBtn:active,.otGo:active,.payGo:active,.ib:active,.today:active,.meBtn:active,.chgTg:active,.thSeg button:active,.ghostBtn:active,.pBtn:active,.dsX:active,.del.txt:active,.nb:active{transform:scale(.95)}
+.day{transition:background-color .18s}
+.otGo i,.payGo i{transition:transform .2s}.otGo:active i,.payGo:active i{transform:translateX(3px)}
+.chgBox{animation:shIn .24s cubic-bezier(.2,.8,.2,1) both}
+.allF[open]>.allIn{animation:shIn .26s cubic-bezier(.2,.8,.2,1) both}
+.payTot{animation:shIn .3s cubic-bezier(.2,.8,.2,1) both}.payTot b{font-variant-numeric:tabular-nums}
+html.thF,html.thF *,html.thF *::before,html.thF *::after{transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease!important}
+@media (prefers-reduced-motion:reduce){.sheet.sIn>*,#cal,header,.chgBox,.allF[open]>.allIn,.payTot{animation:none!important}html.thF *{transition:none!important}.chip:active,.add:active,.addBtn:active,.otGo:active,.payGo:active,.ib:active,.today:active{transform:none}}
 </style>
 <script>/* 실수로 확대되지 않게: 두 번 탭·두 손가락 확대 막기 (아이폰 사파리는 viewport 설정만으로는 안 막힘) */
 (function(){var last=0;["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});
@@ -486,7 +503,8 @@ header .meBtn{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;w
     if(r.media.mediaText!==n)r.media.mediaText=n;});}
   var dk=m==="dark"||(m!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches),mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute("content",dk?"#0F1320":"#5B4BD8");}
  function cur(){try{return localStorage.getItem("skidP_theme")||"auto";}catch(e){return "auto";}}
- window.setTheme=function(m){try{if(m==="auto")localStorage.removeItem("skidP_theme");else localStorage.setItem("skidP_theme",m);}catch(e){}apply(m);};
+ window.setTheme=function(m){try{if(m==="auto")localStorage.removeItem("skidP_theme");else localStorage.setItem("skidP_theme",m);}catch(e){}
+  var H=document.documentElement;H.classList.add("thF");void H.offsetWidth;apply(m);clearTimeout(window.__thF);window.__thF=setTimeout(function(){H.classList.remove("thF");},420);};
  window.getTheme=cur;apply(cur());document.addEventListener("DOMContentLoaded",function(){apply(cur());});
  try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){apply(cur());});}catch(e){}})();</script>
 </head>
@@ -506,7 +524,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114y·GitHub";
+const VERLBL="v1115b·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -692,7 +710,7 @@ function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()
   const n=(new Date(Y,M+1,0).getDate()+f.getDay())>35?42:35;
   for(let i=0;i<n;i++){const d=new Date(s);d.setDate(s.getDate()+i);const k=key(d),ds=dayShift(k,c),subs=subsOf(k),hol=HOL[k],o=stOf(myDay(k,ds,subs,m)),evs=evOf(k);
     h+=`<button type="button" class="day st-${o.st}${d.getMonth()!==M?" out":""}${d.getDay()===0?" sun":""}${d.getDay()===6?" sat":""}${hol?" hol":""}${k===tk?" isToday":""}${k===sel?" sel":""}" data-k="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일${hol?" "+esc(hol):""} ${esc(o.lab)}${evs.length?" 일정 "+evs.length+"개":""}">
-      <span class="dn">${d.getDate()}</span>${VIEW==="all"?allCell(k,ds,subs,m,c,o):`${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:o.st==="subN"?"야대근":"주대근")}</span>`:""}${m&&o.st==="off"?(()=>{const R=openReqs(k,ds,subs,m,c);if(!R.length)return "";const W=workers(k,ds,m.g);return ["D","N"].filter(S=>R.some(x=>{const w=W.find(w=>w.n===x.who);return (w?w.s:"D")===S;})).map(S=>`<span class="req rq${S}">${S==="D"?"주간":"야간"} 대근 구해요</span>`).join("");})():""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${OTM[k]?`<span class="otb">OT ${OTM[k].reduce((t,x)=>t+otH(x).reduce((a,b)=>a+b,0),0)}h</span>`:""}`}${hol?`<span class="hn">${esc(hol)}</span>`:""}
+      <span class="dn">${d.getDate()}</span>${VIEW==="all"?allCell(k,ds,subs,m,c,o):`${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:o.st==="subN"?"야대근":"주대근")}</span>`:""}${m&&o.st==="off"?(()=>{const R=openReqs(k,ds,subs,m,c);if(!R.length)return "";const W=workers(k,ds,m.g);return ["D","N"].filter(S=>R.some(x=>{const w=W.find(w=>w.n===x.who);return (w?w.s:"D")===S;})).map(S=>`<span class="req rq${S}">${S==="D"?"주간":"야간"} 대근 구해요</span>`).join("");})():""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${OTM[k]?(()=>{const L=OTM[k],h=L.reduce((t,x)=>t+otH(x).reduce((a,b)=>a+b,0),0),rs=[...new Set(L.map(x=>String(x.m||"").trim()).filter(Boolean))],why=rs.length?rs.join("·"):"OT";return `<span class="otb" title="${esc(why)} ${h}시간"><span class="otW">${esc(why)}</span><span class="otH">${h}h</span></span>`;})():""}`}${hol?`<span class="hn">${esc(hol)}</span>`:""}
       <span class="evs">${evs.slice(0,2).map(e=>`<span class="ev">${esc(e.t)}</span>`).join("")}${evs.length>2?`<span class="more">+${evs.length-2}</span>`:""}</span></button>`;}
   $("grid").innerHTML=h;$("grid").style.setProperty("--rows",n/7);
   // 안내 띠: 잠금 · 내일 대근
@@ -706,7 +724,9 @@ function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()
   $("banner").innerHTML=bn;syncLbl();}
 
 /* ── 시트(아래에서 올라오는 창) ── */
-function openSheet(html,k){const sh=$("sheet");sh.classList.remove("tall");sh.dataset.k=k||"";sh.innerHTML='<div class="grab"></div>'+html;$("dim").classList.add("on");sh.classList.add("on");}
+let SHA=0;
+function openSheet(html,k){const sh=$("sheet"),an=!sh.classList.contains("on")||SHA;SHA=0;sh.classList.remove("tall");sh.dataset.k=k||"";sh.dataset.v="";sh.innerHTML='<div class="grab"></div>'+html;$("dim").classList.add("on");sh.classList.add("on");
+  if(an){sh.classList.remove("sIn");void sh.offsetWidth;sh.classList.add("sIn");clearTimeout(openSheet.t);openSheet.t=setTimeout(()=>sh.classList.remove("sIn"),700);}}
 function closeSheet(){$("dim").classList.remove("on");$("sheet").classList.remove("on");$("sheet").dataset.k="";if(sel){sel=null;render();}}
 $("dim").onclick=closeSheet;
 // 실제로 보이는 화면 높이(주소창·툴바 제외)를 따라가서 창이 위로 넘치지 않게
@@ -725,6 +745,23 @@ function keepVisible(el){const sh=$("sheet"),box=el.closest(".addEv,.pwf")||el,s
 $("sheet").addEventListener("focusout",()=>setTimeout(fitVh,250));
 window.scrollTo(0,0);
 // 아래로 끌어내리면 닫기 (맨 위에서만)
+/* 날짜 창 좌우 스와이프: 왼쪽으로 밀면 전날, 오른쪽으로 밀면 다음날 */
+function dayShiftKey(k,n){const d=new Date(k+"T00:00");d.setDate(d.getDate()+n);return key(d);}
+(()=>{const sh=$("sheet");let x0=null,y0=0,dx=0,on=false;
+  const skip=t=>t.closest&&t.closest("input,textarea,select,.chips,.allIn,[contenteditable]");
+  sh.addEventListener("touchstart",e=>{if(sh.dataset.v!=="day"||e.touches.length>1||skip(e.target)){x0=null;return;}x0=e.touches[0].clientX;y0=e.touches[0].clientY;dx=0;on=false;},{passive:true});
+  sh.addEventListener("touchmove",e=>{if(x0==null)return;const t=e.touches[0];dx=t.clientX-x0;const dy=t.clientY-y0;
+    if(!on){if(Math.abs(dx)>12&&Math.abs(dx)>Math.abs(dy)*1.4)on=true;else if(Math.abs(dy)>12){x0=null;return;}}
+    if(on){sh.style.transition="none";sh.style.transform=`translate3d(${dx*.35}px,0,0)`;sh.style.opacity=String(1-Math.min(.35,Math.abs(dx)/700));}},{passive:true});
+  const end=()=>{if(x0==null)return;x0=null;const go=on&&Math.abs(dx)>60;on=false;
+    sh.style.transition="transform .22s cubic-bezier(.2,.8,.2,1),opacity .22s";sh.style.transform="";sh.style.opacity="";setTimeout(()=>{sh.style.transition="";},240);
+    if(!go)return;const dir=dx<0?-1:1,k=dayShiftKey(sh.dataset.k,dir);
+    const d=new Date(k+"T00:00");if(d.getFullYear()!==Y||d.getMonth()!==M){Y=d.getFullYear();M=d.getMonth();}
+    openDay(k);
+    const kids=[...sh.children].filter(c=>!c.classList.contains("grab"));
+    if(!matchMedia("(prefers-reduced-motion: reduce)").matches)kids.forEach((c,i)=>{try{c.animate([{opacity:0,transform:`translate3d(${dir*-28}px,0,0)`},{opacity:1,transform:"none"}],{duration:260,delay:i*18,easing:"cubic-bezier(.2,.8,.2,1)",fill:"backwards"});}catch(e){}});
+    try{navigator.vibrate&&navigator.vibrate(8);}catch(e){}};
+  sh.addEventListener("touchend",end,{passive:true});sh.addEventListener("touchcancel",end,{passive:true});})();
 (()=>{const sh=$("sheet");let y0=null;sh.addEventListener("touchstart",e=>{y0=sh.scrollTop<=0?e.touches[0].clientY:null;},{passive:true});
   sh.addEventListener("touchend",e=>{if(y0==null)return;const dy=e.changedTouches[0].clientY-y0;y0=null;if(dy>90&&sh.scrollTop<=0&&!(document.activeElement&&/INPUT|SELECT/.test(document.activeElement.tagName)))closeSheet();},{passive:true});})();
 function twoTap(b,fn,lab){b.onclick=()=>{if(!b.classList.contains("ask")){const o=b.textContent;b.classList.add("ask");b.textContent=lab||"한 번 더 누르면 실행";setTimeout(()=>{if(b.isConnected&&b.classList.contains("ask")){b.classList.remove("ask");b.textContent=o;}},3500);return;}b.classList.remove("ask");fn();};}
@@ -778,7 +815,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
      <table class="tbl"><thead><tr><th></th>${GRP.map(G=>`<th>${G.n}</th>`).join("")}</tr></thead><tbody>${row("주간",ds.D,"D")}${row("야간",ds.N,"N")}</tbody></table>
      <div class="off">휴무 · ${ds.off.map(t=>`${esc(t.k)}조 (${esc(t.g12||"")}·${esc(t.g3||"")})`).join(", ")||"-"}</div>
      ${subs.length?`<ul class="subl">${subs.map(x=>`<li><span class="g ${esc(x.grp)}">${esc((GRP.find(G=>G.g===x.grp)||{}).n||"")}</span><span>${esc(x.who)} ${esc(x.type)} → ${x.sub?esc(x.sub)+" 대근":`<span class="mj">미정</span>`}</span></li>`).join("")}</ul>`:""}</div></details>`;
-  openSheet(h,k);$("sheet").classList.add("tall");$("xBtn").onclick=closeSheet;
+  openSheet(h,k);$("sheet").dataset.v="day";$("sheet").classList.add("tall");$("xBtn").onclick=closeSheet;
   if(wasOpen){$("sheet").querySelectorAll("details[data-f]").forEach(dd=>{if(st0[dd.dataset.f]!=null)dd.open=st0[dd.dataset.f];});$("sheet").scrollTop=st0.top||0;if($("eT")&&st0.t!=null){$("eT").value=st0.t;$("eTm").value=st0.tm;}}
   const gl=$("goLock");if(gl)gl.onclick=openLock;
   if($("otGo"))$("otGo").onclick=()=>openOT(k);
@@ -805,18 +842,18 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
 function openOT(k){const c=cfg(),m=mine(c);if(!m)return;const ds=dayShift(k,c),subs=subsOf(k),o=stOf(myDay(k,ds,subs,m)),d=new Date(k+"T00:00");
   const P=payCfg(),hr=(+P.sal||0)/(+P.hb||209),won=x=>Math.round(x).toLocaleString("ko-KR")+"원",ot=payX().filter(x=>x.d===k);
   const df=o.st==="day"||o.st==="subD"?["19:00","21:00"]:o.st==="night"||o.st==="subN"?["07:00","09:00"]:["07:00","19:00"];
-  openSheet(`<div class="dsHead"><button class="dsX back" type="button" id="xBtn" aria-label="뒤로">‹</button><b>${d.getMonth()+1}월 ${d.getDate()}일 OT</b><span></span></div>
+  SHA=1;openSheet(`<div class="dsHead"><button class="dsX back" type="button" id="xBtn" aria-label="뒤로">‹</button><b>${d.getMonth()+1}월 ${d.getDate()}일 OT</b><span></span></div>
     <div class="otSec"><div class="otWhy">${o.st==="off"||o.st==="lv"?"휴무 출근 (MDD·SKID 지원 등)":"근무 끝나고 추가 근무"} · 내 근무 <b>${esc(o.lab)}</b></div>`+
     (ot.length?`<ul class="otL">${ot.map(x=>{const hh=otH(x),t=hh.reduce((a,b)=>a+b,0);return `<li><div class="otI"><b class="otTm">${x.s?`${tLbl(x.s)} ~ ${tLbl(x.e)}`:"OT"} <em>${t}시간</em></b><span class="otD">${x.m?`<i class="otM">${esc(x.m)}</i>`:""}${hTxt(hh)}${hr?` · <b>${won(hEq(hh)*hr)}</b>`:""}</span></div><button class="del txt" type="button" data-odel="${esc(x.id)}" aria-label="OT 취소">취소</button></li>`;}).join("")}</ul>`:"")+
     `<div class="otAdd"><label class="otLb">시작<select id="oS">${OSLOT}</select></label><span class="otTil">~</span><label class="otLb">끝<select id="oE">${OSLOT}</select></label><label class="otLb otRs">사유<input id="oM" list="xML" maxlength="30" placeholder="예: MDD" autocomplete="off"></label><datalist id="xML"><option value="MDD"><option value="SKID 지원"><option value="교육"><option value="설비 점검"></datalist><button class="addBtn" id="oAdd" type="button">OT 추가</button></div>
     <div class="otPv" id="oPv"></div></div><p class="hint2">8시간까지 150%, 넘으면 200% · 22~06시는 처음부터 200%(8시간 넘으면 250%) · 이 휴대폰에만 저장돼요</p>`,k);
-  $("sheet").classList.add("tall");$("xBtn").onclick=()=>openDay(k);
+  $("sheet").classList.add("tall");$("xBtn").onclick=()=>{SHA=1;openDay(k);};
   const oS=$("oS"),oE=$("oE"),pv=()=>{const hh=otSplit(oS.value,oE.value),t=hh.reduce((a,b)=>a+b,0);
     $("oPv").innerHTML=t?`<span><b>${t}시간</b> · ${hTxt(hh)}</span>${hr?`<span class="otWon">약 <b>${won(hEq(hh)*hr)}</b></span>`:`<small>⚙ 설정 › 예상 월급에서 기본급을 넣으면 금액도 보여요</small>`}`:"시작과 끝 시간을 골라 주세요";};
   oS.value=df[0];oE.value=df[1];oS.onchange=pv;oE.onchange=pv;pv();
   $("oAdd").onclick=()=>{if(oS.value===oE.value){toast("시작과 끝 시간이 같아요");return;}
     payXSave(payX().concat([{id:"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),d:k,s:oS.value,e:oE.value,m:$("oM").value.trim().slice(0,30)}]));
-    toast("OT를 넣었어요 · 예상 월급에 반영돼요");render();openDay(k);};
+    toast("OT를 넣었어요 · 예상 월급에 반영돼요");render();SHA=1;openDay(k);};
   $("sheet").querySelectorAll("[data-odel]").forEach(b=>twoTap(b,()=>{payXSave(payX().filter(x=>x.id!==b.dataset.odel));toast("OT를 취소했어요");render();openOT(k);},"한 번 더 누르면 취소"));}
 
 /* ── 잠금 비밀번호 (선택) ── */
@@ -870,15 +907,17 @@ const otH=x=>Array.isArray(x.h)&&!x.s?x.h:otSplit(x.s,x.e);
 const hTxt=h=>["150%","200%","250%"].map((t,i)=>+h[i]?`${t} ${+h[i]}h`:"").filter(Boolean).join(" · ")||"0시간";
 function otMap(){const o={};payX().forEach(x=>{(o[x.d]=o[x.d]||[]).push(x);});return o;}
 function payCalc(y,mo,P){const c=cfg(),m=mine(c),n=new Date(y,mo+1,0).getDate(),hr=(+P.sal||0)/(+P.hb||209),r=x=>Math.round(x);
-  let d=0,nn=0,nights=0,rot=0;const L=[];
+  let d=0,nn=0,nights=0,rot=0;const L=[],H=[];
   for(let i=1;i<=n;i++){const k=y+"-"+pad(mo+1)+"-"+pad(i),ds=dayShift(k,c),subs=subsOf(k),md=myDay(k,ds,subs,m),o=stOf(md),dw=new Date(y,mo,i).getDay();
     if(o.st==="night")nights++;
+    /* 공휴일 정규 근무 = 12시간 OT (주간 07~19 · 야간 19~07, OT 규칙 그대로) */
+    if(HOL[k]&&(o.st==="day"||o.st==="night")){const N=o.st==="night",h=N?otSplit("19:00","07:00"):otSplit("07:00","19:00");H.push({k,N,h,nm:HOL[k],amt:hEq(h)*hr});}
     const s0=m&&myShift(k,ds,m);if(s0&&(s0==="N"||dw===0||dw===6||HOL[k]))rot++;
     if(o.st==="subD"||o.st==="subN"){const N=o.st==="subN",h=N?P.sN:P.sD;if(N)nn++;else d++;L.push({k,N,h,amt:hEq(h)*hr,by:(md||{}).by||""});}}
   const ym=y+"-"+pad(mo+1),X=payX().filter(x=>String(x.d||"").slice(0,7)===ym).sort((a,b)=>(a.d+(a.s||""))<(b.d+(b.s||""))?-1:1).map(x=>{const h=otH(x);return Object.assign({},x,{hh:h,amt:hEq(h)*hr});});
   const shift=P.shift==="on"?true:P.shift==="off"?false:rot>0;
-  const bo=shift?r(P.bo*hr*P.boR):0,ntT=r(nights*P.ntH*hr*P.nt),meal=shift&&(nights+nn)>0?+P.meal||0:0,subT=r(L.reduce((a,x)=>a+x.amt,0)),xT=r(X.reduce((a,x)=>a+x.amt,0));
-  return {hr,d,nn,nights,shift,L,X,bo,ntT,meal,subT,xT,total:r((+P.sal||0)+bo+ntT+meal+subT+xT)};}
+  const bo=shift?r(P.bo*hr*P.boR):0,ntT=r(nights*P.ntH*hr*P.nt),meal=shift&&(nights+nn)>0?+P.meal||0:0,subT=r(L.reduce((a,x)=>a+x.amt,0)),holT=r(H.reduce((a,x)=>a+x.amt,0)),xT=r(X.reduce((a,x)=>a+x.amt,0));
+  return {hr,d,nn,nights,shift,L,H,X,bo,ntT,meal,subT,holT,xT,total:r((+P.sal||0)+bo+ntT+meal+subT+holT+xT)};}
 function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR")+"원";
   const paint=()=>{const P=payCfg(),R=payCalc(y,mo,P),ym=y+"-"+pad(mo+1);
     openSheet(`<div class="dsHead"><button class="dsX" type="button" id="xBtn" aria-label="닫기">✕</button><b>예상 월급</b><span></span></div>
@@ -894,6 +933,8 @@ function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR
         <li><span>식대 <small>${R.meal?"교대 · 야간 근무 있음":R.shift?"야간 근무 없는 달 · 제외":"교대근무 아님 · 제외"}</small></span><b>${won(R.meal)}</b></li>
         <li><span>대근 OT <small>주간 ${R.d}회 · 야간 ${R.nn}회</small></span><b>${won(R.subT)}</b></li>
         ${R.L.map(x=>`<li class="sub"><span>${+x.k.slice(5,7)}/${+x.k.slice(8)} ${x.N?"야간":"주간"} 대근${x.by?` · ${esc(x.by)}님 대신`:""}<small>${hTxt(x.h)}</small></span><b>${won(x.amt)}</b></li>`).join("")}
+        <li><span>공휴일 근무 OT <small>${R.H.length?`주간 ${R.H.filter(x=>!x.N).length}회 · 야간 ${R.H.filter(x=>x.N).length}회 · 12시간씩`:"이 달 공휴일 근무 없음"}</small></span><b>${won(R.holT)}</b></li>
+        ${R.H.map(x=>`<li class="sub"><span>${+x.k.slice(5,7)}/${+x.k.slice(8)} ${esc(String(x.nm||"공휴일"))} · ${x.N?"야간":"주간"} 근무<small>${hTxt(x.h)}</small></span><b>${won(x.amt)}</b></li>`).join("")}
         <li><span>OT 일정 <small>달력에 넣은 OT ${R.X.length}건</small></span><b>${won(R.xT)}</b></li>
         ${R.X.map(x=>`<li class="sub"><span>${+x.d.slice(5,7)}/${+x.d.slice(8)} ${x.s?`${tLbl(x.s)}~${tLbl(x.e)}`:"OT"}${x.m?` · <i class="pxm">${esc(x.m)}</i>`:""}<small>${hTxt(x.hh)}</small></span><b>${won(x.amt)}</b></li>`).join("")}
       </ul>`:`<div class="pvHint">기본급을 넣으면 이 달 근무표(대근 포함)로 바로 계산해요</div>`}
@@ -910,11 +951,13 @@ function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR
         </div>
         <div class="payG3"><b>주간 대근</b>${P.sD.map((v,i)=>`<label>${["150%","200%","250%"][i]}<input data-s="sD" data-i="${i}" inputmode="decimal" value="${v}"></label>`).join("")}
           <b>야간 대근</b>${P.sN.map((v,i)=>`<label>${["150%","200%","250%"][i]}<input data-s="sN" data-i="${i}" inputmode="decimal" value="${v}"></label>`).join("")}</div>
-        <p class="hint2">교대근무자는 보전수당 ${P.bo}시간 × ${P.boR} · 내 야간 근무 1회마다 ${P.ntH}시간 × ${P.nt} · 대근은 위 표대로 · OT 일정은 8시간까지 150%, 넘으면 200%, 22~06시는 +50% (처음부터 200%)</p>
+        <p class="hint2">교대근무자는 보전수당 ${P.bo}시간 × ${P.boR} · 내 야간 근무 1회마다 ${P.ntH}시간 × ${P.nt} · 대근은 위 표대로 · 공휴일 정규 근무는 12시간 OT · OT 일정은 8시간까지 150%, 넘으면 200%, 22~06시는 +50% (처음부터 200%)</p>
         <button class="ghostBtn" id="pReset" type="button">처음 규칙으로</button>
       </details>
       <p class="hint2">세금·보험료를 빼기 전 금액이고, 실제 급여명세서와 다를 수 있어요. 기본급과 추가 OT는 이 휴대폰에만 저장돼요.</p>`);
     $("xBtn").onclick=closeSheet;
+    {const el=document.querySelector(".payTot b"),to=R.total,from=openPay.last;openPay.last=P.sal?to:undefined;
+      if(el&&from!=null&&from!==to&&!matchMedia("(prefers-reduced-motion: reduce)").matches){const t0=performance.now(),D=420;const step=t=>{const x=Math.min(1,(t-t0)/D),e=1-Math.pow(1-x,3);if(!el.isConnected)return;el.textContent=won(from+(to-from)*e);if(x<1)requestAnimationFrame(step);};requestAnimationFrame(step);}}
     $("pPrev").onclick=()=>{if(--mo<0){mo=11;y--;}form=false;paint();};$("pNext").onclick=()=>{if(++mo>11){mo=0;y++;}form=false;paint();};
     const save=o=>{LS("pay_"+me,JSON.stringify(Object.assign(payCfg(),o)));};
     const num=v=>{const n=parseFloat(String(v).replace(/[^\d.]/g,""));return isFinite(n)?n:0;};
