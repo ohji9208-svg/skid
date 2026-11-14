@@ -2,13 +2,15 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SKID 근무표">
 <meta name="theme-color" content="#5B4BD8">
 <title>SKID 근무표</title>
 <link rel="manifest" href="manifest.json"><link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" href="icon-192.png">
 <style>
+html,body,button,a,label,input,select{touch-action:manipulation}html{-webkit-text-size-adjust:100%;text-size-adjust:100%}header,header *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.verL{margin:18px 0 4px;text-align:center;font-size:11px;font-weight:700;color:var(--muted);opacity:.7}
 :root{--bg:#F4F5FA;--surf:#FFFFFF;--soft:#EEF0F6;--line:#E3E6EE;--ink:#141A2B;--muted:#6B7385;--p:#5B4BD8;--pS:rgba(91,75,216,.10);--red:#D6404C;--redS:rgba(229,72,77,.08);--sat:#3D6BD8;
  --gA:#4F6FD0;--gAb:#E8EDFB;--gB:#2E8C6B;--gBb:#DFF2EA;--gC:#D0581C;--gCb:#FCE7DC;--gD:#C2416B;--gDb:#FBE4EC;--g12:#A86F00;--g3:#B02AA8;
  --sh:0 10px 30px -18px rgba(20,24,40,.35)}
@@ -350,7 +352,7 @@ header{margin:0 6px 8px!important}
 .nbar .ni{font-size:18px;flex:0 0 auto}.nbar .nt{flex:1;min-width:0;font-size:14px;font-weight:800;line-height:1.35;word-break:keep-all}.nbar .nt small{color:var(--muted);font-weight:700}
 .nbar .nb{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--p);color:#fff;font-weight:800;font-size:13px}
 .nbar .nx{flex:0 0 auto;width:32px;height:34px;border:0;background:transparent;color:var(--muted);font-size:15px}
-/* v1114r: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
+/* v1114v: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
 header h1{flex:1 1 auto}
 .vsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;height:34px;padding:3px;border-radius:12px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
 .vsw button{position:relative;z-index:1;border:0;background:transparent;padding:0 11px;font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;transition:color .25s}
@@ -360,9 +362,17 @@ header h1{flex:1 1 auto}
 .alWrap{display:grid;gap:2px;margin-top:2px;justify-items:center}
 .al{position:relative;white-space:nowrap;max-width:100%;display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 5px;border-radius:5px;font-size:11px;font-weight:900;line-height:1}
 .alD{background:#FFF1C9;color:#8A5B00}.alN{background:#E3E5FF;color:#3A3FB8}
+.al.tA{background:var(--gAb);color:var(--gA)}.al.tB{background:var(--gBb);color:var(--gB)}.al.tC{background:var(--gCb);color:var(--gC)}.al.tD{background:var(--gDb);color:var(--gD)}
+.al.alN{box-shadow:inset 0 -2px 0 color-mix(in srgb,currentColor 45%,transparent)}
+.al.hasSub{color:#fff!important;box-shadow:0 1px 4px -1px rgba(0,0,0,.35)}.al.hasSub.tA{background:var(--gA)}.al.hasSub.tB{background:var(--gB)}.al.hasSub.tC{background:var(--gC)}.al.hasSub.tD{background:var(--gD)}
+.al.hasSub.mine{box-shadow:0 0 0 1.5px var(--surf),0 0 0 3px currentColor}.al.hasSub.mine.tA{color:#fff!important;box-shadow:0 0 0 1.5px var(--surf),0 0 0 3px var(--gA)}.al.hasSub.mine.tB{box-shadow:0 0 0 1.5px var(--surf),0 0 0 3px var(--gB)}.al.hasSub.mine.tC{box-shadow:0 0 0 1.5px var(--surf),0 0 0 3px var(--gC)}.al.hasSub.mine.tD{box-shadow:0 0 0 1.5px var(--surf),0 0 0 3px var(--gD)}
+.al.hasSub .alc{position:static;box-shadow:none;background:transparent;color:inherit;min-width:0;height:auto;font-size:10px;padding:0;margin-left:1px}
+.alLeg{display:none;flex-wrap:wrap;gap:6px 10px;align-items:center;justify-content:center;margin:8px 4px 2px;font-size:11.5px;font-weight:800;color:var(--muted)}.alLeg .al{height:16px}
+body.vAll .alLeg{display:flex}
+@media (prefers-color-scheme:dark){.al.hasSub{color:#14161F!important}}
 .al.mine{box-shadow:inset 0 0 0 1.5px currentColor}
 .al .alc{position:absolute;top:-6px;right:-7px;box-shadow:0 0 0 1.5px var(--surf);font-style:normal;min-width:13px;height:13px;border-radius:7px;background:#EA7A3A;color:#fff;font-size:9px;display:grid;place-items:center;padding:0 2px}
-.al.alq{background:transparent;color:#5B4BD6;border:1.2px dashed #7C6CF0;font-size:9.5px;padding:0 3px;letter-spacing:-.3px}@media (max-width:380px){.al.alq b{display:none}.al{padding:0 4px}}
+.al.alq{background:transparent;color:#5B4BD6;border:1.2px dashed #7C6CF0;font-size:9.5px;padding:0 3px;letter-spacing:-.3px}@media (max-width:380px){.al{padding:0 4px}.al.alq{white-space:normal;height:auto;min-height:17px;padding:2px 3px;line-height:1.1;text-align:center;word-break:keep-all}}
 @media (prefers-color-scheme:dark){.alD{background:rgba(242,193,78,.2);color:#F7D27A}.alN{background:rgba(120,126,255,.22);color:#B8BCFF}.al.alq{color:#B9B0FF;border-color:#9A8FFF}}
 /* 주간 대근 = 주황 해 · 야간 대근 = 남색 달 */
 .big.b-subD{color:#B34A06!important;background:#FFE3C8!important}
@@ -372,19 +382,24 @@ header h1{flex:1 1 auto}
 @media (prefers-color-scheme:dark){.sb-subN{color:#B8BCFF!important;box-shadow:inset 0 0 0 1.5px #8A8FFF!important}}
 /* 미정(대근자 아직 없음) = 보라 점선 + ? (대근과 다른 모양) */
 .req{color:#5B4BD6!important;background:rgba(124,108,240,.10)!important;box-shadow:inset 0 0 0 1.2px #7C6CF0;border-radius:5px}
-.req::before{content:"? ";font-weight:900}
+.req::before{content:none}.req{white-space:normal!important;word-break:keep-all;text-align:center;line-height:1.15;padding:2px 3px!important;border:1.2px dashed #7C6CF0;box-shadow:none!important}
 .mj{display:inline-block;padding:0 6px;border-radius:5px;border:1.5px dashed #7C6CF0;color:#5B4BD6;font-weight:800;font-size:12px}
 .mj::before{content:"? "}
-@media (prefers-color-scheme:dark){.req{color:#B9B0FF!important;box-shadow:inset 0 0 0 1.2px #9A8FFF;background:rgba(154,143,255,.14)!important}.mj{color:#B9B0FF;border-color:#9A8FFF}}
+@media (prefers-color-scheme:dark){.req{color:#B9B0FF!important;border-color:#9A8FFF;background:rgba(154,143,255,.14)!important}.mj{color:#B9B0FF;border-color:#9A8FFF}}
 /* 내 일정 메모: 형광펜처럼 배경 */
 .ev{background:#FFE98A!important;color:#4A3B00!important;border-radius:4px!important;padding:1px 3px!important;margin-top:1px}
 .evl .et{background:linear-gradient(transparent 45%,#FFE98A 45%);padding:0 2px;border-radius:2px;color:var(--ink)}
 @media (prefers-color-scheme:dark){.ev{background:rgba(255,214,0,.26)!important;color:#FFF1A8!important}.evl .et{background:linear-gradient(transparent 45%,rgba(255,214,0,.32) 45%)}}
 /* 지우기 = '취소' 글자 버튼 (닫기 ✕ 와 헷갈리지 않게) */
-.evl .del.txt{width:auto!important;min-width:0;height:30px;padding:0 10px!important;border-radius:9px;border:1.5px solid rgba(209,47,58,.5);background:transparent;color:#D12F3A;font-size:13px;font-weight:800}
-@media (prefers-color-scheme:dark){.evl .del.txt{color:#FF8A8A;border-color:rgba(255,138,138,.5)}}
+.evl .del.txt,.otL .del.txt{width:auto!important;min-width:0;height:30px;padding:0 10px!important;border-radius:9px;border:1.5px solid rgba(209,47,58,.5);background:transparent;color:#D12F3A;font-size:13px;font-weight:800}
+@media (prefers-color-scheme:dark){.evl .del.txt,.otL .del.txt{color:#FF8A8A;border-color:rgba(255,138,138,.5)}}
 @media (max-width:360px){.vsw button{padding:0 8px;font-size:12px}header h1{font-size:17px}}
 /* 예상 월급 */
+.thRow{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 2px}.thRow>span{font-weight:900;font-size:15px}
+.thSeg{display:inline-grid;grid-template-columns:repeat(3,1fr);padding:3px;border-radius:12px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
+.thSeg button{height:34px;padding:0 14px;border:0;border-radius:9px;background:transparent;color:var(--muted);font-weight:800;font-size:14px}
+.thSeg button[aria-checked="true"]{background:var(--p);color:#fff;box-shadow:0 3px 8px -4px rgba(0,0,0,.4)}
+.thHint{margin:2px 0 8px}
 .payGo{display:grid;grid-template-columns:auto 1fr auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;width:100%;margin:6px 0 4px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--soft);text-align:left;color:var(--ink)}
 .payGo>span{grid-row:1/3;font-size:22px}.payGo b{font-size:15px}.payGo small{grid-column:2;color:var(--muted);font-size:12px;font-weight:600}.payGo i{grid-row:1/3;grid-column:3;font-style:normal;font-size:20px;color:var(--muted)}
 .payM{display:flex;align-items:center;justify-content:center;gap:14px;margin:4px 0 10px}.payM b{font-size:16px}
@@ -408,13 +423,43 @@ header h1{flex:1 1 auto}
 .payG3{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:6px 8px;align-items:end;margin:4px 0 8px}.payG3 b{font-size:13px;padding-bottom:10px}.payG3 label{display:grid;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}.payG3 input{height:36px;font-size:15px!important;text-align:center;min-width:0;width:100%}
 @media (prefers-color-scheme:dark){.pxm{background:#6B5A12;color:#FFF3B0}}
 .otb{display:block;margin:2px auto 0;width:max-content;max-width:100%;padding:0 4px;border-radius:5px;background:#D9F5E8;color:#0B6B47;font-size:10px;font-weight:900;line-height:15px;white-space:nowrap}
-.otAdd{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:center;margin-top:6px}.otAdd>span{font-weight:900;color:var(--muted)}
-.otAdd select,.otAdd input{height:42px;font-size:16px!important;min-width:0;width:100%}.otAdd input{grid-column:1/3}.otAdd .addBtn{grid-column:3;height:42px;background:#1F9D6B}
-.otSec .tm{color:#0B6B47;font-weight:900}.otT{font-size:13px}#oPv b{color:#0B6B47}
+.otSec{padding:12px!important;border-radius:16px;background:color-mix(in srgb,#1F9D6B 9%,var(--surf));box-shadow:inset 0 0 0 1.5px color-mix(in srgb,#1F9D6B 35%,transparent)}
+.otSec>.rl{font-size:16px!important;color:var(--ink)}.otSec>.rl small{font-size:13px!important;color:var(--ink)!important;opacity:.75;font-weight:800!important}
+.otL{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:6px}
+.otL li{display:flex;align-items:center;gap:10px;padding:10px 8px 10px 12px;border-radius:12px;background:var(--surf);box-shadow:0 0 0 1px var(--line)}
+.otI{flex:1;min-width:0;display:grid;gap:3px}.otTm{font-size:16px;font-weight:900;color:var(--ink)}.otTm em{display:inline-block;white-space:nowrap;font-style:normal;margin-left:4px;padding:1px 7px;border-radius:7px;background:#1F9D6B;color:#fff;font-size:12.5px;vertical-align:2px}
+.otD{font-size:14px;font-weight:800;color:var(--ink);opacity:.85;word-break:keep-all}.otD b{color:#0B6B47;opacity:1}.otM{font-style:normal;margin-right:6px;padding:0 6px;border-radius:5px;background:#FFE98A;color:#4A3800;font-weight:900}
+.otAdd{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px 6px;align-items:end;margin-top:10px}
+.otLb{display:grid;gap:4px;min-width:0;font-size:13px;font-weight:900;color:var(--ink)}.otTil{font-weight:900;font-size:18px;color:var(--ink);padding-bottom:12px}
+.otAdd select,.otAdd input{height:46px;font-size:17px!important;font-weight:800;min-width:0;width:100%;border-radius:12px;border:1.5px solid var(--line);background-color:var(--surf);color:var(--ink);padding:0 12px;-webkit-appearance:none;appearance:none}
+.otAdd input::placeholder{color:var(--muted);font-weight:700;opacity:1}
+.otAdd input:focus,.otAdd select:focus{outline:none;border-color:#1F9D6B;box-shadow:0 0 0 3px color-mix(in srgb,#1F9D6B 25%,transparent)}
+.otAdd .otRs{grid-column:1/3}.otAdd .addBtn{grid-column:3;height:46px;font-size:16px;background:#1F9D6B;color:#fff}
+.otPv{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;margin-top:8px;padding:10px 12px;border-radius:12px;background:var(--surf);font-size:15px;font-weight:800;color:var(--ink)}
+.otPv b{color:#0B6B47;font-weight:900}.otPv small{flex-basis:100%;font-size:12.5px;color:var(--muted);font-weight:700}.otWon{font-size:16px}
+.otSec .del.txt{flex:none}
+@media (prefers-color-scheme:dark){.otSec{background:color-mix(in srgb,#34C782 12%,var(--surf));box-shadow:inset 0 0 0 1.5px rgba(52,199,130,.4)}.otD b,.otPv b{color:#7FE0B1}.otM{background:#6B5A12;color:#FFF3B0}.otTm em{background:#34C782;color:#06281A}}
 @media (prefers-color-scheme:dark){.otb{background:rgba(52,199,130,.2);color:#7FE0B1}.otSec .tm,#oPv b{color:#7FE0B1}}
 .payR{margin:6px 0;border:1px solid var(--line);border-radius:12px;padding:8px 12px}.payR summary{font-weight:800;cursor:pointer}
 .payG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.payG label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}.payG input{height:38px;font-size:16px!important}
 </style>
+<script>/* 실수로 확대되지 않게: 두 번 탭·두 손가락 확대 막기 (아이폰 사파리는 viewport 설정만으로는 안 막힘) */
+(function(){var last=0;["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});
+ document.addEventListener("touchmove",function(e){if(e.touches&&e.touches.length>1)e.preventDefault();},{passive:false});})();</script>
+<script>/* 화면 모드: 자동(휴대폰 설정) · 라이트 · 다크 — CSS의 다크 조건을 직접 켜고 끔 */
+(function(){var O=new WeakMap();
+ function walk(rules,f){for(var i=0;i<rules.length;i++){var r=rules[i];if(r.media&&r.cssRules){f(r);}if(r.cssRules)walk(r.cssRules,f);}}
+ function apply(m){var root=document.documentElement;root.setAttribute("data-theme",m||"auto");
+  root.style.colorScheme=m==="dark"?"dark":m==="light"?"light":"light dark";
+  for(var i=0;i<document.styleSheets.length;i++){var sh=document.styleSheets[i],rs;try{rs=sh.cssRules;}catch(e){continue;}
+   walk(rs,function(r){var t=O.has(r)?O.get(r):r.media.mediaText;if(!/prefers-color-scheme/.test(t))return;if(!O.has(r))O.set(r,t);
+    var n=t;if(m==="dark"||m==="light"){n=t.replace(/\(\s*prefers-color-scheme\s*:\s*(dark|light)\s*\)/g,function(_,w){return w===m?"(min-width:0px)":"(max-width:0px)";});}
+    if(r.media.mediaText!==n)r.media.mediaText=n;});}
+  var dk=m==="dark"||(m!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches),mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute("content",dk?"#0F1320":"#5B4BD8");}
+ function cur(){try{return localStorage.getItem("skidP_theme")||"auto";}catch(e){return "auto";}}
+ window.setTheme=function(m){try{if(m==="auto")localStorage.removeItem("skidP_theme");else localStorage.setItem("skidP_theme",m);}catch(e){}apply(m);};
+ window.getTheme=cur;apply(cur());document.addEventListener("DOMContentLoaded",function(){apply(cur());});
+ try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){apply(cur());});}catch(e){}})();</script>
 </head>
 <body>
 <div class="app" id="app"><div class="loading">불러오는 중…</div></div>
@@ -432,7 +477,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1114r·GitHub";
+const VERLBL="v1114v·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -570,7 +615,7 @@ const save=(rec,msg)=>saveMany([rec],msg);
 /* ── 화면 ── */
 function badLink(){$("app").innerHTML=`<div class="card pin"><h2>SKID 근무표</h2><p>본인 전용 링크로 들어와 주세요</p>
   <div class="empty" style="text-align:left;line-height:1.6">사무실 대시보드의 <b>근무조</b> 창에서 내 이름의 QR을 휴대폰 카메라로 찍으면 열려요.<br>예전에 받은 링크라면 팀 비밀번호가 바뀌었을 수 있어요. 새 QR을 받아 주세요.</div></div>`;}
-function shell(){$("app").innerHTML=`<header><h1>내 캘린더<small>SKID 근무 · <span style="opacity:.55">${VERLBL}</span></small></h1><div class="vsw" id="vsw" role="tablist" aria-label="보기"><i class="th" aria-hidden="true"></i><button type="button" role="tab" data-v="me">내 근무</button><button type="button" role="tab" data-v="all">전체</button></div><button class="meBtn" id="meBtn" type="button" aria-label="설정"></button></header>
+function shell(){$("app").innerHTML=`<header><h1>SKID 근무</h1><div class="vsw" id="vsw" role="tablist" aria-label="보기"><i class="th" aria-hidden="true"></i><button type="button" role="tab" data-v="me">내 근무</button><button type="button" role="tab" data-v="all">전체</button></div><button class="meBtn" id="meBtn" type="button" aria-label="설정"></button></header>
   <div id="banner"></div>
   <section class="card" id="cal"><div class="nav"><button class="ib" id="prv" type="button" aria-label="이전 달">‹</button><b id="ym"></b><button class="ib" id="nxt" type="button" aria-label="다음 달">›</button><span class="sync" id="syncLbl"></span><button class="today" id="tdy" type="button">오늘</button><button class="ib plus" id="fab" type="button" aria-label="일정 추가">+</button></div>
   <div class="wk">${[...W].map(w=>`<span>${w}</span>`).join("")}</div><div class="gridWrap"><div class="grid" id="grid"></div></div></section>`;
@@ -608,19 +653,19 @@ function slide(dir,snap,from){const g=$("grid"),ym=$("ym"),gw=g&&g.parentNode;if
 // 전체 보기: 그날 내 그룹의 주간·야간 조 + 근무 변경 표시 (이름은 날짜를 누르면 표로)
 function allCell(k,ds,subs,m,c,o){const g=m?m.g:GRP[0].g,ws=workers(k,ds,g),sg=subs.filter(z=>z.grp===g);
   const line=(s,lab)=>{const L=ws.filter(w=>w.s===s);if(!L.length)return "";const t=s==="D"?ds.D:ds.N;const me1=L.some(w=>w.n===me);
-    const ch=L.filter(w=>sg.some(z=>z.who===w.n)).length;
-    return `<span class="al al${s}${me1?" mine":""}"><b>${lab}${t?esc(t.k):""}</b>${L.length>1&&!t?L.length:""}${ch?`<i class="alc" title="근무 변경 ${ch}">${ch}</i>`:""}</span>`;};
+    const sb=L.filter(w=>sg.some(z=>z.who===w.n&&z.sub)).length;
+    return `<span class="al al${s}${t?" t"+esc(t.k):""}${sb?" hasSub":""}${me1?" mine":""}" title="${sb?`대근 ${sb}건`:""}"><b>${lab}${t?esc(t.k):""}</b>${L.length>1&&!t?L.length:""}${sb?`<i class="alc">⇄${sb>1?sb:""}</i>`:""}</span>`;};
   const open=sg.filter(z=>!z.sub).length;
-  return `<span class="alWrap">${line("D","주")}${line("N","야")}${open?`<span class="al alq" title="미정 ${open}건">?<b>미정</b>${open}</span>`:""}</span>`;}
+  return `<span class="alWrap">${line("D","주")}${line("N","야")}${open?`<span class="al alq" title="대근 구해요 ${open}건">대근 구해요${open>1?" "+open:""}</span>`:""}</span>`;}
 function render(){if(!$("grid"))return;const c=cfg(),m=mine(c),tk=key(new Date()),OTM=m?otMap():{};
-  document.querySelectorAll("#vsw [data-v]").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===VIEW));const vs=$("vsw");if(vs)vs.dataset.v=VIEW;
+  document.querySelectorAll("#vsw [data-v]").forEach(b=>b.setAttribute("aria-selected",b.dataset.v===VIEW));const vs=$("vsw");if(vs)vs.dataset.v=VIEW;document.body.classList.toggle("vAll",VIEW==="all");
   $("ym").textContent=Y+"."+pad(M+1);
   $("meBtn").innerHTML=`<i></i>${esc(me)}<span class="gear">⚙</span>`;
   const f=new Date(Y,M,1),s=new Date(f);s.setDate(1-f.getDay());let h="";
   const n=(new Date(Y,M+1,0).getDate()+f.getDay())>35?42:35;
   for(let i=0;i<n;i++){const d=new Date(s);d.setDate(s.getDate()+i);const k=key(d),ds=dayShift(k,c),subs=subsOf(k),hol=HOL[k],o=stOf(myDay(k,ds,subs,m)),evs=evOf(k);
     h+=`<button type="button" class="day st-${o.st}${d.getMonth()!==M?" out":""}${d.getDay()===0?" sun":""}${d.getDay()===6?" sat":""}${hol?" hol":""}${k===tk?" isToday":""}${k===sel?" sel":""}" data-k="${k}" aria-label="${d.getMonth()+1}월 ${d.getDate()}일${hol?" "+esc(hol):""} ${esc(o.lab)}${evs.length?" 일정 "+evs.length+"개":""}">
-      <span class="dn">${d.getDate()}</span>${VIEW==="all"?allCell(k,ds,subs,m,c,o):`${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:o.st==="subN"?"야대근":"주대근")}</span>`:""}${m&&o.st==="off"&&openReqs(k,ds,subs,m,c).length?`<span class="req">대근 구함</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${OTM[k]?`<span class="otb">OT ${OTM[k].reduce((t,x)=>t+otH(x).reduce((a,b)=>a+b,0),0)}h</span>`:""}`}${hol?`<span class="hn">${esc(hol)}</span>`:""}
+      <span class="dn">${d.getDate()}</span>${VIEW==="all"?allCell(k,ds,subs,m,c,o):`${m?`<span class="big b-${o.st}${lvc(o)}">${esc(o.st==="off"?"휴":o.st==="day"?"주":o.st==="night"?"야":o.st==="lv"?o.lab:o.st==="subN"?"야대근":"주대근")}</span>`:""}${m&&o.st==="off"&&openReqs(k,ds,subs,m,c).length?`<span class="req">대근 구해요</span>`:""}${o.st.startsWith("sub")?`<span class="bsub">${esc(myDay(k,ds,subs,m).by||"")}</span>`:""}${OTM[k]?`<span class="otb">OT ${OTM[k].reduce((t,x)=>t+otH(x).reduce((a,b)=>a+b,0),0)}h</span>`:""}`}${hol?`<span class="hn">${esc(hol)}</span>`:""}
       <span class="evs">${evs.slice(0,2).map(e=>`<span class="ev">${esc(e.t)}</span>`).join("")}${evs.length>2?`<span class="more">+${evs.length-2}</span>`:""}</span></button>`;}
   $("grid").innerHTML=h;$("grid").style.setProperty("--rows",n/7);
   // 안내 띠: 잠금 · 내일 대근
@@ -697,9 +742,9 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   if(m){const ot=payX().filter(x=>x.d===k),P=payCfg(),hr=(+P.sal||0)/(+P.hb||209),won=x=>Math.round(x).toLocaleString("ko-KR")+"원";
     const df=o.st==="day"||o.st==="subD"?["19:00","21:00"]:o.st==="night"||o.st==="subN"?["07:00","09:00"]:["07:00","19:00"];
     h+=`<div class="dsSec otSec"><span class="rl">OT 일정 <small>${o.st==="off"||o.st==="lv"?"휴무 출근 (MDD·SKID 지원 등)":"근무 끝나고 추가 근무"}</small></span>`+
-      (ot.length?`<ul class="evl">${ot.map(x=>{const hh=otH(x);return `<li><span class="tm">${x.s?`${tLbl(x.s)}~${tLbl(x.e)}`:"OT"}</span><span class="et otT">${x.m?`<i class="pxm">${esc(x.m)}</i> `:""}${hTxt(hh)}${hr?` · ${won(hEq(hh)*hr)}`:""}</span><button class="del txt" type="button" data-odel="${esc(x.id)}" aria-label="OT 취소">취소</button></li>`;}).join("")}</ul>`:"")+
-      `<div class="otAdd"><select id="oS" aria-label="시작">${OSLOT}</select><span>~</span><select id="oE" aria-label="끝">${OSLOT}</select><input id="oM" list="xML" maxlength="30" placeholder="사유 (예: MDD)" autocomplete="off"><datalist id="xML"><option value="MDD"><option value="SKID 지원"><option value="교육"><option value="설비 점검"></datalist><button class="addBtn" id="oAdd" type="button">OT 추가</button></div>
-      <div class="pvHint" id="oPv"></div></div>`;
+      (ot.length?`<ul class="otL">${ot.map(x=>{const hh=otH(x),t=hh.reduce((a,b)=>a+b,0);return `<li><div class="otI"><b class="otTm">${x.s?`${tLbl(x.s)} ~ ${tLbl(x.e)}`:"OT"} <em>${t}시간</em></b><span class="otD">${x.m?`<i class="otM">${esc(x.m)}</i>`:""}${hTxt(hh)}${hr?` · <b>${won(hEq(hh)*hr)}</b>`:""}</span></div><button class="del txt" type="button" data-odel="${esc(x.id)}" aria-label="OT 취소">취소</button></li>`;}).join("")}</ul>`:"")+
+      `<div class="otAdd"><label class="otLb">시작<select id="oS">${OSLOT}</select></label><span class="otTil">~</span><label class="otLb">끝<select id="oE">${OSLOT}</select></label><label class="otLb otRs">사유<input id="oM" list="xML" maxlength="30" placeholder="예: MDD" autocomplete="off"></label><datalist id="xML"><option value="MDD"><option value="SKID 지원"><option value="교육"><option value="설비 점검"></datalist><button class="addBtn" id="oAdd" type="button">OT 추가</button></div>
+      <div class="otPv" id="oPv"></div></div>`;
     st0.otdf=df;}
   // 2) 내 일정
   h+=`<div class="dsSec"><span class="rl">내 일정</span>`;
@@ -716,7 +761,7 @@ function openDay(k,keep,focusAdd){const wasOpen=$("sheet").classList.contains("o
   if(wasOpen){$("sheet").querySelectorAll("details[data-f]").forEach(dd=>{if(st0[dd.dataset.f]!=null)dd.open=st0[dd.dataset.f];});$("sheet").scrollTop=st0.top||0;if($("eT")&&st0.t!=null){$("eT").value=st0.t;$("eTm").value=st0.tm;}}
   const gl=$("goLock");if(gl)gl.onclick=openLock;
   if($("oAdd")){const oS=$("oS"),oE=$("oE"),pv=()=>{const hh=otSplit(oS.value,oE.value),t=hh.reduce((a,b)=>a+b,0),P=payCfg(),hr=(+P.sal||0)/(+P.hb||209);
-      $("oPv").innerHTML=t?`<b>${t}시간</b> · ${hTxt(hh)}${hr?` · 약 <b>${Math.round(hEq(hh)*hr).toLocaleString("ko-KR")}원</b>`:" · ⚙ 설정 › 예상 월급에서 기본급을 넣으면 금액도 보여요"}`:"시작과 끝 시간을 골라 주세요";};
+      $("oPv").innerHTML=t?`<span><b>${t}시간</b> · ${hTxt(hh)}</span>${hr?`<span class="otWon">약 <b>${Math.round(hEq(hh)*hr).toLocaleString("ko-KR")}원</b></span>`:`<small>⚙ 설정 › 예상 월급에서 기본급을 넣으면 금액도 보여요</small>`}`:"시작과 끝 시간을 골라 주세요";};
     oS.value=st0.os||st0.otdf[0];oE.value=st0.oe||st0.otdf[1];oS.onchange=pv;oE.onchange=pv;pv();
     $("oAdd").onclick=()=>{if(oS.value===oE.value){toast("시작과 끝 시간이 같아요");return;}
       payXSave(payX().concat([{id:"x"+Date.now().toString(36)+Math.random().toString(36).slice(2,5),d:k,s:oS.value,e:oE.value,m:$("oM").value.trim().slice(0,30)}]));
@@ -859,11 +904,14 @@ async function openSettings(){const c=cfg(),m=mine(c);
       :`<p class="lead">내 일정이 잠겨 있어요.</p><button class="add" id="pwOpen" type="button">잠금 풀기</button>`;
     openSheet(`<h2>설정<button class="x" type="button" id="xBtn" aria-label="닫기">✕</button></h2>
       <div class="who"><b>${esc(me)}</b>${m?` · ${esc(GRP.find(G=>G.g===m.g).n)}`:""}</div>
+      <div class="thRow"><span>화면 모드</span><div class="thSeg" role="radiogroup" aria-label="화면 모드">${[["auto","자동"],["light","라이트"],["dark","다크"]].map(([v,l])=>`<button type="button" role="radio" data-th="${v}" aria-checked="${getTheme()===v}">${l}</button>`).join("")}</div></div>
+      <div class="hint2 thHint">자동은 휴대폰의 다크 모드 설정을 따라가요</div>
       <button class="payGo" id="payGo" type="button"><span>💰</span><b>예상 월급 계산</b><small>기본급 + 대근 OT · 이 휴대폰에만 저장</small><i>›</i></button>
-      <h3>대근 알림</h3>${pushHtml}<h3>내 일정 보안</h3>${sec}`);
+      <h3>대근 알림</h3>${pushHtml}<h3>내 일정 보안</h3>${sec}<div class="verL">버전 ${esc(VERLBL)}</div>`);
     $("xBtn").onclick=closeSheet;
     const b=id=>$(id);
     if(b("payGo"))b("payGo").onclick=()=>openPay();
+    document.querySelectorAll(".thSeg [data-th]").forEach(x=>x.onclick=()=>{setTheme(x.dataset.th);document.querySelectorAll(".thSeg [data-th]").forEach(y=>y.setAttribute("aria-checked",y===x));toast(x.dataset.th==="auto"?"휴대폰 설정을 따라가요":x.dataset.th==="dark"?"다크 모드로 바꿨어요":"라이트 모드로 바꿨어요");});
     if(b("pwMake"))b("pwMake").onclick=()=>openLock();if(b("pwChange"))b("pwChange").onclick=()=>openLock("change");if(b("pwOpen"))b("pwOpen").onclick=()=>openLock();
     if(b("lkNow"))b("lkNow").onclick=()=>{lockNow();closeSheet();toast("잠갔어요");};
     if(b("lkEach"))b("lkEach").onchange=async()=>{LS("lockEach",b("lkEach").checked?"1":null);if(b("lkEach").checked)LS("k_"+me,null);else if(KEY)await rememberKey();toast(b("lkEach").checked?"앱을 열 때마다 비밀번호를 물어요":"이 휴대폰에서 기억해요");};
