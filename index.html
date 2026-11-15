@@ -361,8 +361,13 @@ header h1{flex:1 1 auto}
 .vsw[data-v="all"] .th{transform:translateX(100%)}
 .alWrap{display:grid;gap:2px;margin-top:2px;justify-items:center}
 /* v1116b: 모든 근무 칩을 같은 높이로 키우고 칩 사이 간격을 넓혀, 테두리(링) 있는 칩도 겹치지 않고 줄이 고르게 */
-.alWrap{gap:8px!important;margin-top:5px!important;padding-bottom:4px}
-.alWrap>.al{height:20px;font-size:11.5px;padding:0 6px;border-radius:6px}
+.alWrap{gap:5px!important;margin-top:5px!important;padding-bottom:3px}
+.alWrap>.al{height:20px;font-size:11.5px;padding:0 6px;border-radius:6px;margin:0!important;min-height:0;width:auto;display:inline-flex}
+/* 바깥 링은 얇게(2.5px) — 위아래 칩 간격 5px 안에 들어가 겹치지 않음 */
+.alWrap>.al.need{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px var(--nc);animation-name:alNeed2}
+@keyframes alNeed2{0%,100%{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px var(--nc)}50%{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px transparent}}
+.alWrap>.al.hasSub.mine{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px currentColor}
+.alWrap>.al.hasSub.mine.tA{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px var(--gA)}.alWrap>.al.hasSub.mine.tB{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px var(--gB)}.alWrap>.al.hasSub.mine.tC{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px var(--gC)}.alWrap>.al.hasSub.mine.tD{box-shadow:0 0 0 1px var(--surf),0 0 0 2.5px var(--gD)}
 .alWrap>.al .aln{width:12px;height:12px;font-size:9.5px}
 @media (max-width:380px){.alWrap>.al{font-size:10.5px;padding:0 3px;gap:1px}.alWrap>.al .aln{width:10px;height:10px;font-size:8.5px}}
 .al{position:relative;white-space:nowrap;max-width:100%;display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 5px;border-radius:5px;font-size:11px;font-weight:900;line-height:1}
@@ -535,7 +540,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1116b·GitHub";
+const VERLBL="v1116c·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
