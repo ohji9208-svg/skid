@@ -360,8 +360,11 @@ header h1{flex:1 1 auto}
 .vsw .th{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:9px;background:var(--p);box-shadow:0 4px 10px -4px rgba(0,0,0,.4);transition:transform .32s cubic-bezier(.3,1.3,.5,1)}
 .vsw[data-v="all"] .th{transform:translateX(100%)}
 .alWrap{display:grid;gap:2px;margin-top:2px;justify-items:center}
-/* v1116a: 바깥 테두리(링)가 있는 칩(대근 구해요 · 내 대근)은 위아래 여백을 줘서 옆 칩과 겹치지 않게 */
-.alWrap>.al.need,.alWrap>.al.hasSub.mine{margin:4px 0}
+/* v1116b: 모든 근무 칩을 같은 높이로 키우고 칩 사이 간격을 넓혀, 테두리(링) 있는 칩도 겹치지 않고 줄이 고르게 */
+.alWrap{gap:8px!important;margin-top:5px!important;padding-bottom:4px}
+.alWrap>.al{height:20px;font-size:11.5px;padding:0 6px;border-radius:6px}
+.alWrap>.al .aln{width:12px;height:12px;font-size:9.5px}
+@media (max-width:380px){.alWrap>.al{font-size:10.5px;padding:0 3px;gap:1px}.alWrap>.al .aln{width:10px;height:10px;font-size:8.5px}}
 .al{position:relative;white-space:nowrap;max-width:100%;display:inline-flex;align-items:center;gap:2px;height:17px;padding:0 5px;border-radius:5px;font-size:11px;font-weight:900;line-height:1}
 .alD{background:#FFF1C9;color:#8A5B00}.alN{background:#E3E5FF;color:#3A3FB8}
 .al.tA{background:var(--gAb);color:var(--gA)}.al.tB{background:var(--gBb);color:var(--gB)}.al.tC{background:var(--gCb);color:var(--gC)}.al.tD{background:var(--gDb);color:var(--gD)}
@@ -532,7 +535,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1116a·GitHub";
+const VERLBL="v1116b·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
