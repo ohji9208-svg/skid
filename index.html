@@ -352,7 +352,7 @@ header{margin:0 6px 8px!important}
 .nbar .ni{font-size:18px;flex:0 0 auto}.nbar .nt{flex:1;min-width:0;font-size:14px;font-weight:800;line-height:1.35;word-break:keep-all}.nbar .nt small{color:var(--muted);font-weight:700}
 .nbar .nb{flex:0 0 auto;height:34px;padding:0 12px;border:0;border-radius:10px;background:var(--p);color:#fff;font-weight:800;font-size:13px}
 .nbar .nx{flex:0 0 auto;width:32px;height:34px;border:0;background:transparent;color:var(--muted);font-size:15px}
-/* v1115b: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
+/* v1115c: 내 근무/전체 · 주/야 대근 · 미정 · 메모 강조 · 취소 버튼 */
 header h1{flex:1 1 auto}
 .vsw{position:relative;display:inline-grid;grid-template-columns:1fr 1fr;flex:none;height:34px;padding:3px;border-radius:12px;background:var(--soft);box-shadow:inset 0 0 0 1px var(--line)}
 .vsw button{position:relative;z-index:1;border:0;background:transparent;padding:0 11px;font-size:13px;font-weight:800;color:var(--muted);white-space:nowrap;transition:color .25s}
@@ -470,10 +470,11 @@ header .meBtn{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;w
 @media (prefers-color-scheme:dark){.otSec{background:color-mix(in srgb,#34C782 12%,var(--surf));box-shadow:inset 0 0 0 1.5px rgba(52,199,130,.4)}.otD b,.otPv b{color:#7FE0B1}.otM{background:#6B5A12;color:#FFF3B0}.otTm em{background:#34C782;color:#06281A}}
 .otb .otW{min-width:0;max-width:100%;white-space:normal;word-break:keep-all;overflow-wrap:anywhere;text-align:center;line-height:1.15;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}.otb .otH{font-size:9.5px;opacity:.85;line-height:1.2}
 @media (prefers-color-scheme:dark){.otb{background:rgba(52,199,130,.2);color:#7FE0B1}.otSec .tm,#oPv b{color:#7FE0B1}}
+.payM b{display:grid;justify-items:center;line-height:1.25}.payM b small{font-size:12px;font-weight:700;color:var(--muted)}
 .payR{margin:6px 0;border:1px solid var(--line);border-radius:12px;padding:8px 12px}.payR summary{font-weight:800;cursor:pointer}
 .payG{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}.payG label{display:grid;gap:4px;font-size:12px;font-weight:700;color:var(--muted)}.payG input{height:38px;font-size:16px!important}
 
-/* ── 모션 (v1115b): 창 내용 등장 · 누름 반응 · 첫 화면 · 테마 전환 ── */
+/* ── 모션 (v1115c): 창 내용 등장 · 누름 반응 · 첫 화면 · 테마 전환 ── */
 @keyframes shIn{from{opacity:0;transform:translate3d(0,10px,0)}to{opacity:1;transform:none}}
 .sheet.sIn>*:not(.grab){animation:shIn .32s cubic-bezier(.2,.8,.2,1) both}
 .sheet.sIn>*:nth-child(3){animation-delay:.03s}.sheet.sIn>*:nth-child(4){animation-delay:.06s}.sheet.sIn>*:nth-child(5){animation-delay:.09s}.sheet.sIn>*:nth-child(6){animation-delay:.12s}.sheet.sIn>*:nth-child(n+7){animation-delay:.15s}
@@ -486,8 +487,8 @@ header .meBtn{min-width:0;flex:0 1 auto;overflow:hidden;text-overflow:ellipsis;w
 .chgBox{animation:shIn .24s cubic-bezier(.2,.8,.2,1) both}
 .allF[open]>.allIn{animation:shIn .26s cubic-bezier(.2,.8,.2,1) both}
 .payTot{animation:shIn .3s cubic-bezier(.2,.8,.2,1) both}.payTot b{font-variant-numeric:tabular-nums}
-html.thF,html.thF *,html.thF *::before,html.thF *::after{transition:background-color .3s ease,color .3s ease,border-color .3s ease,box-shadow .3s ease!important}
-@media (prefers-reduced-motion:reduce){.sheet.sIn>*,#cal,header,.chgBox,.allF[open]>.allIn,.payTot{animation:none!important}html.thF *{transition:none!important}.chip:active,.add:active,.addBtn:active,.otGo:active,.payGo:active,.ib:active,.today:active{transform:none}}
+::view-transition-old(root),::view-transition-new(root){mix-blend-mode:normal!important}::view-transition-old(root){animation:none!important;opacity:1!important}::view-transition-new(root){animation:none!important}
+@media (prefers-reduced-motion:reduce){.sheet.sIn>*,#cal,header,.chgBox,.allF[open]>.allIn,.payTot{animation:none!important}.chip:active,.add:active,.addBtn:active,.otGo:active,.payGo:active,.ib:active,.today:active{transform:none}}
 </style>
 <script>/* 실수로 확대되지 않게: 두 번 탭·두 손가락 확대 막기 (아이폰 사파리는 viewport 설정만으로는 안 막힘) */
 (function(){var last=0;["gesturestart","gesturechange","gestureend"].forEach(function(t){document.addEventListener(t,function(e){e.preventDefault();},{passive:false});});
@@ -504,7 +505,12 @@ html.thF,html.thF *,html.thF *::before,html.thF *::after{transition:background-c
   var dk=m==="dark"||(m!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches),mt=document.querySelector('meta[name="theme-color"]');if(mt)mt.setAttribute("content",dk?"#0F1320":"#5B4BD8");}
  function cur(){try{return localStorage.getItem("skidP_theme")||"auto";}catch(e){return "auto";}}
  window.setTheme=function(m){try{if(m==="auto")localStorage.removeItem("skidP_theme");else localStorage.setItem("skidP_theme",m);}catch(e){}
-  var H=document.documentElement;H.classList.add("thF");void H.offsetWidth;apply(m);clearTimeout(window.__thF);window.__thF=setTimeout(function(){H.classList.remove("thF");},420);};
+  /* 화면 전체를 사진처럼 겹쳐서 부드럽게 바꿈 (글씨가 사라졌다 나오지 않게) · 지원 안 하는 폰은 바로 바꿈 */
+  var rm=false;try{rm=matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
+  if(document.startViewTransition&&!rm){try{var o=window.__thXY||[innerWidth-40,40],x=o[0],y=o[1],r=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+    var vt=document.startViewTransition(function(){apply(m);});
+    vt.ready.then(function(){document.documentElement.animate({clipPath:["circle(0px at "+x+"px "+y+"px)","circle("+r+"px at "+x+"px "+y+"px)"]},{duration:460,easing:"cubic-bezier(.4,0,.2,1)",pseudoElement:"::view-transition-new(root)"});}).catch(function(){});return;}catch(e){}}
+  apply(m);};
  window.getTheme=cur;apply(cur());document.addEventListener("DOMContentLoaded",function(){apply(cur());});
  try{matchMedia("(prefers-color-scheme: dark)").addEventListener("change",function(){apply(cur());});}catch(e){}})();</script>
 </head>
@@ -524,7 +530,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1115b·GitHub";
+const VERLBL="v1115c·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -921,7 +927,7 @@ function payCalc(y,mo,P){const c=cfg(),m=mine(c),n=new Date(y,mo+1,0).getDate(),
 function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR")+"원";
   const paint=()=>{const P=payCfg(),R=payCalc(y,mo,P),ym=y+"-"+pad(mo+1);
     openSheet(`<div class="dsHead"><button class="dsX" type="button" id="xBtn" aria-label="닫기">✕</button><b>예상 월급</b><span></span></div>
-      <div class="payM"><button class="ib" id="pPrev" type="button" aria-label="이전 달">‹</button><b>${y}년 ${mo+1}월</b><button class="ib" id="pNext" type="button" aria-label="다음 달">›</button></div>
+      <div class="payM"><button class="ib" id="pPrev" type="button" aria-label="이전 월급">‹</button><b>${mo===11?y+1:y}년 ${mo===11?1:mo+2}월 월급<small>${mo+1}월 근무분 (${mo+1}/1 ~ ${mo+1}/${new Date(y,mo+1,0).getDate()})</small></b><button class="ib" id="pNext" type="button" aria-label="다음 월급">›</button></div>
       <div class="payMode" role="radiogroup"><button type="button" data-pm="ann" aria-checked="${P.pm!=="mon"}">연봉으로</button><button type="button" data-pm="mon" aria-checked="${P.pm==="mon"}">월 기본급으로</button></div>
       <label class="payIn"><span>${P.pm==="mon"?"내 기본급 (월)":"내 연봉"}</span><input id="pSal" inputmode="numeric" placeholder="${P.pm==="mon"?"예: 3,000,000":"예: 45,000,000"}" value="${P.pm==="mon"?(P.sal?Number(P.sal).toLocaleString("ko-KR"):""):(P.ann?Number(P.ann).toLocaleString("ko-KR"):"")}"><em>원</em></label>
       ${P.pm!=="mon"&&P.ann?`<div class="pvHint payAnnH">연봉 ÷ 12 = 월 기본급 <b>${won(P.sal)}</b></div>`:""}
@@ -992,7 +998,7 @@ async function openSettings(){const c=cfg(),m=mine(c);
     $("xBtn").onclick=closeSheet;
     const b=id=>$(id);
     if(b("payGo"))b("payGo").onclick=()=>openPay();
-    document.querySelectorAll(".thSeg [data-th]").forEach(x=>x.onclick=()=>{setTheme(x.dataset.th);document.querySelectorAll(".thSeg [data-th]").forEach(y=>y.setAttribute("aria-checked",y===x));toast(x.dataset.th==="auto"?"휴대폰 설정을 따라가요":x.dataset.th==="dark"?"다크 모드로 바꿨어요":"라이트 모드로 바꿨어요");});
+    document.querySelectorAll(".thSeg [data-th]").forEach(x=>x.onclick=ev=>{const R=x.getBoundingClientRect();window.__thXY=[ev&&ev.clientX||R.left+R.width/2,ev&&ev.clientY||R.top+R.height/2];setTheme(x.dataset.th);document.querySelectorAll(".thSeg [data-th]").forEach(y=>y.setAttribute("aria-checked",y===x));toast(x.dataset.th==="auto"?"휴대폰 설정을 따라가요":x.dataset.th==="dark"?"다크 모드로 바꿨어요":"라이트 모드로 바꿨어요");});
     if(b("pwMake"))b("pwMake").onclick=()=>openLock();if(b("pwChange"))b("pwChange").onclick=()=>openLock("change");if(b("pwOpen"))b("pwOpen").onclick=()=>openLock();
     if(b("lkNow"))b("lkNow").onclick=()=>{lockNow();closeSheet();toast("잠갔어요");};
     if(b("lkEach"))b("lkEach").onchange=async()=>{LS("lockEach",b("lkEach").checked?"1":null);if(b("lkEach").checked)LS("k_"+me,null);else if(KEY)await rememberKey();toast(b("lkEach").checked?"앱을 열 때마다 비밀번호를 물어요":"이 휴대폰에서 기억해요");};
