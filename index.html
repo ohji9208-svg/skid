@@ -545,7 +545,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1116h·GitHub";
+const VERLBL="v1116i·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -913,7 +913,7 @@ async function enablePush(){if(Notification.permission==="denied")return "denied
    대근 1회 = 12시간 × 시급 × 1.5 · 야간 대근은 22~06시 8시간 × 시급 × 0.5 추가 · 공휴일 대근은 8시간 넘는 4시간 × 시급 × 0.5 추가
    야간 근무가 있는 달: 식대 80,000원 + 기본 OT 8.7시간(× 시급 × 1.5)
    기본급·규칙은 이 휴대폰에만 저장 (서버로 보내지 않음) */
-const PAYDEF={hb:209,bo:8.7,boR:1.5,nt:0.5,ntH:8,meal:80000,sD:[8,4,0],sN:[4,4,4],shift:"auto",summer:1100000,holi:300000,bpBase:"ann",mh:50000,hrO:0,fix:0,tg:6,lab:100000,fnd:50000,bd:100000,bM:0,wel:2200000};
+const PAYDEF={hb:209,bo:8.7,boR:1.5,nt:0.5,ntH:8,meal:80000,sD:[8,4,0],sN:[4,4,4],shift:"auto",summer:1100000,holi:300000,bpBase:"ann",mh:50000,hrO:0,fix:0,tg:6,lab:100000,fnd:50000,bd:100000,bM:0};
 const PRATE=[1.5,2,2.5];
 function payCfg(){let o={};try{o=JSON.parse(LS("pay_"+me)||"{}")||{};}catch(e){}const P=Object.assign({sal:0,ann:0},PAYDEF,o);if(!P.pm)P.pm=o.sal&&!o.ann?"mon":"ann";
   ["sD","sN"].forEach(f=>{if(!Array.isArray(P[f])||P[f].length!==3)P[f]=PAYDEF[f].slice();});return P;}
@@ -947,7 +947,6 @@ function payCalc(y,mo,P){const c=cfg(),m=mine(c),n=new Date(y,mo+1,0).getDate(),
   if(pm===5&&+P.lab)B.push({t:"노동절 상품권",note:"5월",amt:+P.lab});
   if(pm===10&&+P.fnd)B.push({t:"창립기념일 상품권",note:"10월",amt:+P.fnd});
   if(+P.bM&&pm===+P.bM&&+P.bd)B.push({t:"생일 상품권",note:`${+P.bM}월 생일`,amt:+P.bd});
-  if(pm===12&&+P.wel)B.push({t:"복지카드",note:"12월",amt:+P.wel});
   Object.keys(HOL).filter(k=>k.slice(0,7)===pk&&/^(설날|추석)$/.test(HOL[k])).forEach(k=>{if(+P.holi)B.push({t:HOL[k]+" 상여",note:`${+k.slice(5,7)}/${+k.slice(8)} ${HOL[k]}`,amt:+P.holi});});
   let bpct=null,bbase=0;if(pm===4){const bp=P.bp||{};bpct=bp[py]!=null&&bp[py]!==""?+bp[py]:null;bbase=P.bpBase==="mon"?(+P.sal||0):(+P.ann||(+P.sal||0)*12);if(bpct)B.push({t:"성과급",note:`${P.bpBase==="mon"?"월 기본급":"연봉"} ${Math.round(bbase).toLocaleString("ko-KR")}원 × ${bpct}%`,amt:r(bbase*bpct/100),bonus:1});}
   const bnT=r(B.reduce((a,x)=>a+x.amt,0));
@@ -999,12 +998,11 @@ function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR
           <label>창립기념일 상품권 (10월)<input id="pFd" inputmode="numeric" value="${P.fnd}"></label>
           <label>내 생일 달<select id="pBm"><option value="0"${+P.bM?"":" selected"}>선택 안 함</option>${[1,2,3,4,5,6,7,8,9,10,11,12].map(m=>`<option value="${m}"${+P.bM===m?" selected":""}>${m}월</option>`).join("")}</select></label>
           <label>생일 상품권<input id="pBd" inputmode="numeric" value="${P.bd}"></label>
-          <label>복지카드 (12월)<input id="pWl" inputmode="numeric" value="${P.wel}"></label>
           <label>성과급 기준 (4월)<select id="pBb"><option value="ann"${P.bpBase!=="mon"?" selected":""}>연봉 × %</option><option value="mon"${P.bpBase==="mon"?" selected":""}>월 기본급 × %</option></select></label>
         </div>
         <div class="payG3"><b>주간 대근</b>${P.sD.map((v,i)=>`<label>${["150%","200%","250%"][i]}<input data-s="sD" data-i="${i}" inputmode="decimal" value="${v}"></label>`).join("")}
           <b>야간 대근</b>${P.sN.map((v,i)=>`<label>${["150%","200%","250%"][i]}<input data-s="sN" data-i="${i}" inputmode="decimal" value="${v}"></label>`).join("")}</div>
-        <p class="hint2">통상시급 자동 = (기본급 × (1 + ${P.tg==null?6:P.tg}%) + (여름휴가수당 + 설·추석 상여) ÷ 12) ÷ ${P.hb} (원 단위 올림) · 설날·추석(연휴 포함)에 근무하면 하루 명절 근무 수당 · 5월 노동절 · 10월 창립기념일 · 생일 달 상품권 · 12월 복지카드 · 7월 월급에 여름휴가수당 · 설날·추석이 있는 달 월급에 명절 상여 · 4월 월급에 성과급(그해 % × ${P.bpBase==="mon"?"월 기본급":"연봉"}) · 교대근무자는 보전수당 ${P.bo}시간 × ${P.boR} · 내 야간 근무 1회마다 ${P.ntH}시간 × ${P.nt} · 대근은 위 표대로 · 공휴일 정규 근무는 12시간 OT · OT 일정은 8시간까지 150%, 넘으면 200%, 22~06시는 +50% (처음부터 200%)</p>
+        <p class="hint2">통상시급 자동 = (기본급 × (1 + ${P.tg==null?6:P.tg}%) + (여름휴가수당 + 설·추석 상여) ÷ 12) ÷ ${P.hb} (원 단위 올림) · 설날·추석(연휴 포함)에 근무하면 하루 명절 근무 수당 · 5월 노동절 · 10월 창립기념일 · 생일 달 상품권 · 7월 월급에 여름휴가수당 · 설날·추석이 있는 달 월급에 명절 상여 · 4월 월급에 성과급(그해 % × ${P.bpBase==="mon"?"월 기본급":"연봉"}) · 교대근무자는 보전수당 ${P.bo}시간 × ${P.boR} · 내 야간 근무 1회마다 ${P.ntH}시간 × ${P.nt} · 대근은 위 표대로 · 공휴일 정규 근무는 12시간 OT · OT 일정은 8시간까지 150%, 넘으면 200%, 22~06시는 +50% (처음부터 200%)</p>
         <button class="ghostBtn" id="pReset" type="button">처음 규칙으로</button>
       </details>
       <p class="hint2">세금·보험료를 빼기 전 금액이고, 실제 급여명세서와 다를 수 있어요. 기본급과 추가 OT는 이 휴대폰에만 저장돼요.</p>`);
@@ -1019,7 +1017,7 @@ function openPay(){let y=Y,mo=M;const won=x=>Math.round(x).toLocaleString("ko-KR
     document.querySelectorAll(".payMode [data-pm]").forEach(b=>b.onclick=()=>{const P2=payCfg(),pm=b.dataset.pm;save(pm==="mon"?{pm}:{pm,sal:P2.ann?Math.round(P2.ann/12):P2.sal,ann:P2.ann||(P2.sal?P2.sal*12:0)});paint();});
     $("pSal").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("pSal").blur();}});
     {const hi=$("pHr");if(hi){hi.onchange=()=>{const v=String(hi.value).trim();save({hrO:v===""?0:num(v)});paint();};hi.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();hi.blur();}});}}
-    [["pHb","hb"],["pTg","tg"],["pBo","bo"],["pBr","boR"],["pNh","ntH"],["pNt","nt"],["pMe","meal"],["pSu","summer"],["pHo","holi"],["pMh","mh"],["pFx","fix"],["pLb","lab"],["pFd","fnd"],["pBd","bd"],["pWl","wel"]].forEach(([id,f])=>{$(id).onchange=()=>keep(()=>save({[f]:num($(id).value)}));});
+    [["pHb","hb"],["pTg","tg"],["pBo","bo"],["pBr","boR"],["pNh","ntH"],["pNt","nt"],["pMe","meal"],["pSu","summer"],["pHo","holi"],["pMh","mh"],["pFx","fix"],["pLb","lab"],["pFd","fnd"],["pBd","bd"]].forEach(([id,f])=>{$(id).onchange=()=>keep(()=>save({[f]:num($(id).value)}));});
     $("pSh").onchange=()=>keep(()=>save({shift:$("pSh").value}));
     $("pBb").onchange=()=>keep(()=>save({bpBase:$("pBb").value}));
     $("pBm").onchange=()=>keep(()=>save({bM:+$("pBm").value}));
