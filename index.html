@@ -545,7 +545,7 @@ if(QS.get("u")&&QS.get("a")){LS("u",QS.get("u"));LS("a",QS.get("a"));}
 const API=AID?"https://script.google.com/macros/s/"+AID+"/exec":"";
 const PAGE=location.origin+location.pathname;
 let ME=LS("me")||"";
-const VERLBL="v1125a·GitHub";
+const VERLBL="v1125b·GitHub";
 async function gasGet(url,q){const u=url+(url.includes("?")?"&":"?")+"api=1&"+Object.entries(q).map(([k,v])=>k+"="+encodeURIComponent(v)).join("&")+"&_="+Date.now();
   const r=await fetch(u,{redirect:"follow",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const t=await r.text();try{return JSON.parse(t);}catch(e){throw new Error("notjson");}}
 async function gasCall(url,pin,op,recs,extra){const RD={save:"list",setpref:"pref",testmail:"pref",subscribe:"pref",unsubscribe:"pref",testpush:"pref"};
@@ -564,11 +564,11 @@ const SH_DEF={base:"2026-11-07",teams:[{k:"A",g12:"오지훈",g3:"고우성",ph:
 // ==== 인원·근무 순환 변동 (기간별) · 대시보드와 휴대폰이 같은 규칙을 씀 ====
 // 근무 순환이 하루 밀리는 날: 이날은 모든 조가 전날 근무를 한 번 더 (근무표 엑셀 26년 12월 기준: 12/25)
 const SH_HOLD=["2026-12-25"];
-// 조 구성원 교체: 2027-01-01 부터 1st·2nd A조 = 박윤혁 (오지훈은 평일 주간으로)
-const SH_SWAP=[{k:"A",g:"g12",from:"2027-01-01",n:"박윤혁"}];
+// 조 구성원 교체: 2027-02-01 부터 1st·2nd A조 = 박윤혁 (오지훈은 평일 주간으로) · 2027년 1월까지는 오지훈이 A조
+const SH_SWAP=[{k:"A",g:"g12",from:"2027-02-01",n:"박윤혁"}];
 // 추가 인원: w=짝 조(그 조가 s 근무하는 날 같이 근무) · w="WD" 는 평일 주간(토·일·공휴일 휴무)
-const SH_EXTRA=[{n:"박윤혁",g:"g12",s:"D",p:[{to:"2026-11-30",w:"CD"},{from:"2026-12-02",to:"2026-12-31",w:"AB"}]},
-  {n:"오지훈",g:"g12",s:"D",p:[{from:"2027-01-01",w:"WD"}]}];
+const SH_EXTRA=[{n:"박윤혁",g:"g12",s:"D",p:[{to:"2026-11-30",w:"CD"},{from:"2026-12-02",to:"2027-01-31",w:"AB"}]},
+  {n:"오지훈",g:"g12",s:"D",p:[{from:"2027-02-01",w:"WD"}]}];
 const holdN=(k,base)=>SH_HOLD.filter(h=>h>base&&h<=k).length;
 const memberAt=(t,g,k)=>{let n=t[g];SH_SWAP.forEach(w=>{if(w.k===t.k&&w.g===g&&(!w.from||k>=w.from)&&(!w.to||k<=w.to))n=w.n;});return n;};
 const atDay=(t,k)=>{if(!t)return t;let o=null;GRP.forEach(G=>{const n=memberAt(t,G.g,k);if(n!==t[G.g]){o=o||{...t};o[G.g]=n;}});return o||t;};
